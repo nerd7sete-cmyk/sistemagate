@@ -32,13 +32,30 @@ body{
 /* SIDEBAR */
 .sidebar{
   width:250px;
-  height:100vh;
+  height:100dvh; /* 🔥 corrige iPhone */
   background:#000;
   border-right:1px solid rgba(255,255,255,0.05);
   padding:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+
+  overflow-y:auto; /* 🔥 permite rolar */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* SCROLL BONITO */
+.sidebar::-webkit-scrollbar{
+  width:4px;
+}
+.sidebar::-webkit-scrollbar-thumb{
+  background:#222;
+  border-radius:10px;
+}
+
+/* CONTEÚDO */
+.sidebar-content{
+  flex:1;
 }
 
 /* LOGO */
@@ -93,8 +110,9 @@ body{
   border:1px solid rgba(255,255,255,0.08);
 }
 
-/* LOGOUT */
+/* LOGOUT FIXO */
 .logout{
+  margin-top:20px;
   padding:12px;
   border-radius:12px;
   background:#0a0a0a;
@@ -104,16 +122,12 @@ body{
   gap:10px;
 }
 
-.logout:hover{
-  background:#141414;
-}
-
 /* MAIN */
 .main{
   flex:1;
   display:flex;
   flex-direction:column;
-  height:100vh;
+  height:100dvh;
 }
 
 /* MOBILE */
@@ -175,7 +189,7 @@ iframe{
 
 <div class="sidebar" id="sidebar">
 
-  <div>
+  <div class="sidebar-content">
 
     <div class="logo">PrimePay</div>
 
@@ -228,7 +242,6 @@ iframe{
       <i class="ri-search-eye-line"></i> Central de Usuários
     </div>
 
-    <!-- 🔥 NOVO BOTÃO ADICIONADO -->
     <div class="menu-item" onclick="abrir('pdv-root.html', this)">
       <i class="ri-qr-code-line"></i> Cobrança Instantânea
     </div>
