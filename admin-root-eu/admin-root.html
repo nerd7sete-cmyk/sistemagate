@@ -184,7 +184,6 @@ iframe{
       <small>ROOT</small>
     </div>
 
-    <!-- 🔥 DASHBOARD AGORA ABRE O COMPLETO -->
     <div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
       <i class="ri-home-5-line"></i> Dashboard
     </div>
@@ -217,6 +216,23 @@ iframe{
       <i class="ri-settings-3-line"></i> Configurações
     </div>
 
+    <div class="menu-item" onclick="abrir('orquestracao-pagamentos.html', this)">
+      <i class="ri-route-line"></i> Orquestração de Pagamentos
+    </div>
+
+    <div class="menu-item" onclick="abrir('definicoes-taxas.html', this)">
+      <i class="ri-percent-line"></i> Definições de Taxas
+    </div>
+
+    <div class="menu-item" onclick="abrir('central-usuarios.html', this)">
+      <i class="ri-search-eye-line"></i> Central de Usuários
+    </div>
+
+    <!-- 🔥 NOVO BOTÃO ADICIONADO -->
+    <div class="menu-item" onclick="abrir('pdv-root.html', this)">
+      <i class="ri-qr-code-line"></i> Cobrança Instantânea
+    </div>
+
   </div>
 
   <div class="logout" onclick="logout()">
@@ -232,14 +248,12 @@ iframe{
     <strong>PrimePay</strong>
   </div>
 
-  <!-- 🔥 AQUI É O SEGREDO -->
   <iframe id="frame" src="dashboardcompleto.html"></iframe>
 
 </div>
 
 <script>
 
-// 🔐 PROTEÇÃO
 let logado = localStorage.getItem("logado");
 let tipo = localStorage.getItem("tipo");
 
@@ -251,7 +265,6 @@ if(tipo !== "root"){
   window.location.href = "login.html";
 }
 
-// USER
 let usuario = localStorage.getItem("usuario") || "ROOT";
 
 document.getElementById("userBox").innerHTML = `
@@ -259,7 +272,6 @@ document.getElementById("userBox").innerHTML = `
   <small>ROOT</small>
 `;
 
-// NAVEGAÇÃO
 function abrir(pagina, el){
   document.getElementById("frame").src = pagina;
 
@@ -271,7 +283,6 @@ function abrir(pagina, el){
   fecharMenu();
 }
 
-// MOBILE
 function abrirMenu(){
   document.getElementById("sidebar").classList.add("active");
   document.getElementById("overlay").style.display = "block";
@@ -282,7 +293,6 @@ function fecharMenu(){
   document.getElementById("overlay").style.display = "none";
 }
 
-// LOGOUT
 function logout(){
   document.body.style.opacity = "0";
 
