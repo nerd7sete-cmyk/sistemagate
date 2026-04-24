@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Configurações ROOT</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:30px;
+}
+
+/* HEADER */
+.top{
+  margin-bottom:30px;
+}
+
+.top h2{
+  font-size:22px;
+  font-weight:600;
+}
+
+/* GRID FIXO PREMIUM */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  max-width:1100px;
+  margin:auto;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:20px;
+  transition:0.2s;
+}
+
+.card:hover{
+  border-color:rgba(255,255,255,0.12);
+  box-shadow:0 0 30px rgba(255,255,255,0.03);
+}
+
+/* HEADER CARD */
+.card-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:15px;
+  font-size:14px;
+  color:#ccc;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+  margin-top:6px;
+}
+
+/* LABEL */
+.label{
+  font-size:12px;
+  color:#666;
+  margin-top:12px;
+}
+
+/* SWITCH */
+.switch{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:15px;
+}
+
+.toggle{
+  width:42px;
+  height:24px;
+  background:#111;
+  border-radius:20px;
+  position:relative;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.toggle::after{
+  content:"";
+  width:18px;
+  height:18px;
+  background:white;
+  position:absolute;
+  top:3px;
+  left:3px;
+  border-radius:50%;
+  transition:0.2s;
+}
+
+.toggle.active{
+  background:white;
+}
+
+.toggle.active::after{
+  left:21px;
+  background:#000;
+}
+
+/* BOTÃO */
+.footer{
+  max-width:1100px;
+  margin:30px auto 0;
+}
+
+.btn{
+  width:100%;
+  background:white;
+  color:black;
+  padding:16px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Configurações do Sistema (ROOT)</h2>
+</div>
+
+<div class="grid">
+
+  <!-- FINANCEIRO -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ri-money-dollar-circle-line"></i> Financeiro
+    </div>
+
+    <div class="label">Taxa ROOT (%)</div>
+    <input id="taxaRoot" class="input">
+
+    <div class="label">Taxa Admin (%)</div>
+    <input id="taxaAdmin" class="input">
+
+    <div class="label">Taxa Gerente (%)</div>
+    <input id="taxaGerente" class="input">
+
+    <div class="label">Taxa Operador (%)</div>
+    <input id="taxaOperador" class="input">
+  </div>
+
+  <!-- SAQUES -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ri-bank-card-line"></i> Saques
+    </div>
+
+    <div class="label">Valor mínimo</div>
+    <input id="minSaque" class="input">
+
+    <div class="label">Valor máximo</div>
+    <input id="maxSaque" class="input">
+  </div>
+
+  <!-- SISTEMA -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ri-settings-3-line"></i> Sistema
+    </div>
+
+    <div class="label">Nome do sistema</div>
+    <input id="nomeSistema" class="input">
+
+    <div class="label">Gateway padrão</div>
+    <input id="gateway" class="input">
+
+    <div class="label">Expiração PIX (min)</div>
+    <input id="tempoPix" class="input">
+  </div>
+
+  <!-- SEGURANÇA -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ri-shield-check-line"></i> Segurança
+    </div>
+
+    <div class="switch">
+      <span>Logs ativos</span>
+      <div id="logs" class="toggle" onclick="toggle('logs')"></div>
+    </div>
+
+    <div class="switch">
+      <span>Sistema ativo</span>
+      <div id="sistema" class="toggle" onclick="toggle('sistema')"></div>
+    </div>
+
+    <div class="switch">
+      <span>Bloqueio por tentativas</span>
+      <div id="bloqueio" class="toggle" onclick="toggle('bloqueio')"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="btn" onclick="salvar()">Salvar configurações</div>
+</div>
+
+<script>
+
+let config = JSON.parse(localStorage.getItem("configRoot")) || {
+  taxaRoot:15,
+  taxaAdmin:10,
+  taxaGerente:25,
+  taxaOperador:10,
+  minSaque:10,
+  maxSaque:5000,
+  nomeSistema:"PrimePay",
+  gateway:"Interno",
+  tempoPix:10,
+  logs:true,
+  sistema:true,
+  bloqueio:false
+};
+
+function load(){
+  taxaRoot.value = config.taxaRoot;
+  taxaAdmin.value = config.taxaAdmin;
+  taxaGerente.value = config.taxaGerente;
+  taxaOperador.value = config.taxaOperador;
+  minSaque.value = config.minSaque;
+  maxSaque.value = config.maxSaque;
+  nomeSistema.value = config.nomeSistema;
+  gateway.value = config.gateway;
+  tempoPix.value = config.tempoPix;
+
+  if(config.logs) logs.classList.add("active");
+  if(config.sistema) sistema.classList.add("active");
+  if(config.bloqueio) bloqueio.classList.add("active");
+}
+
+function toggle(id){
+  config[id] = !config[id];
+  document.getElementById(id).classList.toggle("active");
+}
+
+function salvar(){
+
+  config.taxaRoot = parseFloat(taxaRoot.value);
+  config.taxaAdmin = parseFloat(taxaAdmin.value);
+  config.taxaGerente = parseFloat(taxaGerente.value);
+  config.taxaOperador = parseFloat(taxaOperador.value);
+
+  config.minSaque = parseFloat(minSaque.value);
+  config.maxSaque = parseFloat(maxSaque.value);
+
+  config.nomeSistema = nomeSistema.value;
+  config.gateway = gateway.value;
+  config.tempoPix = parseInt(tempoPix.value);
+
+  localStorage.setItem("configRoot", JSON.stringify(config));
+
+  alert("Salvo com sucesso");
+}
+
+load();
+
+</script>
+
+</body>
+</html>

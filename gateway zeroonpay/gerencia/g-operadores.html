@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Operadores</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.btn{
+  background:white;
+  color:black;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* FILTROS */
+.filters{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.input{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1e293b;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:18px;
+  border-bottom:1px solid #111;
+  align-items:center;
+  transition:0.2s;
+}
+
+.item:hover{
+  background:#0a0a0a;
+}
+
+/* INFO */
+.nome{
+  font-weight:600;
+  font-size:14px;
+}
+
+.info small{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#0f172a;
+}
+
+/* STATUS PROFISSIONAL */
+.status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.ativo{
+  color:#22c55e;
+  border-color:rgba(34,197,94,0.3);
+}
+
+.inativo{
+  color:#ef4444;
+  border-color:rgba(239,68,68,0.3);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+/* BOTÕES */
+.btn-action{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+  color:#fff;
+  transition:0.2s;
+}
+
+.btn-action:hover{
+  background:#111;
+  transform:scale(1.08);
+}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  max-width:420px;
+}
+
+/* FORM */
+.form{
+  display:grid;
+  gap:12px;
+  margin-top:15px;
+}
+
+/* BOTÕES MODAL */
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.save{
+  flex:1;
+  background:white;
+  color:black;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #1e293b;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#050505;
+  padding:15px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Operadores</h2>
+  <div class="btn" onclick="abrirModal()">+ Criar Operador</div>
+</div>
+
+<div class="filters">
+  <input id="busca" class="input" placeholder="Buscar..." onkeyup="render()">
+  <select id="filtro" class="input" onchange="render()">
+    <option value="todos">Todos</option>
+    <option value="ativos">Ativos</option>
+    <option value="inativos">Inativos</option>
+  </select>
+</div>
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL CRIAR -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3>Novo Operador</h3>
+
+    <div class="form">
+      <input id="nome" class="input" placeholder="Nome">
+      <input id="email" class="input" placeholder="Email">
+      <input id="senha" class="input" placeholder="Senha">
+      <input id="taxa" class="input" value="15">
+    </div>
+
+    <div class="modal-actions">
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Criar</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT TAXA -->
+<div class="modal-bg" id="modalEdit">
+  <div class="modal">
+    <h3>Editar taxa (%)</h3>
+
+    <div class="form">
+      <input id="valorEdit" class="input" placeholder="Nova taxa">
+    </div>
+
+    <div class="modal-actions">
+      <div class="cancel" onclick="fecharEdit()">Cancelar</div>
+      <div class="save" onclick="salvarEdit()">Salvar</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+const buscaInput = document.getElementById("busca");
+const filtroSelect = document.getElementById("filtro");
+
+const nomeInput = document.getElementById("nome");
+const emailInput = document.getElementById("email");
+const senhaInput = document.getElementById("senha");
+const taxaInput = document.getElementById("taxa");
+
+let usuario = localStorage.getItem("usuario") || "admin";
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let indexEdit = null;
+
+function salvar(){
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+}
+
+function show(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"),2000);
+}
+
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML="";
+
+  let busca = buscaInput.value.toLowerCase();
+  let filtro = filtroSelect.value;
+
+  let dados = operadores.filter(o=>o.admin===usuario);
+
+  if(busca){
+    dados = dados.filter(o=>o.nome.toLowerCase().includes(busca));
+  }
+
+  if(filtro==="ativos") dados = dados.filter(o=>o.ativo);
+  if(filtro==="inativos") dados = dados.filter(o=>!o.ativo);
+
+  if(dados.length===0){
+    lista.innerHTML=`<div style="padding:20px;color:#666;">Nenhum operador</div>`;
+    return;
+  }
+
+  dados.forEach((o,i)=>{
+    lista.innerHTML+=`
+    <div class="item">
+      <div class="info">
+        <div class="nome">${o.nome}</div>
+        <small>${o.email}</small>
+
+        <div class="badges">
+          <div class="badge">Taxa ${o.taxa}%</div>
+          <div class="status ${o.ativo ? 'ativo' : 'inativo'}">
+            ${o.ativo ? 'Ativo' : 'Inativo'}
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+
+        <div class="btn-action" onclick="abrirEdit(${i})">
+          <i class="ri-percent-line"></i>
+        </div>
+
+        <div class="btn-action" onclick="toggle(${i})">
+          <i class="ri-toggle-line"></i>
+        </div>
+
+        <div class="btn-action" onclick="remover(${i})">
+          <i class="ri-delete-bin-line"></i>
+        </div>
+
+      </div>
+    </div>
+    `;
+  });
+}
+
+/* CRIAR */
+function criar(){
+
+  if(!nomeInput.value || !emailInput.value || !senhaInput.value){
+    show("Preencha tudo");
+    return;
+  }
+
+  operadores.unshift({
+    nome:nomeInput.value,
+    email:emailInput.value,
+    senha:senhaInput.value,
+    taxa:parseFloat(taxaInput.value) || 15,
+    ativo:true,
+    admin:usuario
+  });
+
+  salvar();
+
+  nomeInput.value="";
+  emailInput.value="";
+  senhaInput.value="";
+  taxaInput.value="15";
+
+  fecharModal();
+  render();
+  show("Operador criado");
+}
+
+/* EDIT TAXA */
+function abrirEdit(i){
+  indexEdit = i;
+  modalEdit.style.display="flex";
+}
+
+function salvarEdit(){
+
+  let v = parseFloat(valorEdit.value);
+
+  if(isNaN(v)){
+    show("Valor inválido");
+    return;
+  }
+
+  operadores[indexEdit].taxa = v;
+
+  salvar();
+  fecharEdit();
+  render();
+  show("Taxa atualizada");
+}
+
+function fecharEdit(){
+  modalEdit.style.display="none";
+  valorEdit.value="";
+}
+
+/* OUTROS */
+function toggle(i){
+  operadores[i].ativo=!operadores[i].ativo;
+  salvar();
+  render();
+}
+
+function remover(i){
+  operadores.splice(i,1);
+  salvar();
+  render();
+}
+
+function abrirModal(){
+  modal.style.display="flex";
+}
+
+function fecharModal(){
+  modal.style.display="none";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

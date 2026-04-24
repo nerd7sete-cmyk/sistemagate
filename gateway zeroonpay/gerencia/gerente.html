@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel Gerente</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  display:flex;
+  background:#000;
+  color:white;
+  font-family:"Segoe UI", Arial;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;
+  height:100vh;
+  background:#000;
+  border-right:1px solid rgba(255,255,255,0.05);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+/* LOGO */
+.logo{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:20px;
+
+  background:linear-gradient(120deg,#fff,#999,#fff);
+  background-size:200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shine 6s linear infinite;
+}
+
+@keyframes shine{
+  0%{background-position:200%;}
+  100%{background-position:-200%;}
+}
+
+/* PERFIL */
+.user-box{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:20px;
+}
+
+.user-name{
+  font-size:14px;
+  font-weight:600;
+}
+
+.user-role{
+  font-size:11px;
+  color:#777;
+  margin-top:3px;
+}
+
+/* MENU */
+.menu-item{
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+  color:#aaa;
+  transition:0.2s;
+}
+
+.menu-item:hover{
+  background:#0a0a0a;
+  color:#fff;
+}
+
+.active{
+  background:#0a0a0a;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* LOGOUT */
+.logout{
+  padding:12px;
+  border-radius:12px;
+  background:#0a0a0a;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+}
+
+.logout:hover{
+  background:#141414;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  background:#000;
+}
+
+iframe{
+  width:100%;
+  height:100vh;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+  <div>
+
+    <div class="logo">PrimePay</div>
+
+    <!-- PERFIL -->
+    <div class="user-box">
+      <div class="user-name" id="nomeUser">Carregando...</div>
+      <div class="user-role">Gerente</div>
+    </div>
+
+    <div class="menu-item active" onclick="abrir('g-dashboard.html', this)">
+      <i class="ri-home-5-line"></i> Dashboard
+    </div>
+
+    <div class="menu-item" onclick="abrir('g-operadores.html', this)">
+      <i class="ri-user-3-line"></i> Operadores
+    </div>
+
+    <div class="menu-item" onclick="abrir('transacoes-gerente.html', this)">
+      <i class="ri-bar-chart-line"></i> Transações
+    </div>
+
+    <div class="menu-item" onclick="abrir('g-saques.html', this)">
+      <i class="ri-wallet-3-line"></i> Saques
+    </div>
+
+    <!-- 🔥 NOVO BOTÃO PROFISSIONAL -->
+    <div class="menu-item" onclick="abrir('perfil-financeiro-gerente.html', this)">
+      <i class="ri-bank-card-line"></i> Conta de Saque
+    </div>
+
+  </div>
+
+  <div class="logout" onclick="logout()">
+    <i class="ri-logout-box-r-line"></i> Sair
+  </div>
+
+</div>
+
+<div class="main">
+  <iframe id="frame" src="g-dashboard.html"></iframe>
+</div>
+
+<script>
+
+// IDENTIFICAÇÃO
+let usuario = localStorage.getItem("usuario");
+document.getElementById("nomeUser").innerText = usuario || "Gerente";
+
+// NAVEGAÇÃO
+function abrir(pagina, el){
+  document.getElementById("frame").src = pagina;
+
+  document.querySelectorAll(".menu-item")
+    .forEach(i => i.classList.remove("active"));
+
+  el.classList.add("active");
+}
+
+// LOGOUT
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

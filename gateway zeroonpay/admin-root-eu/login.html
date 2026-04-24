@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>PrimePay</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#000;
+  color:white;
+}
+
+.card{
+  width:100%;
+  max-width:380px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:30px;
+  border-radius:18px;
+  text-align:center;
+}
+
+.logo{font-size:26px;font-weight:700;margin-bottom:6px;}
+.sub{color:#777;font-size:13px;margin-bottom:25px;}
+
+.input-group{position:relative;margin-bottom:12px;}
+
+.input{
+  width:100%;
+  padding:14px 14px 14px 42px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+.icon{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#666;
+}
+
+.show-pass{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#fff;
+  color:#000;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button.loading{
+  opacity:0.7;
+  pointer-events:none;
+}
+
+.status{margin-top:12px;font-size:13px;}
+.error{color:#ef4444;}
+.success{color:#22c55e;}
+
+.security{
+  margin-top:20px;
+  padding:12px;
+  border-radius:12px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  font-size:12px;
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="logo">PrimePay</div>
+  <div class="sub">Acesse sua conta</div>
+
+  <div class="input-group">
+    <i class="ri-user-line icon"></i>
+    <input type="text" id="email" class="input" placeholder="Login">
+  </div>
+
+  <div class="input-group">
+    <i class="ri-lock-line icon"></i>
+    <input type="password" id="senha" class="input" placeholder="Senha">
+    <i class="ri-eye-line show-pass" onclick="toggleSenha()"></i>
+  </div>
+
+  <button id="btnLogin" onclick="login()">Entrar</button>
+
+  <div id="msg" class="status"></div>
+
+  <div class="security">
+    🔒 Conexão segura • Sistema protegido
+  </div>
+
+</div>
+
+<script>
+
+// 👁️ mostrar senha
+function toggleSenha(){
+  let s = document.getElementById("senha");
+  s.type = s.type === "password" ? "text" : "password";
+}
+
+// 🔥 SEED (RODA UMA VEZ SÓ)
+function seed(){
+
+  localStorage.setItem("root", JSON.stringify({
+    email:"nerd7root",
+    senha:"1234"
+  }));
+
+  localStorage.setItem("admins", JSON.stringify([
+    {
+      nome:"Admin Principal",
+      email:"admin",
+      senha:"123",
+      ativo:true
+    }
+  ]));
+
+  localStorage.setItem("gerentes", JSON.stringify([]));
+  localStorage.setItem("operadores", JSON.stringify([]));
+
+}
+
+// 🚨 CONTROLE DO SEED
+if(!localStorage.getItem("iniciado")){
+  seed();
+  localStorage.setItem("iniciado","true");
+}
+
+// LOGIN
+function login(){
+
+  let email = document.getElementById("email").value.trim();
+  let senha = document.getElementById("senha").value.trim();
+  let msg = document.getElementById("msg");
+  let btn = document.getElementById("btnLogin");
+
+  msg.innerText="";
+  msg.className="status";
+
+  btn.innerText="Entrando...";
+  btn.classList.add("loading");
+
+  setTimeout(()=>{
+
+    // 🔥 ROOT
+    let root = JSON.parse(localStorage.getItem("root"));
+    if(root && email===root.email && senha===root.senha){
+      entrar("root","admin-root-eu/admin-root.html",msg);
+      return;
+    }
+
+    // ADMIN
+    let admins = JSON.parse(localStorage.getItem("admins")) || [];
+    let admin = admins.find(a=>a.email===email && a.senha===senha && a.ativo !== false);
+
+    if(admin){
+      entrar("admin","admins-sub/admin.html",msg);
+      return;
+    }
+
+    // GERENTE
+    let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+    let gerente = gerentes.find(g=>g.email===email && g.senha===senha && g.ativo !== false);
+
+    if(gerente){
+      entrar("gerente","gerencia/gerente.html",msg);
+      return;
+    }
+
+    // OPERADOR
+    let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+    let operador = operadores.find(o=>o.email===email && o.senha===senha && o.ativo !== false);
+
+    if(operador){
+      entrar("operador","operador/index.html",msg);
+      return;
+    }
+
+    // ERRO
+    msg.innerText="Login inválido";
+    msg.classList.add("error");
+
+    btn.innerText="Entrar";
+    btn.classList.remove("loading");
+
+  },400);
+}
+
+// ENTRAR
+function entrar(tipo,redirect,msg){
+
+  localStorage.setItem("logado","true");
+  localStorage.setItem("usuario",document.getElementById("email").value);
+  localStorage.setItem("tipo",tipo);
+
+  msg.innerText="Acesso autorizado";
+  msg.classList.add("success");
+
+  setTimeout(()=>{
+    window.location.href = redirect;
+  },300);
+}
+
+</script>
+
+</body>
+</html>

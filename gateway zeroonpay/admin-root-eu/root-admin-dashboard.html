@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title-main{
+  font-size:22px;
+  font-weight:600;
+}
+
+.status{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:12px;
+  color:#ccc;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  margin-bottom:25px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.06);
+  padding:20px;
+  border-radius:16px;
+  position:relative;
+  transition:0.2s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 25px rgba(255,255,255,0.04);
+}
+
+/* DESTAQUE */
+.highlight{
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 0 30px rgba(255,255,255,0.08);
+}
+
+/* ICON */
+.icon-box{
+  position:absolute;
+  top:15px;
+  right:15px;
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:18px;
+  color:#fff;
+  opacity:0.8;
+}
+
+/* TEXT */
+.title{
+  font-size:12px;
+  color:#666;
+}
+
+.value{
+  font-size:26px;
+  margin-top:10px;
+  color:#fff;
+  font-weight:700;
+}
+
+/* GRID 2 */
+.grid-2{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:15px;
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:20px;
+}
+
+/* LIST */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid #111;
+  font-size:13px;
+}
+
+.item:last-child{
+  border:none;
+}
+
+.dot{
+  width:6px;
+  height:6px;
+  background:#fff;
+  border-radius:50%;
+  opacity:0.6;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="top">
+  <div class="title-main">Dashboard ROOT</div>
+  <div class="status" id="status">Sistema ativo</div>
+</div>
+
+<!-- CARDS -->
+<div class="grid">
+
+  <div class="card highlight">
+    <div class="icon-box"><i class="ri-wallet-3-line"></i></div>
+    <div class="title">Receita total</div>
+    <div class="value" id="receita">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-box"><i class="ri-money-dollar-circle-line"></i></div>
+    <div class="title">Lucro ROOT</div>
+    <div class="value" id="lucro">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-box"><i class="ri-shield-user-line"></i></div>
+    <div class="title">Admins</div>
+    <div class="value" id="admins">0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-box"><i class="ri-user-star-line"></i></div>
+    <div class="title">Gerentes</div>
+    <div class="value" id="gerentes">0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-box"><i class="ri-team-line"></i></div>
+    <div class="title">Operadores</div>
+    <div class="value" id="operadores">0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-box"><i class="ri-exchange-dollar-line"></i></div>
+    <div class="title">Transações</div>
+    <div class="value" id="transacoes">0</div>
+  </div>
+
+</div>
+
+<!-- GRID -->
+<div class="grid-2">
+
+  <div class="box">
+    <h3 style="margin-bottom:10px;color:#aaa;">Volume de receita</h3>
+    <canvas id="grafico"></canvas>
+  </div>
+
+  <div class="box">
+    <h3 style="margin-bottom:10px;color:#aaa;">Atividade recente</h3>
+    <div id="atividade"></div>
+  </div>
+
+</div>
+
+<script>
+
+// DADOS
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let saques = JSON.parse(localStorage.getItem("saques")) || [];
+let config = JSON.parse(localStorage.getItem("config")) || {taxa:15, ativo:true};
+
+// CALCULO
+let receita = 0;
+let porDia = {};
+
+transacoes.forEach(t=>{
+  let valor = t.valor || 0;
+  receita += valor;
+
+  let dia = new Date(t.data || Date.now()).getDate();
+  porDia[dia] = (porDia[dia] || 0) + valor;
+});
+
+let lucro = receita * (config.taxa / 100);
+
+// SET
+document.getElementById("receita").innerText = "R$ " + receita.toFixed(2);
+document.getElementById("lucro").innerText = "R$ " + lucro.toFixed(2);
+document.getElementById("admins").innerText = admins.length;
+document.getElementById("gerentes").innerText = gerentes.length;
+document.getElementById("operadores").innerText = operadores.length;
+document.getElementById("transacoes").innerText = transacoes.length;
+
+document.getElementById("status").innerText = config.ativo ? "Sistema ativo" : "Sistema desligado";
+
+// ATIVIDADE
+let atividade = document.getElementById("atividade");
+
+let logs = [
+  ...transacoes.map(t => `Transação R$ ${t.valor}`),
+  ...saques.map(s => `Saque R$ ${s.valor}`)
+].slice(-8).reverse();
+
+if(logs.length === 0){
+  atividade.innerHTML = `<div class="item">Sem atividade</div>`;
+}else{
+  logs.forEach(l=>{
+    atividade.innerHTML += `
+      <div class="item">
+        <span>${l}</span>
+        <span class="dot"></span>
+      </div>
+    `;
+  });
+}
+
+// GRÁFICO
+new Chart(document.getElementById("grafico"), {
+  type: 'line',
+  data: {
+    labels: Object.keys(porDia),
+    datasets: [{
+      data: Object.values(porDia),
+      borderColor: "#ffffff",
+      backgroundColor: "rgba(255,255,255,0.05)",
+      tension:0.4,
+      fill:true,
+      pointRadius:0
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:"#666"}},
+      y:{ticks:{color:"#666"}}
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>

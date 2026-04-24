@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Configurações</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:20px;
+  font-weight:600;
+}
+
+/* 🔥 GRID PRINCIPAL (2 COLUNAS FIXAS) */
+.main-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+/* COLUNA */
+.col{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:20px;
+  transition:0.2s;
+}
+
+.card:hover{
+  border-color:rgba(255,255,255,0.12);
+}
+
+/* TITULO */
+.card-title{
+  font-size:14px;
+  color:#aaa;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* LABEL */
+.label{
+  font-size:12px;
+  color:#777;
+  margin-top:10px;
+}
+
+/* BOTÃO */
+.btn{
+  margin-top:25px;
+  width:100%;
+  background:#fff;
+  color:#000;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn:hover{
+  opacity:0.9;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .main-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="title">Configurações do Admin</div>
+</div>
+
+<div class="main-grid">
+
+  <!-- 🔥 COLUNA ESQUERDA -->
+  <div class="col">
+
+    <!-- 💰 FINANCEIRO -->
+    <div class="card">
+      <div class="card-title">
+        <i class="ri-money-dollar-circle-line"></i> Financeiro
+      </div>
+
+      <div class="label">Sua taxa (%)</div>
+      <input id="taxaAdmin" class="input">
+
+      <div class="label">Taxa operador (%)</div>
+      <input id="taxaOperador" class="input">
+
+      <div class="label">Taxa gerente (%)</div>
+      <input id="taxaGerente" class="input">
+    </div>
+
+    <!-- 💸 SAQUES -->
+    <div class="card">
+      <div class="card-title">
+        <i class="ri-wallet-3-line"></i> Saques
+      </div>
+
+      <div class="label">Saque mínimo (R$)</div>
+      <input id="minSaque" class="input">
+
+      <div class="label">Saque máximo (R$)</div>
+      <input id="maxSaque" class="input">
+    </div>
+
+  </div>
+
+  <!-- 🔥 COLUNA DIREITA -->
+  <div class="col">
+
+    <!-- 🏷️ IDENTIDADE -->
+    <div class="card">
+      <div class="card-title">
+        <i class="ri-building-line"></i> Identidade
+      </div>
+
+      <div class="label">Nome do sistema</div>
+      <input id="nome" class="input">
+
+      <div class="label">Nome no painel</div>
+      <input id="nomePainel" class="input">
+    </div>
+
+    <!-- ⚙️ OPERAÇÃO -->
+    <div class="card">
+      <div class="card-title">
+        <i class="ri-settings-3-line"></i> Operação
+      </div>
+
+      <div class="label">Tempo expiração (min)</div>
+      <input id="tempoPix" class="input">
+
+      <div class="label">Taxa do sistema (%)</div>
+      <input id="taxaSistema" class="input">
+    </div>
+
+  </div>
+
+</div>
+
+<div class="btn" onclick="salvar()">Salvar configurações</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+let configs = JSON.parse(localStorage.getItem("configAdmin")) || {};
+
+let config = configs[usuario] || {
+  taxaAdmin:15,
+  taxaOperador:10,
+  taxaGerente:25,
+  minSaque:10,
+  maxSaque:5000,
+  nome:"PrimePay",
+  nomePainel:"Painel Admin",
+  tempoPix:10,
+  taxaSistema:15
+};
+
+function load(){
+  taxaAdmin.value = config.taxaAdmin;
+  taxaOperador.value = config.taxaOperador;
+  taxaGerente.value = config.taxaGerente;
+
+  minSaque.value = config.minSaque;
+  maxSaque.value = config.maxSaque;
+
+  nome.value = config.nome;
+  nomePainel.value = config.nomePainel;
+
+  tempoPix.value = config.tempoPix;
+  taxaSistema.value = config.taxaSistema;
+}
+
+function salvar(){
+
+  config.taxaAdmin = parseFloat(taxaAdmin.value);
+  config.taxaOperador = parseFloat(taxaOperador.value);
+  config.taxaGerente = parseFloat(taxaGerente.value);
+
+  config.minSaque = parseFloat(minSaque.value);
+  config.maxSaque = parseFloat(maxSaque.value);
+
+  config.nome = nome.value;
+  config.nomePainel = nomePainel.value;
+
+  config.tempoPix = parseInt(tempoPix.value);
+  config.taxaSistema = parseFloat(taxaSistema.value);
+
+  configs[usuario] = config;
+
+  localStorage.setItem("configAdmin", JSON.stringify(configs));
+
+  let gateways = JSON.parse(localStorage.getItem("gateways")) || {};
+  gateways[usuario] = { nome: config.nome };
+  localStorage.setItem("gateways", JSON.stringify(gateways));
+
+  alert("Configurações salvas");
+}
+
+load();
+
+</script>
+
+</body>
+</html>

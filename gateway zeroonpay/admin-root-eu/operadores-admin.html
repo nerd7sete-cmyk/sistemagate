@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html, body{
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.btn{
+  background:#fff;
+  color:#000;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* FILTRO */
+.filters{
+  margin-bottom:20px;
+}
+
+.input{
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+  width:100%;
+  transition:0.2s;
+}
+
+.input:focus{
+  border-color:#fff;
+  box-shadow:0 0 8px rgba(255,255,255,0.15);
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  padding:18px;
+  border-bottom:1px solid #111;
+}
+
+.item:hover{background:#0a0a0a;}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* INFO */
+.nome{font-weight:600;}
+
+.info small{
+  color:#777;
+  font-size:12px;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#0f0f0f;
+}
+
+.status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+}
+
+.ativo{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.inativo{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-action{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.btn-action:hover{
+  background:#111;
+}
+
+/* 🔥 MODAL MELHORADO */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(4px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:30px;
+  border-radius:18px;
+  width:100%;
+  max-width:420px;
+  animation:fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* 🔥 ESPAÇAMENTO FORM */
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-top:15px;
+}
+
+/* TITULO */
+.modal h3{
+  font-size:18px;
+  margin-bottom:5px;
+}
+
+/* BOTÕES */
+.actions-modal{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.save{
+  flex:1;
+  background:#fff;
+  color:#000;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #1a1a1a;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  color:#aaa;
+}
+
+.cancel:hover{
+  background:#111;
+  color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Operadores (ROOT)</h2>
+  <div class="btn" onclick="abrirModal()">+ Criar Operador</div>
+</div>
+
+<div class="filters">
+  <input id="busca" class="input" placeholder="Buscar operador..." onkeyup="render()">
+</div>
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+
+    <h3>Novo Operador</h3>
+
+    <div class="form">
+      <input id="nome" class="input" placeholder="Nome">
+      <input id="email" class="input" placeholder="Email">
+      <input id="senha" class="input" placeholder="Senha">
+      <input id="taxa" class="input" placeholder="Taxa %" value="10">
+    </div>
+
+    <div class="actions-modal">
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Criar</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let usuario = localStorage.getItem("usuario");
+
+function salvar(){
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+}
+
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let busca = document.getElementById("busca").value.toLowerCase();
+
+  let dados = operadores;
+
+  if(busca){
+    dados = dados.filter(o => o.nome.toLowerCase().includes(busca));
+  }
+
+  if(dados.length === 0){
+    lista.innerHTML = `<div style="padding:20px;color:#666;">Nenhum operador</div>`;
+    return;
+  }
+
+  dados.forEach((o,i)=>{
+
+    lista.innerHTML += `
+    <div class="item">
+      <div class="row">
+        <div class="info">
+          <div class="nome">${o.nome}</div>
+          <small>${o.email}</small>
+
+          <div class="badges">
+            <div class="badge">Admin: ${o.admin}</div>
+            <div class="badge">${o.taxa}%</div>
+            <div class="status ${o.ativo?'ativo':'inativo'}">
+              ${o.ativo?'Ativo':'Inativo'}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="btn-action" onclick="toggle(${i})">
+            <i class="ri-toggle-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="remover(${i})">
+            <i class="ri-delete-bin-line"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+}
+
+function criar(){
+
+  let nome = document.getElementById("nome").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let senha = document.getElementById("senha").value.trim();
+  let taxa = parseFloat(document.getElementById("taxa").value) || 10;
+
+  if(!nome || !email || !senha){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  operadores.unshift({
+    nome,
+    email,
+    senha,
+    gerente:null,
+    admin: usuario,
+    taxa,
+    ativo:true
+  });
+
+  salvar();
+  render();
+  fecharModal();
+
+  document.getElementById("nome").value="";
+  document.getElementById("email").value="";
+  document.getElementById("senha").value="";
+}
+
+function toggle(i){
+  operadores[i].ativo = !operadores[i].ativo;
+  salvar();
+  render();
+}
+
+function remover(i){
+  if(confirm("Excluir operador?")){
+    operadores.splice(i,1);
+    salvar();
+    render();
+  }
+}
+
+function abrirModal(){
+  modal.style.display="flex";
+}
+
+function fecharModal(){
+  modal.style.display="none";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

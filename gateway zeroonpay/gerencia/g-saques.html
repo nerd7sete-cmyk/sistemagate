@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Saques</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.btn{
+  background:white;
+  color:black;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:20px;
+}
+
+/* ITEM */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  border-bottom:1px solid #111;
+}
+
+.status{
+  font-size:12px;
+  padding:4px 10px;
+  border-radius:20px;
+}
+
+.pendente{color:#aaa;}
+.pago{color:#22c55e;}
+.recusado{color:#ef4444;}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  max-width:400px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* SWITCH */
+.switch{
+  margin-top:10px;
+  font-size:12px;
+  color:#aaa;
+  cursor:pointer;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.save{
+  flex:1;
+  background:white;
+  color:black;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #1e293b;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Saques</h2>
+  <div class="btn" onclick="abrirModal()">+ Solicitar Saque</div>
+</div>
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+
+    <h3>Novo Saque</h3>
+
+    <input id="valor" class="input" placeholder="Valor (R$)">
+
+    <!-- INFO PADRÃO -->
+    <div id="pixPadrao" class="switch"></div>
+
+    <select id="tipo" class="input">
+      <option value="cpf">CPF</option>
+      <option value="email">Email</option>
+      <option value="telefone">Telefone</option>
+      <option value="aleatoria">Aleatória</option>
+    </select>
+
+    <input id="chave" class="input" placeholder="Chave PIX">
+
+    <div class="switch" onclick="alternarChave()">
+      Usar outra chave
+    </div>
+
+    <div class="actions">
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Solicitar</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+let saques = JSON.parse(localStorage.getItem("saques")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+let usarPadrao = true;
+
+// TOAST
+function show(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"),2000);
+}
+
+// SALDO
+function getSaldo(){
+
+  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+  let meusOperadores = operadores.filter(o => o.gerente === usuario);
+
+  let total = 0;
+
+  transacoes.forEach(t=>{
+    let op = meusOperadores.find(o => o.email === t.operador);
+    if(op){
+      total += t.valor || 0;
+    }
+  });
+
+  let gerente = gerentes.find(g => g.email === usuario);
+  let taxa = gerente?.taxa || 25;
+
+  return total * (taxa/100);
+}
+
+// CARREGAR PIX PADRÃO
+function carregarPix(){
+
+  let dados = JSON.parse(localStorage.getItem("pix_"+usuario));
+
+  if(!dados){
+    document.getElementById("pixPadrao").innerText = "Nenhuma chave padrão cadastrada";
+    usarPadrao = false;
+    return;
+  }
+
+  document.getElementById("pixPadrao").innerText =
+    "Chave padrão: " + dados.tipo.toUpperCase() + " • " + dados.chave;
+
+  document.getElementById("tipo").value = dados.tipo;
+  document.getElementById("chave").value = dados.chave;
+
+  usarPadrao = true;
+}
+
+// ALTERNAR
+function alternarChave(){
+  usarPadrao = !usarPadrao;
+
+  if(!usarPadrao){
+    document.getElementById("tipo").value = "cpf";
+    document.getElementById("chave").value = "";
+  }else{
+    carregarPix();
+  }
+}
+
+// RENDER
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML="";
+
+  let meus = saques.filter(s => s.gerente === usuario);
+
+  if(meus.length === 0){
+    lista.innerHTML = `<div style="padding:20px;color:#666;">Nenhum saque</div>`;
+    return;
+  }
+
+  meus.forEach(s=>{
+    lista.innerHTML += `
+    <div class="item">
+      <div>
+        <div>R$ ${s.valor}</div>
+        <small>${s.tipo.toUpperCase()} • ${s.chave}</small>
+      </div>
+      <div class="status ${s.status}">
+        ${s.status}
+      </div>
+    </div>
+    `;
+  });
+}
+
+// CRIAR SAQUE
+function criar(){
+
+  let valor = parseFloat(document.getElementById("valor").value);
+  let tipo = document.getElementById("tipo").value;
+  let chave = document.getElementById("chave").value;
+
+  if(!valor || !chave){
+    show("Preencha os campos");
+    return;
+  }
+
+  let saldo = getSaldo();
+
+  if(valor > saldo){
+    show("Saldo insuficiente");
+    return;
+  }
+
+  saques.unshift({
+    gerente:usuario,
+    valor,
+    tipo,
+    chave,
+    status:"pendente",
+    data:new Date().toLocaleString()
+  });
+
+  localStorage.setItem("saques", JSON.stringify(saques));
+
+  show("Saque solicitado");
+
+  fecharModal();
+  render();
+}
+
+// MODAL
+function abrirModal(){
+  document.getElementById("modal").style.display="flex";
+  carregarPix();
+}
+
+function fecharModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Auditoria e Segurança</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* TOPO */
+.top{
+  margin-bottom:25px;
+}
+
+.top h2{
+  font-size:20px;
+}
+
+/* FILTROS */
+.filters{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.input{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  padding:18px;
+  border-bottom:1px solid #111;
+}
+
+.item:hover{
+  background:#0a0a0a;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* INFO */
+.info strong{
+  display:block;
+}
+
+.info small{
+  color:#777;
+  font-size:12px;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#111;
+}
+
+/* TIPOS */
+.login{color:#22c55e;}
+.saque{color:#facc15;}
+.delete{color:#ef4444;}
+.create{color:#3b82f6;}
+.update{color:#a855f7;}
+
+/* EMPTY */
+.empty{
+  padding:20px;
+  text-align:center;
+  color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Auditoria & Logs de Segurança</h2>
+</div>
+
+<!-- FILTROS -->
+<div class="filters">
+
+  <input id="busca" class="input" placeholder="Buscar usuário..." onkeyup="render()">
+
+  <select id="tipo" class="input" onchange="render()">
+    <option value="todos">Todos</option>
+    <option value="login">Login</option>
+    <option value="saque">Saque</option>
+    <option value="create">Criação</option>
+    <option value="delete">Exclusão</option>
+    <option value="update">Atualização</option>
+  </select>
+
+</div>
+
+<!-- LISTA -->
+<div class="card" id="lista"></div>
+
+<script>
+
+// 🔥 LOGS
+let logs = JSON.parse(localStorage.getItem("logs")) || [];
+
+// 🔥 RENDER
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let busca = document.getElementById("busca").value.toLowerCase();
+  let tipo = document.getElementById("tipo").value;
+
+  let dados = logs;
+
+  if(busca){
+    dados = dados.filter(l => l.usuario?.toLowerCase().includes(busca));
+  }
+
+  if(tipo !== "todos"){
+    dados = dados.filter(l => l.tipo === tipo);
+  }
+
+  if(dados.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum registro encontrado</div>`;
+    return;
+  }
+
+  dados.reverse().forEach(l => {
+
+    lista.innerHTML += `
+    <div class="item">
+
+      <div class="row">
+
+        <div class="info">
+          <strong>${l.acao}</strong>
+          <small>${new Date(l.data).toLocaleString()}</small>
+
+          <div class="badges">
+            <div class="badge">Usuário: ${l.usuario}</div>
+            <div class="badge">IP: ${l.ip || "-"}</div>
+            <div class="badge">Dispositivo: ${l.device || "-"}</div>
+          </div>
+        </div>
+
+        <div class="badge ${l.tipo}">
+          ${l.tipo}
+        </div>
+
+      </div>
+
+    </div>
+    `;
+  });
+
+}
+
+render();
+
+
+// 🔥 FUNÇÃO GLOBAL PRA REGISTRAR LOG
+function registrarLog(tipo, acao){
+
+  let logs = JSON.parse(localStorage.getItem("logs")) || [];
+
+  logs.push({
+    tipo, // login, saque, create...
+    acao,
+    usuario: localStorage.getItem("usuario") || "desconhecido",
+    data: new Date().toISOString(),
+    ip: "local",
+    device: navigator.userAgent
+  });
+
+  localStorage.setItem("logs", JSON.stringify(logs));
+}
+</script>
+
+</body>
+</html>

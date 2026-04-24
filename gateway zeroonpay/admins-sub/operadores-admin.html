@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.btn{
+  background:#fff;
+  color:#000;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+  margin-bottom:15px;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  padding:18px;
+  border-bottom:1px solid #111;
+}
+
+.item:hover{
+  background:#0a0a0a;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* INFO */
+.nome{
+  font-weight:600;
+}
+
+.info small{
+  color:#777;
+  font-size:12px;
+  display:block;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#111;
+}
+
+/* STATUS */
+.ativo{
+  color:#22c55e;
+}
+
+.inativo{
+  color:#ef4444;
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-action{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.btn-action:hover{
+  background:#111;
+}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  max-width:420px;
+}
+
+.modal h3{
+  margin-bottom:10px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.save{
+  flex:1;
+  background:#fff;
+  color:#000;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Operadores</h2>
+  <div class="btn" onclick="abrirModal()">+ Criar Operador</div>
+</div>
+
+<input id="busca" class="input" placeholder="Buscar operador..." onkeyup="render()">
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+
+    <h3>Novo Operador</h3>
+
+    <input id="nome" class="input" placeholder="Nome">
+    <input id="email" class="input" placeholder="Email">
+    <input id="senha" class="input" placeholder="Senha">
+    <input id="taxa" class="input" placeholder="Taxa (%)" value="15">
+
+    <select id="tipoVinculo" class="input" onchange="toggleGerente()">
+      <option value="admin">Vincular ao Admin</option>
+      <option value="gerente">Vincular a um Gerente</option>
+    </select>
+
+    <select id="gerente" class="input" style="display:none;"></select>
+
+    <div class="modal-actions">
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Criar</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+// salvar
+function salvar(){
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+}
+
+// mostrar gerentes
+function toggleGerente(){
+  let tipo = tipoVinculo.value;
+
+  if(tipo === "gerente"){
+    gerente.style.display="block";
+    gerente.innerHTML="";
+
+    gerentes
+    .filter(g=>g.admin===usuario)
+    .forEach(g=>{
+      gerente.innerHTML += `<option value="${g.email}">${g.nome}</option>`;
+    });
+
+  }else{
+    gerente.style.display="none";
+  }
+}
+
+// criar
+function criar(){
+
+  let nome = nomeInput.value;
+  let email = emailInput.value;
+  let senha = senhaInput.value;
+  let taxa = parseFloat(taxaInput.value) || 15;
+
+  let tipo = tipoVinculo.value;
+  let gerenteSel = tipo==="gerente" ? gerente.value : null;
+
+  if(!nome || !email || !senha){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  operadores.unshift({
+    nome,
+    email,
+    senha,
+    gerente: gerenteSel,
+    saldo:0,
+    taxa,
+    ativo:true,
+    admin:usuario
+  });
+
+  salvar();
+  fecharModal();
+  render();
+
+  nomeInput.value="";
+  emailInput.value="";
+  senhaInput.value="";
+}
+
+// render
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML="";
+
+  let busca = document.getElementById("busca").value.toLowerCase();
+
+  let meus = operadores.filter(o=>o.admin===usuario);
+
+  if(busca){
+    meus = meus.filter(o=>o.nome.toLowerCase().includes(busca));
+  }
+
+  if(meus.length===0){
+    lista.innerHTML=`<div style="padding:20px;color:#666;">Nenhum operador</div>`;
+    return;
+  }
+
+  meus.forEach((o,i)=>{
+
+    let gerenteNome = gerentes.find(g=>g.email===o.gerente)?.nome || "Admin";
+
+    lista.innerHTML+=`
+    <div class="item">
+      <div class="row">
+
+        <div class="info">
+          <div class="nome">${o.nome}</div>
+          <small>${o.email}</small>
+          <small>Gerente: ${gerenteNome}</small>
+          <small>Saldo: R$ ${o.saldo.toFixed(2)}</small>
+
+          <div class="badges">
+            <div class="badge">Taxa ${o.taxa}%</div>
+            <div class="badge ${o.ativo?'ativo':'inativo'}">
+              ${o.ativo?'Ativo':'Inativo'}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+
+          <div class="btn-action" onclick="editarTaxa(${i})">
+            <i class="ri-percent-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="editarSaldo(${i})">
+            <i class="ri-wallet-3-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="toggle(${i})">
+            <i class="ri-toggle-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="remover(${i})">
+            <i class="ri-delete-bin-line"></i>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    `;
+  });
+}
+
+// ações
+function editarTaxa(i){
+  let v = prompt("Nova taxa (%)");
+  if(v){
+    operadores[i].taxa = parseFloat(v);
+    salvar();
+    render();
+  }
+}
+
+function editarSaldo(i){
+  let v = prompt("Valor (+ ou -)");
+  if(v){
+    operadores[i].saldo += parseFloat(v);
+    salvar();
+    render();
+  }
+}
+
+function toggle(i){
+  operadores[i].ativo = !operadores[i].ativo;
+  salvar();
+  render();
+}
+
+function remover(i){
+  if(confirm("Excluir operador?")){
+    operadores.splice(i,1);
+    salvar();
+    render();
+  }
+}
+
+// modal
+function abrirModal(){ modal.style.display="flex"; }
+function fecharModal(){ modal.style.display="none"; }
+
+let nomeInput = document.getElementById("nome");
+let emailInput = document.getElementById("email");
+let senhaInput = document.getElementById("senha");
+let taxaInput = document.getElementById("taxa");
+
+render();
+
+</script>
+
+</body>
+</html>

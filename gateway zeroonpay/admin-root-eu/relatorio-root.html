@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<title>Relatórios</title>
+
+<style>
+{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/ HEADER /
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+.select{
+  padding:10px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid #1a1a1a;
+  color:white;
+}
+
+/ CARDS /
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:20px;
+  transition:0.2s;
+}
+
+.card:hover{
+  border-color:rgba(255,255,255,0.2);
+}
+
+.icon{
+  font-size:18px;
+  color:#888;
+}
+
+.label{
+  font-size:12px;
+  color:#666;
+  margin-top:5px;
+}
+
+.value{
+  font-size:24px;
+  margin-top:8px;
+  font-weight:600;
+}
+
+/ GRID PRINCIPAL /
+.main-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:15px;
+}
+
+/ BOX /
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:20px;
+}
+
+/ TITULO BOX /
+.box-title{
+  font-size:13px;
+  color:#888;
+  margin-bottom:15px;
+}
+
+/ LISTA /
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #111;
+  font-size:13px;
+}
+
+.item:last-child{border:none;}
+
+.small{
+  color:#777;
+  font-size:12px;
+}
+
+/ RESPONSIVO */
+@media(max-width:900px){
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .main-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="title">Relatório Financeiro</div>
+
+  <select id="periodo" class="select" onchange="render()">
+    <option value="7">7 dias</option>
+    <option value="15">15 dias</option>
+    <option value="30" selected>30 dias</option>
+  </select>
+</div>
+
+<!-- CARDS -->
+<div class="grid">
+
+  <div class="card">
+    <div class="icon"><i class="ri-money-dollar-circle-line"></i></div>
+    <div class="label">Faturamento</div>
+    <div class="value" id="total">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-percent-line"></i></div>
+    <div class="label">Lucro</div>
+    <div class="value" id="lucro">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-exchange-dollar-line"></i></div>
+    <div class="label">Transações</div>
+    <div class="value" id="transacoes">0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-bar-chart-line"></i></div>
+    <div class="label">Ticket médio</div>
+    <div class="value" id="ticket">R$ 0</div>
+  </div>
+
+</div>
+
+<!-- GRID PRINCIPAL -->
+<div class="main-grid">
+
+  <!-- ESQUERDA -->
+  <div>
+
+    <!-- GRAFICO -->
+    <div class="box">
+      <div class="box-title">Faturamento por dia</div>
+      <canvas id="grafico"></canvas>
+    </div>
+
+    <!-- ATIVIDADE -->
+    <div class="box" style="margin-top:15px;">
+      <div class="box-title">Atividade recente</div>
+      <div id="atividade"></div>
+    </div>
+
+  </div>
+
+  <!-- DIREITA -->
+  <div class="box">
+    <div class="box-title">Top operadores</div>
+    <div id="ranking"></div>
+  </div>
+
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+function filtrar(){
+
+  let dias = parseInt(document.getElementById("periodo").value);
+
+  let limite = new Date();
+  limite.setDate(limite.getDate() - dias);
+
+  return transacoes.filter(t =>
+    t.admin === usuario &&
+    t.status === "pago" &&
+    new Date(t.data) >= limite
+  );
+}
+
+function render(){
+
+  let dados = filtrar();
+
+  let total = 0;
+  let porDia = {};
+  let ranking = {};
+
+  dados.forEach(t=>{
+    let v = t.valor || 0;
+    total += v;
+
+    let dia = new Date(t.data).toLocaleDateString();
+    porDia[dia] = (porDia[dia] || 0) + v;
+
+    ranking[t.operador] = (ranking[t.operador] || 0) + v;
+  });
+
+  let lucro = total * 0.15;
+  let ticket = dados.length ? total / dados.length : 0;
+
+  document.getElementById("total").innerText = "R$ " + total.toFixed(2);
+  document.getElementById("lucro").innerText = "R$ " + lucro.toFixed(2);
+  document.getElementById("transacoes").innerText = dados.length;
+  document.getElementById("ticket").innerText = "R$ " + ticket.toFixed(2);
+
+  // RANKING
+  let r = document.getElementById("ranking");
+  r.innerHTML = "";
+
+  Object.entries(ranking)
+  .sort((a,b)=>b[1]-a[1])
+  .slice(0,5)
+  .forEach(([email,valor])=>{
+
+    let op = operadores.find(o=>o.email===email);
+
+    r.innerHTML +=       <div class="item">         <span>${op?.nome || "Admin"}</span>         <span>R$ ${valor.toFixed(2)}</span>       </div>    ;
+  });
+
+  // ATIVIDADE
+  let atv = document.getElementById("atividade");
+  atv.innerHTML = "";
+
+  dados.slice(-6).reverse().forEach(t=>{
+    atv.innerHTML +=       <div class="item">         <span>R$ ${t.valor}</span>         <span class="small">${new Date(t.data).toLocaleDateString()}</span>       </div>    ;
+  });
+
+  // GRAFICO
+  if(window.grafico) grafico.destroy();
+
+  window.grafico = new Chart(document.getElementById("grafico"), {
+    type:"line",
+    data:{
+      labels:Object.keys(porDia),
+      datasets:[{
+        data:Object.values(porDia),
+        borderColor:"#fff",
+        backgroundColor:"rgba(255,255,255,0.05)",
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:"#666"}},
+        y:{ticks:{color:"#666"}}
+      }
+    }
+  });
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>

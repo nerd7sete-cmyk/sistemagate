@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Financeiro</title>
+
+<script src="/auth.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+/* 🔥 TRAVA TOTAL (igual dashboard 1) */
+html, body{
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+  color:#fff;
+}
+
+/* CONTAINER PRINCIPAL */
+.container{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+  gap:15px;
+}
+
+/* ÁREA DE CONTEÚDO */
+.content{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  flex:1;
+  overflow:hidden;
+}
+
+/* CARDS */
+.card{
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;
+  padding:20px;
+  position:relative;
+  transition:0.18s ease;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(255,255,255,0.03);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:3px;
+  height:100%;
+  background:#fff;
+  opacity:0.06;
+}
+
+/* HEADER */
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.card-title{
+  font-size:11px;
+  color:#666;
+}
+
+.icon{
+  background:#0f0f0f;
+  border:1px solid #1a1a1a;
+  padding:6px;
+  border-radius:8px;
+  color:#aaa;
+}
+
+.card-value{
+  font-size:24px;
+  font-weight:700;
+  margin-top:8px;
+}
+
+.card-sub{
+  font-size:11px;
+  color:#777;
+  margin-top:4px;
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #111;
+  font-size:12px;
+  color:#aaa;
+}
+
+/* GRID DE CARDS (fica mais profissional) */
+.cards{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:12px;
+}
+
+/* LISTAS */
+.lists{
+  flex:1;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:12px;
+  overflow:hidden;
+}
+
+/* LIST CARD */
+.list-card{
+  background:#050505;
+  border:1px solid #111;
+  border-radius:16px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* HEADER LIST */
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:13px;
+  color:#aaa;
+}
+
+.badge{
+  background:#0a0a0a;
+  border:1px solid #1a1a1a;
+  padding:3px 8px;
+  border-radius:6px;
+  font-size:10px;
+}
+
+/* ÁREA SCROLL INTERNO */
+.list-content{
+  overflow:auto;
+  flex:1;
+}
+
+/* ITEM */
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid #111;
+  margin-top:8px;
+}
+
+.item:hover{
+  background:#0f0f0f;
+}
+
+.left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  background:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+
+.nome{
+  font-size:13px;
+}
+
+.id{
+  font-size:10px;
+  color:#666;
+}
+
+.valor{
+  font-size:13px;
+  font-weight:600;
+  color:#22c55e;
+}
+</style>
+</head>
+
+<body data-tipo="root">
+
+<div class="container">
+
+  <div class="content">
+
+    <!-- CARDS -->
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">OPERADORES</div>
+          <div class="icon"><i class="ri-team-line"></i></div>
+        </div>
+        <div class="card-value" id="saldoOperadores"></div>
+        <div class="card-sub">saldo acima de R$110</div>
+        <div class="total">
+          <span>Total</span>
+          <span id="totalOperadores"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">GERENTES</div>
+          <div class="icon"><i class="ri-user-star-line"></i></div>
+        </div>
+        <div class="card-value" id="saldoGerentes"></div>
+        <div class="card-sub">saldo acima de R$110</div>
+        <div class="total">
+          <span>Total</span>
+          <span id="totalGerentes"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">ADMINS</div>
+          <div class="icon"><i class="ri-shield-user-line"></i></div>
+        </div>
+        <div class="card-value" id="saldoAdmins"></div>
+        <div class="card-sub">saldo acima de R$110</div>
+        <div class="total">
+          <span>Total</span>
+          <span id="totalAdmins"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LISTAS -->
+    <div class="lists">
+
+      <div class="list-card">
+        <div class="section-title">
+          <span>Operadores</span>
+          <span class="badge" id="countOperadores"></span>
+        </div>
+        <div class="list-content" id="listaOperadores"></div>
+      </div>
+
+      <div class="list-card">
+        <div class="section-title">
+          <span>Gerentes</span>
+          <span class="badge" id="countGerentes"></span>
+        </div>
+        <div class="list-content" id="listaGerentes"></div>
+      </div>
+
+      <div class="list-card">
+        <div class="section-title">
+          <span>Admins</span>
+          <span class="badge" id="countAdmins"></span>
+        </div>
+        <div class="list-content" id="listaAdmins"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+let op = operadores.filter(x => (x.saldo||0) >= 110);
+let ge = gerentes.filter(x => (x.saldo||0) >= 110);
+let ad = admins.filter(x => (x.saldo||0) >= 110);
+
+function soma(arr){
+  return arr.reduce((a,b)=>a+(b.saldo||0),0);
+}
+
+saldoOperadores.innerText = "R$ "+soma(op).toFixed(2);
+totalOperadores.innerText = "R$ "+soma(op).toFixed(2);
+
+saldoGerentes.innerText = "R$ "+soma(ge).toFixed(2);
+totalGerentes.innerText = "R$ "+soma(ge).toFixed(2);
+
+saldoAdmins.innerText = "R$ "+soma(ad).toFixed(2);
+totalAdmins.innerText = "R$ "+soma(ad).toFixed(2);
+
+countOperadores.innerText = op.length;
+countGerentes.innerText = ge.length;
+countAdmins.innerText = ad.length;
+
+function render(el, dados){
+  el.innerHTML = "";
+  dados.forEach(u=>{
+    el.innerHTML += `
+      <div class="item">
+        <div class="left">
+          <div class="avatar">${u.nome[0]}</div>
+          <div>
+            <div class="nome">${u.nome}</div>
+            <div class="id">${u.email}</div>
+          </div>
+        </div>
+        <div class="valor">R$ ${(u.saldo||0).toFixed(2)}</div>
+      </div>
+    `;
+  });
+}
+
+render(listaOperadores, op);
+render(listaGerentes, ge);
+render(listaAdmins, ad);
+</script>
+
+</body>
+</html>

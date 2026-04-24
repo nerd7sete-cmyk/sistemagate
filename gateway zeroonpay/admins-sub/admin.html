@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Painel Admin</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+body{
+  display:flex;
+  height:100vh;
+  background:#000;
+  color:white;
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;
+  min-width:250px;
+  background:#000;
+  border-right:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:20px;
+}
+
+/* LOGO */
+.logo{
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:20px;
+}
+
+/* USER */
+.user{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+.user strong{font-size:14px;}
+.user small{font-size:11px;color:#777;}
+
+/* MENU */
+.menu{
+  flex:1;
+  overflow:auto;
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  color:#aaa;
+  transition:0.2s;
+}
+
+.menu-item:hover{
+  background:#0a0a0a;
+  color:#fff;
+}
+
+.active{
+  background:#0a0a0a;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* LOGOUT */
+.logout{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:#0a0a0a;
+  display:flex;
+  gap:10px;
+  cursor:pointer;
+}
+
+.logout:hover{
+  background:#111;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* TOPBAR */
+.topbar{
+  height:60px;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-weight:600;
+}
+
+/* FRAME */
+.frame-container{
+  flex:1;
+  overflow:hidden;
+}
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
+}
+
+/* MOBILE */
+.menu-btn{
+  display:none;
+  font-size:22px;
+  margin-right:10px;
+  cursor:pointer;
+}
+
+.overlay{
+  display:none;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+
+  body{
+    overflow:auto;
+  }
+
+  .sidebar{
+    position:fixed;
+    left:-260px;
+    top:0;
+    height:100%;
+    z-index:1001;
+    transition:0.3s;
+  }
+
+  .sidebar.active{
+    left:0;
+  }
+
+  .overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    z-index:1000;
+  }
+
+  .overlay.active{
+    display:block;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+  <div>
+
+    <div class="logo" id="logoNome">Gateway</div>
+
+    <div class="user" id="userBox">
+      <strong>Carregando...</strong>
+      <small>Admin</small>
+    </div>
+
+    <div class="menu">
+
+      <div class="menu-item active" onclick="abrir('admin-dashboard.html', this)">
+        <i class="ri-home-5-line"></i> Dashboard
+      </div>
+
+      <div class="menu-item" onclick="abrir('admin-gerentes.html', this)">
+        <i class="ri-user-star-line"></i> Gerentes
+      </div>
+
+      <div class="menu-item" onclick="abrir('operadores-admin.html', this)">
+        <i class="ri-team-line"></i> Operadores
+      </div>
+
+      <div class="menu-item" onclick="abrir('transacoes-admin.html', this)">
+        <i class="ri-exchange-dollar-line"></i> Transações
+      </div>
+
+      <div class="menu-item" onclick="abrir('saques-admin.html', this)">
+        <i class="ri-wallet-3-line"></i> Saques
+      </div>
+
+      <div class="menu-item" onclick="abrir('relatorio-admin.html', this)">
+        <i class="ri-bar-chart-line"></i> Relatórios
+      </div>
+
+      <div class="menu-item" onclick="abrir('config-admin.html', this)">
+        <i class="ri-settings-3-line"></i> Configurações
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="logout" onclick="logout()">
+    <i class="ri-logout-box-r-line"></i> Sair
+  </div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="topbar">
+    <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
+    <span id="topNome">Painel Admin</span>
+  </div>
+
+  <div class="frame-container">
+    <iframe id="frame" src="admin-dashboard.html"></iframe>
+  </div>
+
+</div>
+
+<script>
+
+// 🔒 PROTEÇÃO
+let tipo = localStorage.getItem("tipo");
+
+if(tipo !== "admin"){
+  window.location.href = "login.html";
+}
+
+// USER
+let usuario = localStorage.getItem("usuario") || "Admin";
+
+document.getElementById("userBox").innerHTML = `
+  <strong>${usuario}</strong>
+  <small>Admin</small>
+`;
+
+// 🔥 NOME DA GATEWAY
+let gateways = JSON.parse(localStorage.getItem("gateways")) || {};
+
+if(gateways[usuario]){
+  let nome = gateways[usuario].nome;
+
+  document.getElementById("logoNome").innerText = nome;
+  document.getElementById("topNome").innerText = nome + " • Painel";
+  document.title = nome + " - Admin";
+}
+
+// NAVEGAÇÃO
+function abrir(pagina, el){
+
+  document.getElementById("frame").src = pagina;
+
+  document.querySelectorAll(".menu-item")
+    .forEach(i => i.classList.remove("active"));
+
+  el.classList.add("active");
+
+  fecharMenu();
+}
+
+// MOBILE
+function abrirMenu(){
+  document.getElementById("sidebar").classList.add("active");
+  document.getElementById("overlay").classList.add("active");
+}
+
+function fecharMenu(){
+  document.getElementById("sidebar").classList.remove("active");
+  document.getElementById("overlay").classList.remove("active");
+}
+
+// LOGOUT
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>
