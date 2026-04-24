@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.status{
+  font-size:12px;
+  padding:6px 12px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  color:#aaa;
+}
+
+/* CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:18px;
+  transition:0.2s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+}
+
+/* ICON */
+.icon{
+  font-size:18px;
+  margin-bottom:8px;
+  color:#888;
+}
+
+/* TEXT */
+.label{
+  font-size:12px;
+  color:#666;
+}
+
+.value{
+  font-size:22px;
+  margin-top:6px;
+  font-weight:600;
+}
+
+/* GRID 2 */
+.grid-2{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:15px;
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:18px;
+}
+
+/* LISTA */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #111;
+  font-size:13px;
+}
+
+.item:last-child{
+  border:none;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="top">
+  <div class="title">Dashboard</div>
+  <div class="status">Sistema ativo</div>
+</div>
+
+<!-- CARDS -->
+<div class="grid">
+
+  <div class="card">
+    <div class="icon"><i class="ri-money-dollar-circle-line"></i></div>
+    <div class="label">Volume total</div>
+    <div class="value" id="total">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-percent-line"></i></div>
+    <div class="label">Seu lucro</div>
+    <div class="value" id="lucro">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-shopping-bag-line"></i></div>
+    <div class="label">Transações</div>
+    <div class="value" id="transacoes">0</div>
+  </div>
+
+  <!-- 🔥 NOVO CARD GERENTES -->
+  <div class="card">
+    <div class="icon"><i class="ri-user-star-line"></i></div>
+    <div class="label">Gerentes</div>
+    <div class="value" id="gerentes">0</div>
+  </div>
+
+  <div class="card">
+    <div class="icon"><i class="ri-team-line"></i></div>
+    <div class="label">Operadores</div>
+    <div class="value" id="operadores">0</div>
+  </div>
+
+</div>
+
+<!-- GRID -->
+<div class="grid-2">
+
+  <!-- GRÁFICO -->
+  <div class="box">
+    <div class="label" style="margin-bottom:10px;">Volume por dia</div>
+    <canvas id="grafico"></canvas>
+  </div>
+
+  <!-- ATIVIDADE -->
+  <div class="box">
+    <div class="label" style="margin-bottom:10px;">Atividade recente</div>
+    <div id="atividade"></div>
+  </div>
+
+</div>
+
+<script>
+
+// DADOS
+let usuario = localStorage.getItem("usuario");
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+// FILTRA DO ADMIN
+let minhas = transacoes.filter(t => t.admin === usuario);
+
+// 🔥 FILTRA GERENTES DO ADMIN
+let meusGerentes = gerentes.filter(g => g.admin === usuario);
+
+// CALCULO
+let total = 0;
+let porDia = {};
+
+minhas.forEach(t=>{
+  let valor = t.valor || 0;
+  total += valor;
+
+  let dia = new Date(t.data || Date.now()).getDate();
+  porDia[dia] = (porDia[dia] || 0) + valor;
+});
+
+let lucro = total * 0.15;
+
+// SET
+document.getElementById("total").innerText = "R$ " + total.toFixed(2);
+document.getElementById("lucro").innerText = "R$ " + lucro.toFixed(2);
+document.getElementById("transacoes").innerText = minhas.length;
+document.getElementById("operadores").innerText = operadores.length;
+document.getElementById("gerentes").innerText = meusGerentes.length;
+
+// ATIVIDADE
+let atividade = document.getElementById("atividade");
+
+if(minhas.length === 0){
+  atividade.innerHTML = `<div class="item">Sem atividade</div>`;
+}else{
+  minhas.slice(-6).reverse().forEach(t=>{
+    atividade.innerHTML += `
+      <div class="item">
+        <span>R$ ${t.valor}</span>
+        <span>${new Date(t.data).toLocaleDateString()}</span>
+      </div>
+    `;
+  });
+}
+
+// GRÁFICO
+new Chart(document.getElementById("grafico"), {
+  type: 'line',
+  data: {
+    labels: Object.keys(porDia),
+    datasets: [{
+      data: Object.values(porDia),
+      borderColor: "#ffffff",
+      backgroundColor: "rgba(255,255,255,0.05)",
+      fill: true,
+      tension: 0.4,
+      pointRadius: 0
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:"#666"}},
+      y:{ticks:{color:"#666"}}
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>

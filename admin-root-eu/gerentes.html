@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+
+html, body{
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+h2{font-weight:600;}
+
+.btn-add{
+  background:#fff;
+  color:#000;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  padding:18px;
+  border-bottom:1px solid #111;
+}
+
+.item:hover{background:#0a0a0a;}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* INFO */
+.nome{font-weight:600;}
+
+.info small{
+  color:#777;
+  font-size:12px;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#0f0f0f;
+}
+
+.status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+}
+
+.ativo{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.inativo{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-action{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.btn-action:hover{
+  background:#111;
+}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  max-width:420px;
+}
+
+.input{
+  width:100%;
+  margin-top:10px;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* BOTÕES */
+.actions-modal{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.save{
+  background:#fff;
+  color:#000;
+  font-weight:600;
+}
+
+.cancel{
+  border:1px solid #1a1a1a;
+  color:#aaa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Gerentes</h2>
+  <div class="btn-add" onclick="abrirModal()">+ Criar Gerente</div>
+</div>
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+
+    <h3>Novo Gerente</h3>
+
+    <input id="nome" class="input" placeholder="Nome">
+    <input id="email" class="input" placeholder="Email">
+    <input id="senha" class="input" type="password" placeholder="Senha">
+    <input id="whatsapp" class="input" placeholder="WhatsApp">
+
+    <div class="actions-modal">
+      <div class="btn cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="btn save" onclick="criar()">Criar</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+// 🔥 REFERÊNCIAS CORRETAS
+const nomeInput = document.getElementById("nome");
+const emailInput = document.getElementById("email");
+const senhaInput = document.getElementById("senha");
+const whatsappInput = document.getElementById("whatsapp");
+
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+// SALVAR
+function salvar(){
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+}
+
+// RENDER
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML="";
+
+  if(gerentes.length === 0){
+    lista.innerHTML = `<div style="padding:20px;color:#666;">Nenhum gerente cadastrado</div>`;
+    return;
+  }
+
+  gerentes.forEach((g,i)=>{
+
+    lista.innerHTML += `
+    <div class="item">
+
+      <div class="row">
+
+        <div class="info">
+          <div class="nome">${g.nome}</div>
+          <small>${g.email} • ${g.whatsapp || "-"}</small>
+
+          <div class="badges">
+            <div class="badge">Gerente</div>
+            <div class="status ${g.ativo?'ativo':'inativo'}">
+              ${g.ativo?'Ativo':'Inativo'}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+
+          <div class="btn-action" onclick="toggle(${i})">
+            <i class="ri-toggle-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="remover(${i})">
+            <i class="ri-delete-bin-line"></i>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    `;
+  });
+}
+
+// CRIAR
+function criar(){
+
+  let nome = nomeInput.value.trim();
+  let email = emailInput.value.trim();
+  let senha = senhaInput.value.trim();
+  let whatsapp = whatsappInput.value.trim();
+
+  if(!nome || !email || !senha){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  gerentes.unshift({
+    nome,
+    email,
+    senha,
+    whatsapp,
+    ativo:true
+  });
+
+  salvar();
+  render();
+  fecharModal();
+
+  nomeInput.value="";
+  emailInput.value="";
+  senhaInput.value="";
+  whatsappInput.value="";
+}
+
+// TOGGLE
+function toggle(i){
+  gerentes[i].ativo = !gerentes[i].ativo;
+  salvar();
+  render();
+}
+
+// REMOVER
+function remover(i){
+  if(confirm("Excluir gerente?")){
+    gerentes.splice(i,1);
+    salvar();
+    render();
+  }
+}
+
+// MODAL
+function abrirModal(){
+  modal.style.display="flex";
+}
+
+function fecharModal(){
+  modal.style.display="none";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

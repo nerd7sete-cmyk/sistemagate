@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:20px;
+  font-weight:600;
+}
+
+.btn{
+  background:#fff;
+  color:#000;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* FILTRO */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+  margin-bottom:15px;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ITEM */
+.item{
+  padding:18px;
+  border-bottom:1px solid #111;
+}
+
+.item:hover{
+  background:#0a0a0a;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* INFO */
+.nome{
+  font-weight:600;
+}
+
+.info small{
+  color:#777;
+  font-size:12px;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#111;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+}
+
+.ativo{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.inativo{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-action{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.btn-action:hover{
+  background:#111;
+}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  max-width:420px;
+}
+
+.actions-modal{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.save{
+  flex:1;
+  background:#fff;
+  color:#000;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.cancel{
+  flex:1;
+  border:1px solid #1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="title">Gerentes</div>
+  <div class="btn" onclick="abrirModal()">+ Criar Gerente</div>
+</div>
+
+<input id="busca" class="input" placeholder="Buscar gerente..." onkeyup="render()">
+
+<div class="card" id="lista"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+
+    <h3>Novo Gerente</h3>
+
+    <input id="nome" class="input" placeholder="Nome">
+    <input id="email" class="input" placeholder="Email">
+    <input id="senha" class="input" placeholder="Senha">
+    <input id="taxa" class="input" placeholder="Taxa (%)" value="25">
+
+    <div class="actions-modal">
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Criar</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let usuario = localStorage.getItem("usuario");
+
+// SALVAR
+function salvar(){
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+}
+
+// RENDER
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let busca = document.getElementById("busca").value.toLowerCase();
+
+  let dados = gerentes.filter(g => g.admin === usuario);
+
+  if(busca){
+    dados = dados.filter(g => g.nome.toLowerCase().includes(busca));
+  }
+
+  if(dados.length === 0){
+    lista.innerHTML = `<div style="padding:20px;color:#666;">Nenhum gerente</div>`;
+    return;
+  }
+
+  dados.forEach((g,i)=>{
+
+    let totalOps = operadores.filter(o => o.gerente === g.email).length;
+
+    lista.innerHTML += `
+    <div class="item">
+
+      <div class="row">
+
+        <div class="info">
+          <div class="nome">${g.nome}</div>
+          <small>${g.email}</small>
+
+          <div class="badges">
+            <div class="badge">Taxa: ${g.taxa}%</div>
+            <div class="badge">${totalOps} operadores</div>
+            <div class="badge">Criado em: ${new Date(g.data).toLocaleDateString()}</div>
+
+            <div class="status ${g.ativo?'ativo':'inativo'}">
+              ${g.ativo?'Ativo':'Inativo'}
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+
+          <div class="btn-action" onclick="toggle(${i})">
+            <i class="ri-toggle-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="editarTaxa(${i})">
+            <i class="ri-percent-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="remover(${i})">
+            <i class="ri-delete-bin-line"></i>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    `;
+  });
+}
+
+// CRIAR
+function criar(){
+
+  let nome = document.getElementById("nome").value;
+  let email = document.getElementById("email").value;
+  let senha = document.getElementById("senha").value;
+  let taxa = parseFloat(document.getElementById("taxa").value) || 25;
+
+  if(!nome || !email || !senha){
+    alert("Preencha os campos");
+    return;
+  }
+
+  gerentes.unshift({
+    nome,
+    email,
+    senha,
+    taxa,
+    ativo:true,
+    admin: usuario,
+    data: new Date().toISOString()
+  });
+
+  salvar();
+  render();
+  fecharModal();
+}
+
+// TOGGLE
+function toggle(i){
+  gerentes[i].ativo = !gerentes[i].ativo;
+  salvar();
+  render();
+}
+
+// EDITAR TAXA
+function editarTaxa(i){
+  let nova = prompt("Nova taxa (%)", gerentes[i].taxa);
+  if(nova){
+    gerentes[i].taxa = parseFloat(nova);
+    salvar();
+    render();
+  }
+}
+
+// REMOVER
+function remover(i){
+  if(confirm("Excluir gerente?")){
+    gerentes.splice(i,1);
+    salvar();
+    render();
+  }
+}
+
+// MODAL
+function abrirModal(){
+  modal.style.display="flex";
+}
+
+function fecharModal(){
+  modal.style.display="none";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

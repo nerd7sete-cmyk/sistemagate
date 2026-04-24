@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  margin-bottom:20px;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ROW */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
+  padding:14px;
+  border-bottom:1px solid #111;
+  font-size:12px;
+}
+
+.header{
+  background:#0a0a0a;
+  color:#777;
+}
+
+/* STATUS */
+.status{
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:10px;
+}
+
+.pendente{
+  color:#aaa;
+  background:rgba(255,255,255,0.05);
+}
+
+.pago{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.recusado{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:6px;
+}
+
+.btn{
+  width:28px;
+  height:28px;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.btn:hover{background:#111;}
+
+.aprovar i{color:#22c55e;}
+.recusar i{color:#ef4444;}
+.delete i{color:#aaa;}
+
+.empty{
+  padding:30px;
+  text-align:center;
+  color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Saques do Sistema</h2>
+</div>
+
+<div class="card" id="tabela"></div>
+
+<script>
+
+let saques = JSON.parse(localStorage.getItem("saques")) || [];
+
+// SALVAR
+function salvar(){
+  localStorage.setItem("saques", JSON.stringify(saques));
+}
+
+// FORMATAR
+function formatarValor(v){
+  return "R$ " + v.toFixed(2).replace(".", ",");
+}
+
+// 🔥 PEGAR SALDO DO USUÁRIO
+function getSaldo(usuario){
+  return parseFloat(localStorage.getItem("saldo_"+usuario)) || 0;
+}
+
+// 🔥 ATUALIZAR SALDO
+function setSaldo(usuario, valor){
+  localStorage.setItem("saldo_"+usuario, valor);
+}
+
+// RENDER
+function render(){
+
+  let tabela = document.getElementById("tabela");
+
+  tabela.innerHTML = `
+    <div class="row header">
+      <div>Valor</div>
+      <div>Usuário</div>
+      <div>Gateway</div>
+      <div>Status</div>
+      <div>Data</div>
+      <div>Ações</div>
+    </div>
+  `;
+
+  if(saques.length === 0){
+    tabela.innerHTML += `<div class="empty">Nenhum saque</div>`;
+    return;
+  }
+
+  saques.slice().reverse().forEach((s, i)=>{
+
+    tabela.innerHTML += `
+      <div class="row">
+
+        <div>${formatarValor(s.valor)}</div>
+
+        <div>${s.usuario}</div>
+
+        <div>${s.gateway || "-"}</div>
+
+        <div>
+          <span class="status ${s.status}">
+            ${s.status}
+          </span>
+        </div>
+
+        <div>${s.data}</div>
+
+        <div class="actions">
+
+          ${s.status === "pendente" ? `
+            <div class="btn aprovar" onclick="aprovar(${i})">
+              <i class="ri-check-line"></i>
+            </div>
+
+            <div class="btn recusar" onclick="recusar(${i})">
+              <i class="ri-close-line"></i>
+            </div>
+          ` : ""}
+
+          <div class="btn delete" onclick="remover(${i})">
+            <i class="ri-delete-bin-line"></i>
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  });
+}
+
+// ✅ APROVAR
+function aprovar(i){
+
+  saques[i].status = "pago";
+
+  salvar();
+  render();
+}
+
+// ❌ RECUSAR (DEVOLVE SALDO)
+function recusar(i){
+
+  let saque = saques[i];
+
+  if(saque.status !== "pendente") return;
+
+  let saldoAtual = getSaldo(saque.usuario);
+
+  // 🔥 DEVOLVE O DINHEIRO
+  setSaldo(saque.usuario, saldoAtual + saque.valor);
+
+  saque.status = "recusado";
+
+  salvar();
+  render();
+}
+
+// 🗑 EXCLUIR (NÃO DEVOLVE SALDO)
+function remover(i){
+
+  if(confirm("Excluir saque? (não devolve saldo)")){
+    saques.splice(i,1);
+    salvar();
+    render();
+  }
+}
+
+render();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PDV - PrimePay</title>
+
+<!-- 🔐 PROTEÇÃO (CARREGA PRIMEIRO) -->
+<script src="/auth.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+.card{
+  max-width:480px;
+  margin:auto;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:25px;
+}
+
+h2{font-size:20px;margin-bottom:5px;}
+.sub{color:#777;font-size:13px;margin-bottom:20px;}
+
+.valor-box{text-align:center;margin-bottom:25px;}
+.valor-label{font-size:11px;color:#666;}
+
+.valor-input{
+  font-size:42px;
+  font-weight:600;
+  margin-top:10px;
+  background:transparent;
+  border:none;
+  outline:none;
+  text-align:center;
+  width:100%;
+  color:#fff;
+}
+
+input{
+  width:100%;
+  margin-top:12px;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+.alert{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:12px;
+  border-radius:10px;
+  margin-top:15px;
+  font-size:12px;
+  color:#aaa;
+}
+
+button{
+  width:100%;
+  margin-top:20px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:white;
+  color:black;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.status{
+  margin-top:10px;
+  text-align:center;
+  font-size:13px;
+  color:#aaa;
+}
+
+.qr-area{
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.4s;
+  margin-top:25px;
+  text-align:center;
+}
+
+.qr-area.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.qr-box{
+  background:white;
+  padding:10px;
+  border-radius:12px;
+  display:inline-block;
+}
+
+.pix-code{
+  margin-top:15px;
+  background:#0a0a0a;
+  padding:12px;
+  border-radius:10px;
+  font-size:12px;
+  word-break:break-all;
+}
+
+.copy{
+  margin-top:10px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:13px;
+}
+</style>
+</head>
+
+<!-- 🔐 DEFINE TIPO -->
+<body data-tipo="operador">
+
+<div class="card">
+
+  <h2>PDV Rápido</h2>
+  <div class="sub">Gerar cobrança via PIX</div>
+
+  <div class="valor-box">
+    <div class="valor-label">VALOR</div>
+    <input type="text" id="valorInput" class="valor-input" placeholder="R$ 0,00">
+  </div>
+
+  <input type="text" placeholder="Nome do cliente">
+  <input type="text" id="cpf" placeholder="CPF do cliente">
+
+  <div class="alert">
+    O pagamento será monitorado automaticamente.
+  </div>
+
+  <button onclick="gerarPix()">Gerar Cobrança</button>
+
+  <div id="status" class="status"></div>
+
+  <div class="qr-area" id="qrArea">
+    <div class="qr-box">
+      <canvas id="qr"></canvas>
+    </div>
+
+    <div class="pix-code" id="pixCode"></div>
+
+    <div class="copy" onclick="copiarPix()" id="copyBtn">
+      Copiar código PIX
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+let valor = 0;
+
+valorInput.addEventListener("input", function(){
+  let v = this.value.replace(/\D/g,"");
+  v = (v/100).toFixed(2)+"";
+  v = v.replace(".",",");
+  v = v.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  this.value = "R$ " + v;
+  valor = parseFloat(v.replace(",","."));
+});
+
+cpf.addEventListener("input", function(){
+  let v = this.value.replace(/\D/g, "");
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  this.value = v;
+});
+
+function gerarPix(){
+  if(valor < 1){
+    alert("Digite um valor válido");
+    return;
+  }
+
+  let codigoPix = "000201PRIMEPAY" + valor.toFixed(2);
+
+  pixCode.innerText = codigoPix;
+
+  QRCode.toCanvas(document.getElementById("qr"), codigoPix);
+
+  qrArea.classList.add("show");
+
+  status.innerText = "Cobrança gerada com sucesso";
+}
+
+function copiarPix(){
+  navigator.clipboard.writeText(pixCode.innerText);
+  copyBtn.innerText = "Copiado!";
+  setTimeout(()=> copyBtn.innerText="Copiar código PIX",1500);
+}
+
+</script>
+
+</body>
+</html>

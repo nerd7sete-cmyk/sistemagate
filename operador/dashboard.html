@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
+}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:auto;
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:25px;
+}
+
+.level{
+  color:#aaa;
+  font-size:13px;
+}
+
+/* ALERT */
+.alert{
+  background:#050505;
+  padding:18px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  margin-bottom:25px;
+}
+
+/* 💎 SALDO ULTRA PREMIUM */
+.saldo-box{
+  position:relative;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:25px;
+  border-radius:20px;
+  margin-bottom:25px;
+
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+
+  border:1px solid rgba(255,255,255,0.1);
+
+  /* 🔥 GLOW */
+  box-shadow:
+    0 0 30px rgba(255,255,255,0.04),
+    inset 0 0 20px rgba(255,255,255,0.02);
+}
+
+/* brilho topo */
+.saldo-box::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#fff,transparent);
+  opacity:0.4;
+}
+
+.saldo-left{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+/* ICON PREMIUM */
+.icon{
+  background:linear-gradient(145deg,#0a0a0a,#111);
+  border:1px solid rgba(255,255,255,0.15);
+  padding:14px;
+  border-radius:14px;
+  font-size:22px;
+  box-shadow:0 0 15px rgba(255,255,255,0.05);
+}
+
+/* TEXTO */
+.saldo-info small{
+  color:#666;
+  font-size:12px;
+}
+
+.saldo-info h1{
+  font-size:34px;
+  margin:6px 0;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+/* BADGE */
+.badge{
+  font-size:11px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(34,197,94,0.1);
+  color:#22c55e;
+  margin-top:5px;
+  display:inline-block;
+}
+
+/* BOTÃO SAQUE */
+.saque-btn{
+  background:white;
+  color:black;
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.saque-btn:hover{
+  transform:scale(1.05);
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:18px;
+  border-radius:14px;
+}
+
+.card h3{
+  color:#666;
+  font-size:12px;
+}
+
+.card h1{
+  margin-top:10px;
+  font-size:22px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:15px;
+}
+
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:18px;
+  border-radius:16px;
+}
+
+/* LISTA */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid #111;
+}
+
+.status{
+  font-size:11px;
+  padding:5px 10px;
+  border-radius:999px;
+}
+
+.pago{
+  background:rgba(34,197,94,0.1);
+  color:#22c55e;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top">
+  <div class="level">Nível 1</div>
+  <div style="color:#666;font-size:13px;">Meta: R$ 0 / R$ 10.000</div>
+</div>
+
+<div class="alert">
+  Sistema ativo e operando normalmente
+</div>
+
+<!-- 💎 SALDO PREMIUM -->
+<div class="saldo-box">
+
+  <div class="saldo-left">
+
+    <div class="icon">
+      <i class="ri-wallet-3-line"></i>
+    </div>
+
+    <div class="saldo-info">
+      <small>Saldo disponível</small>
+      <h1 id="saldo">R$ 0,00</h1>
+      <span class="badge">Disponível para saque</span>
+    </div>
+
+  </div>
+
+  <div class="saque-btn" onclick="alert('Ir para saque')">
+    Sacar
+  </div>
+
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+  <div class="card">
+    <h3>Sua taxa</h3>
+    <h1 id="taxa">0%</h1>
+  </div>
+
+  <div class="card">
+    <h3>Total de vendas</h3>
+    <h1 id="vendas">0</h1>
+  </div>
+
+  <div class="card">
+    <h3>Volume total</h3>
+    <h1 id="volume">R$ 0,00</h1>
+  </div>
+</div>
+
+<div class="grid">
+
+  <div class="box">
+    <h3>Volume de vendas</h3>
+    <canvas id="grafico"></canvas>
+  </div>
+
+  <div class="box">
+    <h3>Últimas vendas</h3>
+    <div id="lista"></div>
+  </div>
+
+</div>
+
+</div>
+
+<script>
+
+// DADOS
+let usuario = localStorage.getItem("usuario");
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let minhas = transacoes.filter(t => t.operador === usuario);
+
+let total = 0;
+let qtd = 0;
+let porDia = {};
+
+minhas.forEach(t=>{
+  let valor = t.valor || 0;
+  total += valor;
+  qtd++;
+
+  let dia = new Date(t.data || Date.now()).getDate();
+  porDia[dia] = (porDia[dia] || 0) + valor;
+});
+
+let operador = operadores.find(o => o.email === usuario);
+let taxa = operador?.taxa || 10;
+
+let saldo = total * (taxa/100);
+
+document.getElementById("saldo").innerText = "R$ " + saldo.toFixed(2);
+document.getElementById("taxa").innerText = taxa + "%";
+document.getElementById("vendas").innerText = qtd;
+document.getElementById("volume").innerText = "R$ " + total.toFixed(2);
+
+// LISTA
+let lista = document.getElementById("lista");
+
+minhas.slice(0,5).forEach(t=>{
+  lista.innerHTML += `
+    <div class="item">
+      <div>
+        <div>R$ ${t.valor}</div>
+        <small style="color:#666;">${new Date(t.data).toLocaleDateString()}</small>
+      </div>
+      <div class="status pago">Aprovado</div>
+    </div>
+  `;
+});
+
+// GRAFICO
+new Chart(document.getElementById("grafico"), {
+  type: 'line',
+  data: {
+    labels: Object.keys(porDia),
+    datasets: [{
+      data: Object.values(porDia),
+      borderColor: "#fff",
+      backgroundColor: "rgba(255,255,255,0.05)",
+      tension:0.4,
+      fill:true,
+      pointRadius:0
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:"#666"}},
+      y:{ticks:{color:"#666"}}
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>

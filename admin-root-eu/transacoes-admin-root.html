@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.stats{
+  display:flex;
+  gap:15px;
+}
+
+.stat{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:12px 16px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+/* FILTROS */
+.filters{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.input{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* ROW */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
+  padding:14px;
+  border-bottom:1px solid #111;
+  font-size:12px;
+}
+
+.header{
+  background:#0a0a0a;
+  color:#777;
+}
+
+/* HOVER */
+.row:not(.header):hover{
+  background:#0a0a0a;
+}
+
+/* TEXTOS */
+.small{
+  font-size:11px;
+  color:#777;
+}
+
+.lucro{
+  color:#22c55e;
+  font-weight:bold;
+}
+
+/* EMPTY */
+.empty{
+  padding:30px;
+  text-align:center;
+  color:#555;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .row{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    border:1px solid #111;
+    border-radius:12px;
+    margin-bottom:10px;
+  }
+  .header{display:none;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Transações do Sistema</h2>
+
+  <div class="stats">
+    <div class="stat" id="total">Total: R$ 0,00</div>
+    <div class="stat" id="lucroTotal">Lucro: R$ 0,00</div>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filters">
+  <input id="busca" class="input" placeholder="Buscar usuário..." onkeyup="render()">
+</div>
+
+<div class="card" id="tabela"></div>
+
+<script>
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+const TAXA = 15; // 🔥 SUA TAXA
+
+function formatarValor(v){
+  return "R$ " + v.toFixed(2).replace(".", ",");
+}
+
+function formatarData(d){
+  return new Date(d).toLocaleString();
+}
+
+function render(){
+
+  let tabela = document.getElementById("tabela");
+  let busca = document.getElementById("busca").value.toLowerCase();
+
+  let dados = transacoes.filter(t => t.status === "pago");
+
+  if(busca){
+    dados = dados.filter(t =>
+      (t.usuario || "").toLowerCase().includes(busca)
+    );
+  }
+
+  let total = 0;
+  let lucroTotal = 0;
+
+  tabela.innerHTML = `
+    <div class="row header">
+      <div>Valor</div>
+      <div>Lucro</div>
+      <div>Usuário</div>
+      <div>Hierarquia</div>
+      <div>Gateway</div>
+      <div>Data</div>
+    </div>
+  `;
+
+  if(dados.length === 0){
+    tabela.innerHTML += `<div class="empty">Nenhuma transação</div>`;
+    return;
+  }
+
+  dados.slice().reverse().forEach(t=>{
+
+    let valor = t.valor || 0;
+    let lucro = valor * (TAXA / 100);
+
+    total += valor;
+    lucroTotal += lucro;
+
+    tabela.innerHTML += `
+      <div class="row">
+
+        <div>
+          ${formatarValor(valor)}
+          <div class="small">ID: ${t.id || "-"}</div>
+        </div>
+
+        <div class="lucro">
+          ${formatarValor(lucro)}
+        </div>
+
+        <div>
+          ${t.usuario || "-"}
+        </div>
+
+        <div class="small">
+          OP: ${t.operador || "-"}<br>
+          GER: ${t.gerente || "-"}<br>
+          ADM: ${t.admin || "-"}
+        </div>
+
+        <div>${t.gateway || "-"}</div>
+
+        <div class="small">${formatarData(t.data)}</div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText =
+    "Total: " + formatarValor(total);
+
+  document.getElementById("lucroTotal").innerText =
+    "Lucro: " + formatarValor(lucroTotal);
+}
+
+render();
+
+</script>
+
+</body>
+</html>

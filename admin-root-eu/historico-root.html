@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Histórico Completo</title>
+
+<script src="/auth.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+/* FILTROS */
+.filtros{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+input, select{
+  padding:10px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid #1a1a1a;
+  color:white;
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:15px;
+}
+
+/* ITEM */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:14px 0;
+  border-bottom:1px solid #111;
+}
+
+.item:last-child{border:none;}
+
+.left{
+  display:flex;
+  flex-direction:column;
+}
+
+.nome{
+  font-size:14px;
+}
+
+.info{
+  font-size:11px;
+  color:#666;
+}
+
+.right{
+  text-align:right;
+}
+
+.valor{
+  font-size:15px;
+  font-weight:600;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  margin-top:4px;
+}
+
+.pago{color:#22c55e;}
+.pendente{color:#facc15;}
+
+/* BOTÕES */
+.btn{
+  margin-top:6px;
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  background:#111;
+  color:#fff;
+}
+</style>
+</head>
+
+<body data-tipo="root">
+
+<div class="top">
+  <div class="title">Histórico Completo</div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtros">
+  <input type="text" id="busca" placeholder="Buscar operador..." oninput="render()">
+
+  <select id="status" onchange="render()">
+    <option value="todas">Todas</option>
+    <option value="pago">Pagas</option>
+    <option value="pendente">Pendentes</option>
+  </select>
+</div>
+
+<br>
+
+<div class="box" id="lista"></div>
+
+<script>
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+// RENDER
+function render(){
+
+  let lista = document.getElementById("lista");
+  let busca = document.getElementById("busca").value.toLowerCase();
+  let statusFiltro = document.getElementById("status").value;
+
+  lista.innerHTML = "";
+
+  let dados = transacoes;
+
+  // FILTRO STATUS
+  if(statusFiltro !== "todas"){
+    dados = dados.filter(t => t.status === statusFiltro);
+  }
+
+  // FILTRO BUSCA
+  dados = dados.filter(t=>{
+    let op = operadores.find(o => o.email === t.operador);
+    return op?.nome?.toLowerCase().includes(busca);
+  });
+
+  if(dados.length === 0){
+    lista.innerHTML = `<div class="item">Nenhuma transação encontrada</div>`;
+    return;
+  }
+
+  dados.slice().reverse().forEach((t, index)=>{
+
+    let op = operadores.find(o => o.email === t.operador);
+
+    lista.innerHTML += `
+      <div class="item">
+
+        <div class="left">
+          <div class="nome">${op?.nome || "Operador"}</div>
+          <div class="info">
+            ${new Date(t.data).toLocaleString()}
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="valor">R$ ${t.valor.toFixed(2)}</div>
+
+          <div class="status ${t.status}">
+            ${t.status.toUpperCase()}
+          </div>
+
+          <button class="btn" onclick="toggle(${index})">
+            Alterar
+          </button>
+
+          <button class="btn" onclick="remover(${index})">
+            Excluir
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  });
+
+}
+
+// ALTERAR STATUS
+function toggle(i){
+
+  let lista = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+  lista[i].status = lista[i].status === "pago" ? "pendente" : "pago";
+
+  localStorage.setItem("transacoes", JSON.stringify(lista));
+
+  render();
+}
+
+// REMOVER
+function remover(i){
+
+  let lista = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+  lista.splice(i,1);
+
+  localStorage.setItem("transacoes", JSON.stringify(lista));
+
+  render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>

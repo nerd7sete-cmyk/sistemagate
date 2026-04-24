@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Extrato</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
+}
+
+body{
+  background:#000;
+  color:white;
+  padding:25px;
+}
+
+/* HEADER */
+.header h1{
+  font-size:22px;
+  font-weight:600;
+}
+
+.header p{
+  color:#666;
+  font-size:13px;
+  margin-bottom:25px;
+}
+
+/* FILTROS */
+.filtros{
+  display:flex;
+  gap:10px;
+  margin-bottom:25px;
+  flex-wrap:wrap;
+}
+
+.filtro{
+  padding:8px 14px;
+  border-radius:20px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  cursor:pointer;
+  transition:0.2s;
+  font-size:13px;
+  color:#aaa;
+}
+
+.filtro:hover{
+  background:#111;
+  color:#fff;
+}
+
+.filtro.active{
+  background:#111;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+/* TABELA */
+.table{
+  background:#050505;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.08);
+  overflow:hidden;
+}
+
+/* LINHAS */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  padding:16px;
+  border-bottom:1px solid #111;
+  align-items:center;
+  transition:0.2s;
+}
+
+.row.header{
+  font-weight:500;
+  color:#666;
+  font-size:12px;
+}
+
+.row:not(.header):hover{
+  background:#0a0a0a;
+}
+
+/* VALOR */
+.valor{
+  font-weight:600;
+}
+
+/* STATUS */
+.status{
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  display:inline-block;
+}
+
+/* STATUS MODERNO */
+.pago{
+  color:#22c55e;
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.2);
+}
+
+.pendente{
+  color:#aaa;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.falha{
+  color:#ef4444;
+  background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.2);
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:25px;
+  color:#555;
+}
+
+/* RESPONSIVO */
+@media(max-width:700px){
+
+  .row{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .row.header{
+    display:none;
+  }
+
+  .row{
+    border:1px solid #111;
+    border-radius:12px;
+    margin-bottom:10px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Extrato</h1>
+  <p>Histórico de transações</p>
+</div>
+
+<div class="filtros">
+  <div class="filtro active" onclick="filtrar('todos', this)">Todos</div>
+  <div class="filtro" onclick="filtrar('pago', this)">Aprovados</div>
+  <div class="filtro" onclick="filtrar('pendente', this)">Pendentes</div>
+  <div class="filtro" onclick="filtrar('falha', this)">Recusados</div>
+</div>
+
+<div class="table" id="tabela"></div>
+
+<script>
+
+const dados = [
+  {valor:300, cliente:"João", status:"pago", data:"22/04"},
+  {valor:150, cliente:"Maria", status:"pendente", data:"22/04"},
+  {valor:500, cliente:"Carlos", status:"falha", data:"21/04"},
+  {valor:200, cliente:"Ana", status:"pago", data:"21/04"}
+];
+
+const tabela = document.getElementById("tabela");
+
+function nomeStatus(s){
+  if(s === "pago") return "Aprovado";
+  if(s === "pendente") return "Em análise";
+  return "Recusado";
+}
+
+function render(lista){
+
+  tabela.innerHTML = `
+    <div class="row header">
+      <div>Valor</div>
+      <div>Cliente</div>
+      <div>Status</div>
+      <div>Data</div>
+    </div>
+  `;
+
+  if(lista.length === 0){
+    tabela.innerHTML += `<div class="empty">Nenhuma transação encontrada</div>`;
+    return;
+  }
+
+  lista.forEach(item => {
+    tabela.innerHTML += `
+      <div class="row">
+        <div class="valor">R$ ${item.valor.toFixed(2)}</div>
+        <div>${item.cliente}</div>
+        <div><span class="status ${item.status}">${nomeStatus(item.status)}</span></div>
+        <div>${item.data}</div>
+      </div>
+    `;
+  });
+}
+
+function filtrar(tipo, el){
+
+  document.querySelectorAll(".filtro")
+    .forEach(f => f.classList.remove("active"));
+
+  el.classList.add("active");
+
+  if(tipo === "todos"){
+    render(dados);
+  }else{
+    render(dados.filter(d => d.status === tipo));
+  }
+}
+
+render(dados);
+
+</script>
+
+</body>
+</html>

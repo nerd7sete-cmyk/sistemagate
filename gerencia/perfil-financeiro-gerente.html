@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:30px;
+  display:flex;
+  justify-content:center;
+}
+
+.container{
+  width:100%;
+  max-width:650px;
+}
+
+/* TOPO */
+.top{
+  margin-bottom:25px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header i{
+  font-size:20px;
+  opacity:0.8;
+}
+
+h2{
+  font-size:22px;
+  font-weight:600;
+}
+
+.subtitle{
+  font-size:12px;
+  color:#666;
+  margin-top:5px;
+}
+
+/* ALERTA UX */
+.tip{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:12px;
+  color:#aaa;
+  line-height:1.5;
+}
+
+/* CARD */
+.card{
+  margin-top:20px;
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:30px;
+}
+
+/* FORM */
+.form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.full{
+  grid-column:1/3;
+}
+
+.label{
+  font-size:11px;
+  color:#666;
+  margin-bottom:5px;
+}
+
+.input{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+.input:focus{
+  border-color:white;
+  box-shadow:0 0 10px rgba(255,255,255,0.15);
+}
+
+/* BOTÕES */
+.btn{
+  margin-top:20px;
+  background:white;
+  color:black;
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn-outline{
+  margin-top:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-size:13px;
+  color:#aaa;
+}
+
+/* INFO */
+.info{
+  margin-top:25px;
+  padding:20px;
+  border-radius:14px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+}
+
+.info strong{
+  display:block;
+  margin-bottom:10px;
+}
+
+.pix-row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  color:#aaa;
+}
+
+/* TAG PADRÃO */
+.tag{
+  display:inline-block;
+  margin-top:10px;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:15px 20px;
+  border-radius:12px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.toast.show{
+  opacity:1;
+}
+
+/* RESPONSIVO */
+@media(max-width:600px){
+  .form{
+    grid-template-columns:1fr;
+  }
+  .full{
+    grid-column:1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="top">
+    <div class="header">
+      <i class="ri-bank-card-line"></i>
+      <h2>Conta de Saque</h2>
+    </div>
+
+    <div class="subtitle">
+      Defina sua chave padrão para recebimento de saques
+    </div>
+
+    <!-- 🔥 EXPLICAÇÃO CLARA -->
+    <div class="tip">
+      Essa será sua <b>chave padrão</b>.  
+      Na hora do saque, você poderá usar essa chave automaticamente ou informar outra manualmente, se quiser.
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="form">
+
+      <div class="full">
+        <div class="label">Tipo de chave PIX</div>
+        <select id="tipo" class="input">
+          <option value="cpf">CPF</option>
+          <option value="email">Email</option>
+          <option value="telefone">Telefone</option>
+          <option value="aleatoria">Chave Aleatória</option>
+        </select>
+      </div>
+
+      <div class="full">
+        <div class="label">Chave PIX</div>
+        <input id="chave" class="input" placeholder="Digite sua chave">
+      </div>
+
+      <div>
+        <div class="label">Nome do titular</div>
+        <input id="nome" class="input" placeholder="Nome completo">
+      </div>
+
+      <div>
+        <div class="label">Banco (opcional)</div>
+        <input id="banco" class="input" placeholder="Ex: Nubank">
+      </div>
+
+    </div>
+
+    <div class="btn" onclick="salvar()">Salvar chave padrão</div>
+
+    <div class="btn-outline" onclick="limpar()">
+      Remover chave
+    </div>
+
+    <div class="info" id="info">
+      Nenhuma chave cadastrada
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+// TOAST
+function show(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"),2000);
+}
+
+// SALVAR
+function salvar(){
+
+  let tipo = tipoEl.value;
+  let chave = chaveEl.value;
+  let nome = nomeEl.value;
+  let banco = bancoEl.value;
+
+  if(!chave){
+    show("Digite a chave PIX");
+    return;
+  }
+
+  let dados = { tipo, chave, nome, banco };
+
+  localStorage.setItem("pix_"+usuario, JSON.stringify(dados));
+
+  show("Chave padrão salva");
+  render();
+}
+
+// LIMPAR
+function limpar(){
+  localStorage.removeItem("pix_"+usuario);
+  show("Chave removida");
+  render();
+}
+
+// ELEMENTOS
+const tipoEl = document.getElementById("tipo");
+const chaveEl = document.getElementById("chave");
+const nomeEl = document.getElementById("nome");
+const bancoEl = document.getElementById("banco");
+
+// RENDER
+function render(){
+
+  let dados = JSON.parse(localStorage.getItem("pix_"+usuario));
+
+  if(!dados){
+    document.getElementById("info").innerHTML = "Nenhuma chave cadastrada";
+    return;
+  }
+
+  tipoEl.value = dados.tipo;
+  chaveEl.value = dados.chave;
+  nomeEl.value = dados.nome || "";
+  bancoEl.value = dados.banco || "";
+
+  document.getElementById("info").innerHTML = `
+    <strong>Chave padrão cadastrada</strong>
+
+    <div class="tag">Usada automaticamente nos saques</div>
+
+    <div class="pix-row">
+      <span>Tipo</span>
+      <span>${dados.tipo.toUpperCase()}</span>
+    </div>
+
+    <div class="pix-row">
+      <span>Chave</span>
+      <span>${dados.chave}</span>
+    </div>
+
+    <div class="pix-row">
+      <span>Nome</span>
+      <span>${dados.nome || "-"}</span>
+    </div>
+
+    <div class="pix-row">
+      <span>Banco</span>
+      <span>${dados.banco || "-"}</span>
+    </div>
+  `;
+}
+
+render();
+
+</script>
+
+</body>
+</html>

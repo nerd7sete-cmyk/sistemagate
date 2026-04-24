@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:white;
+  padding:30px;
+  display:flex;
+  justify-content:center;
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:800px;
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:20px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#050505,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:25px;
+}
+
+/* TITULO */
+h2{
+  font-size:20px;
+  margin-bottom:15px;
+}
+
+/* SALDO */
+.saldo{
+  font-size:28px;
+  margin-top:5px;
+  font-weight:600;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* BOTÃO */
+.btn{
+  margin-top:15px;
+  background:white;
+  color:black;
+  padding:13px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* PIX PADRÃO */
+.pix-box{
+  margin-top:15px;
+  padding:15px;
+  border-radius:12px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+}
+
+.pix-box strong{
+  display:block;
+  margin-bottom:8px;
+}
+
+/* STATUS */
+.status{
+  margin-top:10px;
+  font-size:13px;
+}
+
+.success{color:#22c55e;}
+.error{color:#ef4444;}
+
+/* HISTÓRICO */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #111;
+  font-size:13px;
+}
+
+.pendente{color:#aaa;}
+.pago{color:#22c55e;}
+
+@media(max-width:900px){
+  .container{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ESQUERDA -->
+<div class="card">
+
+<h2>Solicitar saque</h2>
+
+<small>Saldo disponível</small>
+<div class="saldo" id="saldo">R$ 0,00</div>
+
+<input id="valor" class="input" placeholder="Valor (R$)">
+
+<!-- 🔥 CHAVE PADRÃO -->
+<div id="pixPadrao" class="pix-box" style="display:none"></div>
+
+<select id="tipo" class="input">
+  <option value="cpf">CPF</option>
+  <option value="email">Email</option>
+  <option value="telefone">Telefone</option>
+  <option value="aleatoria">Chave Aleatória</option>
+</select>
+
+<input id="chave" class="input" placeholder="Chave PIX">
+
+<div class="btn" onclick="sacar()">Solicitar saque</div>
+
+<div id="msg" class="status"></div>
+
+</div>
+
+<!-- DIREITA -->
+<div class="card">
+
+<h2>Histórico</h2>
+<div id="historico"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+// 🔥 DADOS
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let minhas = transacoes.filter(t => t.operador === usuario);
+
+// CALCULO
+let total = 0;
+minhas.forEach(t => total += t.valor || 0);
+
+let operador = operadores.find(o => o.email === usuario);
+let taxa = operador?.taxa || 10;
+
+let saldo = total * (taxa/100);
+
+// HISTÓRICO
+let historico = JSON.parse(localStorage.getItem("saques_operador_"+usuario)) || [];
+
+// 🔥 CORRETO: PUXA DO perfil-financeiro
+let pix = JSON.parse(localStorage.getItem("pix_"+usuario));
+
+// RENDER
+function render(){
+
+  document.getElementById("saldo").innerText = "R$ " + saldo.toFixed(2);
+
+  // PIX PADRÃO
+  if(pix){
+
+    document.getElementById("pixPadrao").style.display = "block";
+
+    document.getElementById("pixPadrao").innerHTML = `
+      <strong>Chave padrão</strong>
+      ${pix.tipo.toUpperCase()} • ${pix.chave}<br>
+      ${pix.nome || ""}
+
+      <div style="margin-top:10px;font-size:12px;color:#666;">
+        Essa chave será usada automaticamente se você não alterar abaixo
+      </div>
+    `;
+
+    // AUTO PREENCHER
+    document.getElementById("tipo").value = pix.tipo;
+    document.getElementById("chave").value = pix.chave;
+
+  }
+
+  // HISTÓRICO
+  let box = document.getElementById("historico");
+  box.innerHTML = "";
+
+  historico.forEach(s => {
+    box.innerHTML += `
+      <div class="item">
+        <span>R$ ${s.valor}</span>
+        <span class="${s.status}">${s.status}</span>
+      </div>
+    `;
+  });
+}
+
+// SACAR
+function sacar(){
+
+  let valor = parseFloat(document.getElementById("valor").value);
+  let tipo = document.getElementById("tipo").value;
+  let chave = document.getElementById("chave").value;
+
+  let msg = document.getElementById("msg");
+  msg.innerText = "";
+
+  if(!valor || valor < 10){
+    msg.innerText = "Valor mínimo R$ 10";
+    msg.className = "status error";
+    return;
+  }
+
+  if(valor > saldo){
+    msg.innerText = "Saldo insuficiente";
+    msg.className = "status error";
+    return;
+  }
+
+  if(!chave){
+    msg.innerText = "Informe uma chave PIX";
+    msg.className = "status error";
+    return;
+  }
+
+  saldo -= valor;
+
+  historico.unshift({
+    valor: valor.toFixed(2),
+    tipo,
+    chave,
+    status:"pendente",
+    data:new Date().toLocaleString()
+  });
+
+  localStorage.setItem("saques_operador_"+usuario, JSON.stringify(historico));
+
+  msg.innerText = "Saque solicitado com sucesso";
+  msg.className = "status success";
+
+  document.getElementById("valor").value = "";
+
+  render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
