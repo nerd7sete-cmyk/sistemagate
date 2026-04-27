@@ -32,19 +32,18 @@ body{
 /* SIDEBAR */
 .sidebar{
   width:250px;
-  height:100dvh; /* 🔥 corrige iPhone */
+  height:100dvh;
   background:#000;
   border-right:1px solid rgba(255,255,255,0.05);
   padding:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-
-  overflow-y:auto; /* 🔥 permite rolar */
+  overflow-y:auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* SCROLL BONITO */
+/* SCROLL */
 .sidebar::-webkit-scrollbar{
   width:4px;
 }
@@ -53,7 +52,6 @@ body{
   border-radius:10px;
 }
 
-/* CONTEÚDO */
 .sidebar-content{
   flex:1;
 }
@@ -110,7 +108,7 @@ body{
   border:1px solid rgba(255,255,255,0.08);
 }
 
-/* LOGOUT FIXO */
+/* LOGOUT */
 .logout{
   margin-top:20px;
   padding:12px;
@@ -148,7 +146,6 @@ iframe{
   border:none;
 }
 
-/* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
@@ -246,6 +243,12 @@ iframe{
       <i class="ri-qr-code-line"></i> Cobrança Instantânea
     </div>
 
+    <!-- 🔥 BOTÃO TEMA -->
+    <div class="menu-item" onclick="trocarTema()">
+      <i class="ri-contrast-2-line"></i>
+      <span id="temaTexto">Modo Claro</span>
+    </div>
+
   </div>
 
   <div class="logout" onclick="logout()">
@@ -267,6 +270,7 @@ iframe{
 
 <script>
 
+// 🔐 PROTEÇÃO
 let logado = localStorage.getItem("logado");
 let tipo = localStorage.getItem("tipo");
 
@@ -278,6 +282,7 @@ if(tipo !== "root"){
   window.location.href = "login.html";
 }
 
+// USER
 let usuario = localStorage.getItem("usuario") || "ROOT";
 
 document.getElementById("userBox").innerHTML = `
@@ -285,6 +290,7 @@ document.getElementById("userBox").innerHTML = `
   <small>ROOT</small>
 `;
 
+// NAVEGAÇÃO
 function abrir(pagina, el){
   document.getElementById("frame").src = pagina;
 
@@ -296,6 +302,7 @@ function abrir(pagina, el){
   fecharMenu();
 }
 
+// MOBILE
 function abrirMenu(){
   document.getElementById("sidebar").classList.add("active");
   document.getElementById("overlay").style.display = "block";
@@ -306,6 +313,7 @@ function fecharMenu(){
   document.getElementById("overlay").style.display = "none";
 }
 
+// LOGOUT
 function logout(){
   document.body.style.opacity = "0";
 
@@ -314,6 +322,20 @@ function logout(){
     window.location.href = "login.html";
   },300);
 }
+
+// 🔥 TEMA
+function trocarTema(){
+  let atual = localStorage.getItem("tema") || "dark";
+  let novo = atual === "dark" ? "light" : "dark";
+
+  localStorage.setItem("tema", novo);
+  location.reload();
+}
+
+// TEXTO DINÂMICO
+let temaAtual = localStorage.getItem("tema") || "dark";
+document.getElementById("temaTexto").innerText =
+  temaAtual === "dark" ? "Modo Claro" : "Modo Escuro";
 
 </script>
 

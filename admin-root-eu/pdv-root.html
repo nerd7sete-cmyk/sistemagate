@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerar Cobrança - PrimePay</title>
+
+<!-- 🔥 TEMA GLOBAL -->
+<script src="theme-global.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+body{
+  background:linear-gradient(180deg,#000,#050505);
+  color:#fff;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.icon{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#0a0a0a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 12px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.header h2{
+  font-size:20px;
+  font-weight:600;
+}
+
+.header span{
+  font-size:12px;
+  color:#999;
+}
+
+/* CARD */
+.card{
+  max-width:420px;
+  margin:0 auto;
+  background:#0b0b0b;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 0 30px rgba(255,255,255,0.02);
+}
+
+/* LABEL */
+.label{
+  font-size:11px;
+  color:#aaa;
+  margin-bottom:6px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#050505;
+  color:#fff;
+  margin-bottom:14px;
+  font-size:13px;
+  transition:0.2s;
+}
+
+.input:focus{
+  border:1px solid #444;
+  outline:none;
+}
+
+/* VALOR */
+.valor{
+  font-size:22px;
+  font-weight:600;
+  text-align:center;
+}
+
+/* BOTÃO */
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#fff;
+  color:#000;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:10px;
+  transition:0.2s;
+}
+
+.btn:hover{
+  opacity:0.85;
+  transform:translateY(-1px);
+}
+
+/* QR RESULT */
+.qr-box{
+  margin-top:20px;
+  text-align:center;
+  display:none;
+}
+
+.qr{
+  width:180px;
+  height:180px;
+  margin:0 auto 10px;
+  background:#fff;
+  border-radius:10px;
+}
+
+/* COPY */
+.copy{
+  font-size:11px;
+  color:#aaa;
+  margin-top:5px;
+  word-break:break-all;
+}
+
+/* LOADING */
+.loading{
+  display:none;
+  text-align:center;
+  font-size:12px;
+  color:#aaa;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="icon">
+    <i class="ri-qr-code-line" style="font-size:22px;"></i>
+  </div>
+
+  <h2>Gerar Cobrança</h2>
+  <span>Crie um QR Code PIX para pagamento instantâneo</span>
+</div>
+
+<div class="card">
+
+  <div class="label">Nome (opcional)</div>
+  <input class="input" id="nome" placeholder="Ex: Cliente VIP">
+
+  <div class="label">CPF (opcional)</div>
+  <input class="input" id="cpf" placeholder="000.000.000-00">
+
+  <div class="label">Valor da cobrança</div>
+  <input class="input valor" id="valor" placeholder="R$ 0,00">
+
+  <button class="btn" onclick="gerar()">Gerar QR Code</button>
+
+  <div class="loading" id="loading">Gerando cobrança...</div>
+
+  <div class="qr-box" id="qrBox">
+    <div class="qr"></div>
+    <div class="copy" id="pixCode">PIX_CODE_EXEMPLO_123</div>
+  </div>
+
+</div>
+
+<script>
+
+/* FORMATA VALOR */
+valor.addEventListener("input", (e)=>{
+  let v = e.target.value.replace(/\D/g,"");
+  v = (v/100).toFixed(2) + "";
+  v = v.replace(".",",");
+  v = v.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  e.target.value = "R$ " + v;
+});
+
+/* GERAR */
+function gerar(){
+
+  let v = valor.value.replace(/[^\d]/g,"");
+
+  if(!v){
+    alert("Digite um valor");
+    return;
+  }
+
+  loading.style.display = "block";
+
+  setTimeout(()=>{
+
+    loading.style.display = "none";
+    qrBox.style.display = "block";
+
+    pixCode.innerText = "00020126580014BR.GOV.BCB.PIX...EXEMPLO";
+
+  },1000);
+
+}
+</script>
+
+</body>
+</html>

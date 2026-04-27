@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Nominal Específica - PrimePay</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+body{
+  background:#000;
+  color:#fff;
+}
+
+/* BACKGROUND PREMIUM */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(255,255,255,0.04), transparent 40%);
+  z-index:-1;
+}
+
+/* CONTAINER */
+.wrapper{
+  max-width:1100px;
+  margin:60px auto;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.header h1{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+.header p{
+  font-size:14px;
+  color:#888;
+  margin-top:8px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+}
+
+/* CARD */
+.card{
+  background:rgba(10,10,10,0.85);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;
+  padding:25px;
+  backdrop-filter:blur(12px);
+  transition:0.3s;
+}
+
+.card:hover{
+  border:1px solid rgba(255,255,255,0.15);
+  transform:translateY(-4px);
+}
+
+/* BADGE */
+.badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:12px;
+  background:#111;
+  border:1px solid #222;
+  font-size:11px;
+  margin-bottom:20px;
+}
+
+/* ITENS */
+.item{
+  display:flex;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.item i{
+  font-size:18px;
+  color:#fff;
+}
+
+.item strong{
+  font-size:14px;
+}
+
+.item span{
+  font-size:12px;
+  color:#777;
+}
+
+/* PREÇO */
+.price{
+  text-align:center;
+  margin:20px 0;
+}
+
+.price h2{
+  font-size:38px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.price span{
+  font-size:12px;
+  color:#888;
+}
+
+/* BOTÃO TOP */
+.btn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fff,#dcdcdc);
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 30px rgba(255,255,255,0.1);
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 20px 40px rgba(255,255,255,0.15);
+}
+
+/* SEGURANÇA */
+.secure{
+  text-align:center;
+  font-size:11px;
+  color:#666;
+  margin-top:12px;
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .wrapper{
+    margin:30px auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <div class="header">
+    <h1>Nominal Específica</h1>
+    <p>Infraestrutura dedicada com identidade própria para sua operação</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- ESQUERDA -->
+    <div class="card">
+
+      <div class="badge">INCLUSO</div>
+
+      <div class="item">
+        <i class="ri-check-line"></i>
+        <div>
+          <strong>Razão Social Personalizada</strong><br>
+          <span>Nome exibido no comprovante</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="ri-check-line"></i>
+        <div>
+          <strong>CNPJ Exclusivo</strong><br>
+          <span>Conta dedicada na adquirente</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="ri-check-line"></i>
+        <div>
+          <strong>Infraestrutura Isolada</strong><br>
+          <span>Operação independente e segura</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="ri-check-line"></i>
+        <div>
+          <strong>Ativação Rápida</strong><br>
+          <span>Pronto em até 5 dias úteis</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <i class="ri-check-line"></i>
+        <div>
+          <strong>Garantia Anti-Queda</strong><br>
+          <span>Substituição automática</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DIREITA -->
+    <div class="card">
+
+      <div class="badge">PAGAMENTO ÚNICO</div>
+
+      <div class="price">
+        <h2>R$ 3.000</h2>
+        <span>Sem mensalidade • Setup incluso</span>
+      </div>
+
+      <button class="btn" onclick="gerarPix()">
+        <i class="ri-qr-code-line"></i> Gerar Cobrança PIX
+      </button>
+
+      <div class="secure">
+        🔒 Ambiente seguro • Dados protegidos
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function gerarPix(){
+  alert("Aqui entra seu backend PIX 🔥");
+}
+</script>
+
+</body>
+</html>

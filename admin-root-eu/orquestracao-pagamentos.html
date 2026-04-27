@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Orquestração de Pagamentos</title>
+
+<script src="/auth.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:#fff;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:20px;
+}
+
+.header h2{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+.header span{
+  font-size:12px;
+  color:#888;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:18px;
+  transition:0.2s;
+}
+
+.card:hover{
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* TITULO */
+.title{
+  font-size:13px;
+  margin-bottom:3px;
+  font-weight:500;
+}
+
+.desc{
+  font-size:11px;
+  color:#777;
+  margin-bottom:15px;
+  line-height:1.4;
+}
+
+/* ITEM */
+.gateway{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#0a0a0a;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.gateway:hover{
+  border-color:#333;
+}
+
+/* ATIVO */
+.gateway.active{
+  border:1px solid #fff;
+  background:#080808;
+}
+
+/* TEXTO */
+.left{
+  display:flex;
+  flex-direction:column;
+}
+
+.nome{
+  font-size:13px;
+}
+
+.status{
+  font-size:10px;
+  color:#777;
+}
+
+/* RADIO */
+.radio{
+  width:16px;
+  height:16px;
+  border:1px solid #555;
+  border-radius:50%;
+  position:relative;
+}
+
+.radio.active::after{
+  content:"";
+  width:8px;
+  height:8px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:3px;
+  left:3px;
+}
+
+/* BOTÃO */
+.btn{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(180deg,#fff,#dcdcdc);
+  color:#000;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn:hover{
+  opacity:0.85;
+  transform:translateY(-1px);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#0a0a0a;
+  border:1px solid #222;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:12px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Orquestração de Pagamentos</h2>
+  <span>Gerencie o roteamento e processamento de depósitos e saques da plataforma</span>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="grid">
+
+<!-- PIX -->
+<div class="card">
+  <div class="title">Processamento de Depósitos (PIX)</div>
+  <div class="desc">Selecione o adquirente responsável pelo recebimento de pagamentos via PIX</div>
+
+  <div id="pixList"></div>
+
+  <button class="btn" onclick="salvarPix()">Aplicar configuração</button>
+</div>
+
+<!-- SAQUE -->
+<div class="card">
+  <div class="title">Processamento de Saques</div>
+  <div class="desc">Selecione o adquirente responsável pelo envio de pagamentos aos usuários</div>
+
+  <div id="saqueList"></div>
+
+  <button class="btn" onclick="salvarSaque()">Aplicar configuração</button>
+</div>
+
+</div>
+
+<script>
+
+/* TOAST */
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+/* GATEWAYS */
+let gateways = [
+  {nome:"Gateway Principal", status:"Online"},
+  {nome:"Gateway Reserva", status:"Backup automático"},
+  {nome:"Gateway Manual", status:"Processamento manual"}
+];
+
+let pixSelected = 0;
+let saqueSelected = 0;
+
+/* RENDER */
+function render(){
+
+  pixList.innerHTML = "";
+  saqueList.innerHTML = "";
+
+  gateways.forEach((g,i)=>{
+
+    pixList.innerHTML += `
+      <div class="gateway ${pixSelected===i?'active':''}" onclick="selectPix(${i})">
+        <div class="left">
+          <div class="nome">${g.nome}</div>
+          <div class="status">${g.status}</div>
+        </div>
+        <div class="radio ${pixSelected===i?'active':''}"></div>
+      </div>
+    `;
+
+    saqueList.innerHTML += `
+      <div class="gateway ${saqueSelected===i?'active':''}" onclick="selectSaque(${i})">
+        <div class="left">
+          <div class="nome">${g.nome}</div>
+          <div class="status">${g.status}</div>
+        </div>
+        <div class="radio ${saqueSelected===i?'active':''}"></div>
+      </div>
+    `;
+
+  });
+
+}
+
+/* SELECT */
+function selectPix(i){
+  pixSelected = i;
+  render();
+}
+
+function selectSaque(i){
+  saqueSelected = i;
+  render();
+}
+
+/* SAVE */
+function salvarPix(){
+  localStorage.setItem("gateway_pix", pixSelected);
+  toast("Roteamento de PIX atualizado");
+}
+
+function salvarSaque(){
+  localStorage.setItem("gateway_saque", saqueSelected);
+  toast("Roteamento de saques atualizado");
+}
+
+/* LOAD */
+function load(){
+  pixSelected = Number(localStorage.getItem("gateway_pix")) || 0;
+  saqueSelected = Number(localStorage.getItem("gateway_saque")) || 0;
+  render();
+}
+
+load();
+
+</script>
+
+</body>
+</html>

@@ -33,7 +33,7 @@ body{
   justify-content:space-between;
 }
 
-/* LOGO PREMIUM */
+/* LOGO */
 .logo{
   font-size:18px;
   font-weight:700;
@@ -51,26 +51,27 @@ body{
   100%{background-position:-200%;}
 }
 
-/* USER BOX */
+/* USER (AGORA CLICÁVEL) */
 .user{
   background:#050505;
   border:1px solid rgba(255,255,255,0.06);
   padding:14px;
   border-radius:14px;
   margin-bottom:25px;
+  cursor:pointer;
+  transition:0.25s;
 }
 
-.user strong{
-  display:block;
-  font-size:14px;
+.user:hover{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.15);
+  transform:scale(1.02);
 }
 
-.user small{
-  color:#666;
-  font-size:11px;
-}
+.user strong{display:block;font-size:14px;}
+.user small{color:#666;font-size:11px;}
 
-/* MENU ITEM */
+/* MENU NORMAL */
 .menu-item{
   display:flex;
   align-items:center;
@@ -83,17 +84,76 @@ body{
   transition:0.2s;
 }
 
-/* HOVER */
 .menu-item:hover{
   background:#0a0a0a;
   color:#fff;
 }
 
-/* ACTIVE */
 .active{
   background:#0a0a0a;
   color:#fff;
   border:1px solid rgba(255,255,255,0.08);
+}
+
+/* DIVIDER */
+.divider{
+  margin:20px 0 10px;
+  height:1px;
+  background:linear-gradient(to right,transparent,#333,transparent);
+}
+
+/* PREMIUM */
+.menu-premium{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
+  color:#fff;
+  background:linear-gradient(135deg,#0a0a0a,#000);
+  border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 0 20px rgba(255,255,255,0.05);
+  transition:0.3s;
+}
+
+.menu-premium::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:14px;
+  padding:1px;
+  background:linear-gradient(120deg,#fff,transparent,#fff);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:0.2;
+}
+
+.menu-premium::after{
+  content:"PREMIUM";
+  position:absolute;
+  top:-8px;
+  right:10px;
+  font-size:9px;
+  padding:3px 7px;
+  border-radius:6px;
+  background:#fff;
+  color:#000;
+  font-weight:700;
+}
+
+.menu-premium:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 30px rgba(255,255,255,0.12);
+}
+
+.menu-premium.active{
+  border:1px solid #fff;
+  box-shadow:0 0 40px rgba(255,255,255,0.2);
 }
 
 /* LOGOUT */
@@ -101,11 +161,9 @@ body{
   padding:12px;
   border-radius:12px;
   background:#0a0a0a;
-  color:#fff;
   cursor:pointer;
   display:flex;
   gap:10px;
-  transition:0.2s;
 }
 
 .logout:hover{
@@ -115,12 +173,10 @@ body{
 /* MAIN */
 .main{
   flex:1;
-  background:#000;
   display:flex;
   flex-direction:column;
 }
 
-/* MOBILE TOP */
 .topbar{
   display:none;
   padding:15px;
@@ -132,14 +188,12 @@ body{
   cursor:pointer;
 }
 
-/* IFRAME */
 iframe{
   flex:1;
   width:100%;
   border:none;
 }
 
-/* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
@@ -185,9 +239,8 @@ iframe{
 
     <div class="logo">PrimePay</div>
 
-    <div class="user" id="userBox">
-      <strong>Carregando...</strong>
-      <small>Operador</small>
+    <!-- 🔥 PERFIL CLICÁVEL -->
+    <div class="user" id="userBox" onclick="abrir('perfil-operador.html', this)">
     </div>
 
     <div class="menu-item active" onclick="abrir('dashboard.html', this)">
@@ -206,9 +259,14 @@ iframe{
       <i class="ri-wallet-3-line"></i> Saques
     </div>
 
-    <!-- 🔥 NOVO BOTÃO PROFISSIONAL -->
     <div class="menu-item" onclick="abrir('perfil-financeiro-operador.html', this)">
       <i class="ri-bank-line"></i> Conta de Saque
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="menu-premium" onclick="abrir('nominal-especifica.html', this)">
+      <i class="ri-vip-crown-fill"></i> Nominal Específica
     </div>
 
   </div>
@@ -219,7 +277,7 @@ iframe{
 
 </div>
 
-<div class="main" id="main">
+<div class="main">
 
   <div class="topbar">
     <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
@@ -232,7 +290,6 @@ iframe{
 
 <script>
 
-// USER
 let usuario = localStorage.getItem("usuario") || "Operador";
 
 document.getElementById("userBox").innerHTML = `
@@ -240,11 +297,10 @@ document.getElementById("userBox").innerHTML = `
   <small>Operador</small>
 `;
 
-// NAVEGAÇÃO
 function abrir(pagina, el){
   document.getElementById("frame").src = pagina;
 
-  document.querySelectorAll(".menu-item")
+  document.querySelectorAll(".menu-item, .menu-premium, .user")
     .forEach(i => i.classList.remove("active"));
 
   el.classList.add("active");
@@ -252,21 +308,18 @@ function abrir(pagina, el){
   fecharMenu();
 }
 
-// MOBILE
 function abrirMenu(){
-  document.getElementById("sidebar").classList.add("active");
-  document.getElementById("overlay").style.display = "block";
+  sidebar.classList.add("active");
+  overlay.style.display = "block";
 }
 
 function fecharMenu(){
-  document.getElementById("sidebar").classList.remove("active");
-  document.getElementById("overlay").style.display = "none";
+  sidebar.classList.remove("active");
+  overlay.style.display = "none";
 }
 
-// LOGOUT
 function logout(){
   document.body.style.opacity = "0";
-
   setTimeout(()=>{
     localStorage.clear();
     window.location.href = "login.html";

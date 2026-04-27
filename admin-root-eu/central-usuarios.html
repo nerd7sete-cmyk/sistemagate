@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Central de Usuários</title>
+
+<script src="/auth.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:#fff;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:25px;
+}
+
+.header h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header span{
+  font-size:12px;
+  color:#888;
+}
+
+/* BUSCA */
+.search{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#0a0a0a;
+  color:#fff;
+  margin-bottom:20px;
+  transition:0.2s;
+}
+
+.search:focus{
+  border-color:#333;
+  outline:none;
+}
+
+/* LISTA */
+.user{
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #111;
+  background:#0a0a0a;
+  margin-bottom:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.user:hover{
+  border-color:#333;
+  transform:translateY(-1px);
+}
+
+/* NOME */
+.user strong{
+  font-size:14px;
+}
+
+.user small{
+  color:#777;
+  font-size:11px;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  padding:20px;
+  overflow:auto;
+  z-index:999;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:15px;
+}
+
+/* TITULO */
+.title{
+  font-size:12px;
+  color:#aaa;
+  margin-bottom:12px;
+  letter-spacing:0.5px;
+}
+
+/* INFO */
+.info{
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* ITEM */
+.item{
+  padding:10px;
+  border-bottom:1px solid #111;
+  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.item:last-child{
+  border-bottom:none;
+}
+
+/* VALOR */
+.valor{
+  font-weight:600;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  color:#777;
+}
+
+/* BOTAO */
+.btn{
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fff,#dcdcdc);
+  color:#000;
+  cursor:pointer;
+  width:100%;
+  font-weight:600;
+  margin-top:10px;
+}
+
+/* EMPTY */
+.empty{
+  color:#555;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Central de Usuários</h2>
+  <span>Gerencie, analise e visualize dados completos dos usuários</span>
+</div>
+
+<input class="search" id="busca" placeholder="Buscar por nome ou email..." onkeyup="buscar()">
+
+<div id="listaUsuarios"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+
+  <div class="card">
+    <div class="title">INFORMAÇÕES DA CONTA</div>
+    <div class="info" id="info"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">HISTÓRICO DE TRANSAÇÕES</div>
+    <div id="transacoes"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">HISTÓRICO DE SAQUES</div>
+    <div id="saques"></div>
+  </div>
+
+  <button class="btn" onclick="fechar()">Fechar</button>
+
+</div>
+
+<script>
+
+/* PROTEÇÃO */
+if(localStorage.getItem("tipo") !== "root"){
+  window.location.href = "login.html";
+}
+
+/* DADOS */
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let saques = JSON.parse(localStorage.getItem("saques")) || [];
+
+/* RENDER */
+function render(lista){
+
+  listaUsuarios.innerHTML = "";
+
+  if(lista.length === 0){
+    listaUsuarios.innerHTML = `<div class="empty">Nenhum usuário encontrado</div>`;
+    return;
+  }
+
+  lista.forEach(u=>{
+    listaUsuarios.innerHTML += `
+      <div class="user" onclick="abrir('${u.email}')">
+        <strong>${u.nome}</strong><br>
+        <small>${u.email}</small>
+      </div>
+    `;
+  });
+
+}
+
+/* BUSCA */
+function buscar(){
+
+  let termo = busca.value.toLowerCase();
+
+  let filtrado = usuarios.filter(u =>
+    u.nome.toLowerCase().includes(termo) ||
+    u.email.toLowerCase().includes(termo)
+  );
+
+  render(filtrado);
+
+}
+
+/* ABRIR PERFIL */
+function abrir(email){
+
+  let u = usuarios.find(x=>x.email===email);
+
+  let t = transacoes.filter(x=>x.email===email);
+  let s = saques.filter(x=>x.email===email);
+
+  info.innerHTML = `
+    <b>Nome:</b> ${u.nome}<br>
+    <b>Email:</b> ${u.email}<br>
+    <b>Tipo:</b> ${u.tipo}<br>
+    <b>Saldo:</b> R$ ${(u.saldo||0).toFixed(2)}
+  `;
+
+  transacoes.innerHTML = t.length ? "" : `<div class="empty">Nenhuma transação</div>`;
+  saques.innerHTML = s.length ? "" : `<div class="empty">Nenhum saque</div>`;
+
+  t.forEach(x=>{
+    transacoes.innerHTML += `
+      <div class="item">
+        <div>
+          <div class="valor">R$ ${Number(x.valor).toFixed(2)}</div>
+          <div class="status">${x.status}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  s.forEach(x=>{
+    saques.innerHTML += `
+      <div class="item">
+        <div>
+          <div class="valor">R$ ${Number(x.valor).toFixed(2)}</div>
+          <div class="status">${x.status}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  modal.style.display = "block";
+
+}
+
+/* FECHAR */
+function fechar(){
+  modal.style.display = "none";
+}
+
+render(usuarios);
+
+</script>
+
+</body>
+</html>

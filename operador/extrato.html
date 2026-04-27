@@ -6,6 +6,8 @@
 
 <title>Extrato</title>
 
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
 <style>
 *{
   margin:0;
@@ -46,7 +48,7 @@ body{
   background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.06);
   cursor:pointer;
-  transition:0.2s;
+  transition:0.25s;
   font-size:13px;
   color:#aaa;
 }
@@ -57,15 +59,15 @@ body{
 }
 
 .filtro.active{
-  background:#111;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.12);
+  background:#fff;
+  color:#000;
+  border:none;
 }
 
 /* TABELA */
 .table{
   background:#050505;
-  border-radius:16px;
+  border-radius:18px;
   border:1px solid rgba(255,255,255,0.08);
   overflow:hidden;
 }
@@ -74,59 +76,77 @@ body{
 .row{
   display:grid;
   grid-template-columns:1fr 1fr 1fr 1fr;
-  padding:16px;
+  padding:18px;
   border-bottom:1px solid #111;
   align-items:center;
-  transition:0.2s;
+  transition:0.25s;
 }
 
 .row.header{
   font-weight:500;
-  color:#666;
+  color:#555;
   font-size:12px;
 }
 
 .row:not(.header):hover{
   background:#0a0a0a;
+  transform:scale(1.01);
 }
 
 /* VALOR */
 .valor{
   font-weight:600;
+  font-size:15px;
 }
 
-/* STATUS */
+/* STATUS BASE */
 .status{
-  padding:5px 12px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
   border-radius:999px;
   font-size:11px;
   font-weight:600;
-  display:inline-block;
+  position:relative;
+  overflow:hidden;
 }
 
-/* STATUS MODERNO */
-.pago{
-  color:#22c55e;
-  background:rgba(34,197,94,0.08);
-  border:1px solid rgba(34,197,94,0.2);
+/* APROVADO */
+.aprovado{
+  color:#00ff88;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.25);
+  box-shadow:0 0 10px rgba(0,255,136,0.1);
 }
 
+/* PENDENTE */
 .pendente{
   color:#aaa;
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.1);
+  animation:pulse 1.5s infinite;
 }
 
+/* FALHA */
 .falha{
-  color:#ef4444;
-  background:rgba(239,68,68,0.08);
-  border:1px solid rgba(239,68,68,0.2);
+  color:#ff4d4d;
+  background:rgba(255,77,77,0.08);
+  border:1px solid rgba(255,77,77,0.2);
+  box-shadow:0 0 10px rgba(255,77,77,0.1);
+}
+
+/* ANIMAÇÃO PENDENTE */
+@keyframes pulse{
+  0%{opacity:1;}
+  50%{opacity:0.6;}
+  100%{opacity:1;}
 }
 
 /* EMPTY */
 .empty{
   text-align:center;
-  padding:25px;
+  padding:30px;
   color:#555;
 }
 
@@ -144,7 +164,7 @@ body{
 
   .row{
     border:1px solid #111;
-    border-radius:12px;
+    border-radius:14px;
     margin-bottom:10px;
   }
 
@@ -161,7 +181,7 @@ body{
 
 <div class="filtros">
   <div class="filtro active" onclick="filtrar('todos', this)">Todos</div>
-  <div class="filtro" onclick="filtrar('pago', this)">Aprovados</div>
+  <div class="filtro" onclick="filtrar('aprovado', this)">Aprovados</div>
   <div class="filtro" onclick="filtrar('pendente', this)">Pendentes</div>
   <div class="filtro" onclick="filtrar('falha', this)">Recusados</div>
 </div>
@@ -170,21 +190,43 @@ body{
 
 <script>
 
-const dados = [
-  {valor:300, cliente:"João", status:"pago", data:"22/04"},
-  {valor:150, cliente:"Maria", status:"pendente", data:"22/04"},
-  {valor:500, cliente:"Carlos", status:"falha", data:"21/04"},
-  {valor:200, cliente:"Ana", status:"pago", data:"21/04"}
-];
+/* FORMATAR */
+function formatar(valor){
+  return valor.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+/* STATUS TEXTO + ÍCONE */
+function renderStatus(s){
+
+  if(s === "aprovado"){
+    return `<span class="status aprovado">
+      <i class="ri-checkbox-circle-fill"></i> Aprovado
+    </span>`;
+  }
+
+  if(s === "pendente"){
+    return `<span class="status pendente">
+      <i class="ri-time-line"></i> Pendente
+    </span>`;
+  }
+
+  return `<span class="status falha">
+    <i class="ri-close-circle-fill"></i> Recusado
+  </span>`;
+}
+
+/* DADOS */
+let usuario = localStorage.getItem("usuario");
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+let dados = transacoes.filter(t => t.operador === usuario);
+
+/* ORDEM MAIS RECENTE */
+dados.sort((a,b)=> new Date(b.data) - new Date(a.data));
 
 const tabela = document.getElementById("tabela");
 
-function nomeStatus(s){
-  if(s === "pago") return "Aprovado";
-  if(s === "pendente") return "Em análise";
-  return "Recusado";
-}
-
+/* RENDER */
 function render(lista){
 
   tabela.innerHTML = `
@@ -202,17 +244,21 @@ function render(lista){
   }
 
   lista.forEach(item => {
+
+    let dataFormatada = new Date(item.data).toLocaleDateString();
+
     tabela.innerHTML += `
       <div class="row">
-        <div class="valor">R$ ${item.valor.toFixed(2)}</div>
-        <div>${item.cliente}</div>
-        <div><span class="status ${item.status}">${nomeStatus(item.status)}</span></div>
-        <div>${item.data}</div>
+        <div class="valor">${formatar(Number(item.valor))}</div>
+        <div>${item.cliente || "Cliente"}</div>
+        <div>${renderStatus(item.status)}</div>
+        <div>${dataFormatada}</div>
       </div>
     `;
   });
 }
 
+/* FILTRO */
 function filtrar(tipo, el){
 
   document.querySelectorAll(".filtro")
@@ -227,6 +273,7 @@ function filtrar(tipo, el){
   }
 }
 
+/* LOAD */
 render(dados);
 
 </script>

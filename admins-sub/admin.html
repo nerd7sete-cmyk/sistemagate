@@ -3,64 +3,60 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Painel Admin</title>
+<title>PrimePay - Admin</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Segoe UI";
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html, body{
+  height:100%;
+  -webkit-text-size-adjust:100%;
 }
 
 body{
   display:flex;
-  height:100vh;
   background:#000;
-  color:white;
-  overflow:hidden;
+  color:#fff;
+  font-family:"Segoe UI", Arial;
 }
 
 /* SIDEBAR */
 .sidebar{
   width:250px;
-  min-width:250px;
+  height:100dvh;
   background:#000;
   border-right:1px solid rgba(255,255,255,0.05);
+  padding:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  padding:20px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* LOGO */
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
+
 .logo{
   font-size:16px;
   font-weight:600;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
-/* USER */
 .user{
   background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.06);
   padding:12px;
   border-radius:12px;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
 .user strong{font-size:14px;}
-.user small{font-size:11px;color:#777;}
-
-/* MENU */
-.menu{
-  flex:1;
-  overflow:auto;
-}
+.user small{color:#777;font-size:11px;}
 
 .menu-item{
   display:flex;
@@ -68,7 +64,7 @@ body{
   gap:10px;
   padding:12px;
   border-radius:12px;
-  margin-bottom:8px;
+  margin-bottom:10px;
   cursor:pointer;
   color:#aaa;
   transition:0.2s;
@@ -85,19 +81,14 @@ body{
   border:1px solid rgba(255,255,255,0.08);
 }
 
-/* LOGOUT */
 .logout{
-  margin-top:10px;
+  margin-top:20px;
   padding:12px;
   border-radius:12px;
   background:#0a0a0a;
+  cursor:pointer;
   display:flex;
   gap:10px;
-  cursor:pointer;
-}
-
-.logout:hover{
-  background:#111;
 }
 
 /* MAIN */
@@ -105,78 +96,52 @@ body{
   flex:1;
   display:flex;
   flex-direction:column;
+  height:100dvh;
 }
 
-/* TOPBAR */
 .topbar{
-  height:60px;
   display:flex;
   align-items:center;
-  padding:0 20px;
+  gap:10px;
+  padding:15px;
   border-bottom:1px solid rgba(255,255,255,0.05);
-  font-weight:600;
-}
-
-/* FRAME */
-.frame-container{
-  flex:1;
-  overflow:hidden;
 }
 
 iframe{
+  flex:1;
   width:100%;
-  height:100%;
   border:none;
   background:#000;
 }
 
-/* MOBILE */
-.menu-btn{
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
   display:none;
+  z-index:1000;
+}
+
+.menu-btn{
   font-size:22px;
-  margin-right:10px;
   cursor:pointer;
 }
 
-.overlay{
-  display:none;
-}
-
-/* RESPONSIVO */
 @media(max-width:900px){
-
-  body{
-    overflow:auto;
-  }
 
   .sidebar{
     position:fixed;
-    left:-260px;
+    left:0;
     top:0;
-    height:100%;
+    transform:translateX(-100%);
     z-index:1001;
     transition:0.3s;
   }
 
   .sidebar.active{
-    left:0;
+    transform:translateX(0);
   }
 
-  .overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.8);
-    z-index:1000;
-  }
-
-  .overlay.active{
-    display:block;
-  }
-
-  .menu-btn{
-    display:block;
-  }
 }
 </style>
 </head>
@@ -185,48 +150,45 @@ iframe{
 
 <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
 
   <div>
 
-    <div class="logo" id="logoNome">Gateway</div>
+    <div class="logo">PrimePay Admin</div>
 
-    <div class="user" id="userBox">
-      <strong>Carregando...</strong>
-      <small>Admin</small>
+    <div class="user" id="userBox"></div>
+
+    <!-- MENU CORRIGIDO -->
+    <div class="menu-item active" onclick="abrir('admin-dashboard.html', this)">
+      <i class="ri-home-5-line"></i> Dashboard
     </div>
 
-    <div class="menu">
+    <div class="menu-item" onclick="abrir('admins-sub/admin-gerentes.html', this)">
+      <i class="ri-user-star-line"></i> Gerentes
+    </div>
 
-      <div class="menu-item active" onclick="abrir('admin-dashboard.html', this)">
-        <i class="ri-home-5-line"></i> Dashboard
-      </div>
+    <div class="menu-item" onclick="abrir('admins-sub/operadores-admin.html', this)">
+      <i class="ri-team-line"></i> Operadores
+    </div>
 
-      <div class="menu-item" onclick="abrir('admin-gerentes.html', this)">
-        <i class="ri-user-star-line"></i> Gerentes
-      </div>
+    <div class="menu-item" onclick="abrir('admins-sub/transacoes-admin.html', this)">
+      <i class="ri-exchange-dollar-line"></i> Transações
+    </div>
 
-      <div class="menu-item" onclick="abrir('operadores-admin.html', this)">
-        <i class="ri-team-line"></i> Operadores
-      </div>
+    <div class="menu-item" onclick="abrir('admins-sub/saques-admin.html', this)">
+      <i class="ri-wallet-3-line"></i> Saques
+    </div>
 
-      <div class="menu-item" onclick="abrir('transacoes-admin.html', this)">
-        <i class="ri-exchange-dollar-line"></i> Transações
-      </div>
+    <div class="menu-item" onclick="abrir('admins-sub/relatorio-admin.html', this)">
+      <i class="ri-bar-chart-line"></i> Relatórios
+    </div>
 
-      <div class="menu-item" onclick="abrir('saques-admin.html', this)">
-        <i class="ri-wallet-3-line"></i> Saques
-      </div>
+    <div class="menu-item" onclick="abrir('admins-sub/pdv-admin.html', this)">
+      <i class="ri-qr-code-line"></i> Cobrança PIX
+    </div>
 
-      <div class="menu-item" onclick="abrir('relatorio-admin.html', this)">
-        <i class="ri-bar-chart-line"></i> Relatórios
-      </div>
-
-      <div class="menu-item" onclick="abrir('config-admin.html', this)">
-        <i class="ri-settings-3-line"></i> Configurações
-      </div>
-
+    <div class="menu-item" onclick="abrir('admins-sub/config-admin.html', this)">
+      <i class="ri-settings-3-line"></i> Configurações
     </div>
 
   </div>
@@ -237,52 +199,40 @@ iframe{
 
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
   <div class="topbar">
     <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
-    <span id="topNome">Painel Admin</span>
+    <strong>Painel Admin</strong>
   </div>
 
-  <div class="frame-container">
-    <iframe id="frame" src="admin-dashboard.html"></iframe>
-  </div>
+  <iframe id="frame"></iframe>
 
 </div>
 
 <script>
 
-// 🔒 PROTEÇÃO
+/* 🔐 PROTEÇÃO */
 let tipo = localStorage.getItem("tipo");
-
 if(tipo !== "admin"){
   window.location.href = "login.html";
 }
 
-// USER
+/* USER */
 let usuario = localStorage.getItem("usuario") || "Admin";
 
 document.getElementById("userBox").innerHTML = `
   <strong>${usuario}</strong>
-  <small>Admin</small>
+  <small>ADMIN</small>
 `;
 
-// 🔥 NOME DA GATEWAY
-let gateways = JSON.parse(localStorage.getItem("gateways")) || {};
-
-if(gateways[usuario]){
-  let nome = gateways[usuario].nome;
-
-  document.getElementById("logoNome").innerText = nome;
-  document.getElementById("topNome").innerText = nome + " • Painel";
-  document.title = nome + " - Admin";
-}
-
-// NAVEGAÇÃO
+/* 🔥 FUNÇÃO PERFEITA */
 function abrir(pagina, el){
 
-  document.getElementById("frame").src = pagina;
+  const frame = document.getElementById("frame");
+
+  // evita bug de reload
+  frame.src = pagina;
 
   document.querySelectorAll(".menu-item")
     .forEach(i => i.classList.remove("active"));
@@ -292,18 +242,23 @@ function abrir(pagina, el){
   fecharMenu();
 }
 
-// MOBILE
+/* LOAD INICIAL */
+window.onload = () => {
+  abrir('admins-sub/admin-dashboard.html', document.querySelector('.menu-item'));
+};
+
+/* MOBILE */
 function abrirMenu(){
   document.getElementById("sidebar").classList.add("active");
-  document.getElementById("overlay").classList.add("active");
+  document.getElementById("overlay").style.display = "block";
 }
 
 function fecharMenu(){
   document.getElementById("sidebar").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
+  document.getElementById("overlay").style.display = "none";
 }
 
-// LOGOUT
+/* LOGOUT */
 function logout(){
   localStorage.clear();
   window.location.href = "login.html";

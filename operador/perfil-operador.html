@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Conta - PrimePay</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:#000;
+  color:#fff;
+  font-family:"Segoe UI", Arial;
+  padding:20px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:30px;
+}
+
+.header h1{
+  font-size:24px;
+  font-weight:600;
+}
+
+.header span{
+  color:#777;
+  font-size:12px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+}
+
+/* CARD BASE */
+.card{
+  position:relative;
+  background:linear-gradient(145deg,#0a0a0a,#050505);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:20px;
+  transition:0.35s;
+  overflow:hidden;
+}
+
+/* 🔥 EFEITO PREMIUM */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--x) var(--y),
+  rgba(255,255,255,0.08), transparent 40%);
+  opacity:0;
+  transition:0.3s;
+}
+
+.card:hover::before{
+  opacity:1;
+}
+
+/* HOVER GERAL */
+.card:hover{
+  transform:translateY(-6px) scale(1.01);
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:
+    0 10px 40px rgba(255,255,255,0.05),
+    0 0 0 1px rgba(255,255,255,0.05);
+}
+
+/* TITULO */
+.title{
+  font-size:12px;
+  color:#888;
+  margin-bottom:8px;
+}
+
+/* VALOR */
+.value{
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+/* USER */
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.avatar{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#111,#000);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:rgba(0,255,100,0.08);
+  color:#00ff88;
+  display:inline-block;
+  margin-top:6px;
+}
+
+/* LISTA */
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:13px;
+  color:#bbb;
+}
+
+/* NOMINAL ULTRA PREMIUM */
+.nominal{
+  background:linear-gradient(135deg,#0a0a0a,#000);
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+.nominal::after{
+  content:"PREMIUM";
+  position:absolute;
+  top:-8px;
+  right:12px;
+  font-size:9px;
+  padding:4px 8px;
+  border-radius:10px;
+  background:#fff;
+  color:#000;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+/* STATUS */
+.badge-off{
+  color:#ff4d4d;
+  font-size:12px;
+}
+
+.badge-on{
+  color:#00ff88;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Minha Conta</h1>
+    <span>Dados do operador</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- PERFIL -->
+    <div class="card">
+      <div class="user-box">
+        <div class="avatar">
+          <i class="ri-user-3-line"></i>
+        </div>
+        <div>
+          <strong id="nome">Operador</strong><br>
+          <small>ID: 847291</small><br>
+          <div class="status">Ativo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALDO -->
+    <div class="card">
+      <div class="title">Saldo Atual</div>
+      <div class="value">R$ 1.250,00</div>
+    </div>
+
+    <!-- MOVIMENTAÇÃO -->
+    <div class="card">
+      <div class="title">Total Movimentado</div>
+      <div class="value">R$ 8.540,00</div>
+    </div>
+
+    <!-- TAXA -->
+    <div class="card">
+      <div class="title">Sua Taxa</div>
+      <div class="value">10%</div>
+    </div>
+
+    <!-- SAQUE -->
+    <div class="card">
+      <div class="title">Dados de Saque</div>
+      <div class="list">
+        <span>Banco: Nubank</span>
+        <span>Chave PIX: email@email.com</span>
+      </div>
+    </div>
+
+    <!-- SEGURANÇA -->
+    <div class="card">
+      <div class="title">Segurança</div>
+      <div class="list">
+        <span>Senha protegida</span>
+        <span>Último acesso: Hoje</span>
+      </div>
+    </div>
+
+    <!-- NOMINAL -->
+    <div class="card nominal">
+      <div class="title">Nominal Específica</div>
+
+      <div class="list">
+        <span>Infraestrutura dedicada</span>
+        <span>Comprovante com sua marca</span>
+        <span>CNPJ exclusivo</span>
+      </div>
+
+      <br>
+      <div class="badge-off">Não ativado</div>
+    </div>
+
+    <!-- ATIVIDADE -->
+    <div class="card">
+      <div class="title">Últimas Atividades</div>
+      <div class="list">
+        <span>PIX recebido - R$ 120</span>
+        <span>Saque solicitado - R$ 300</span>
+        <span>Login realizado hoje</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+// Nome dinâmico
+let usuario = localStorage.getItem("usuario") || "Operador";
+document.getElementById("nome").innerText = usuario;
+
+// 🔥 efeito mouse premium
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("mousemove", e=>{
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--x", x + "px");
+    card.style.setProperty("--y", y + "px");
+  });
+});
+
+</script>
+
+</body>
+</html>
