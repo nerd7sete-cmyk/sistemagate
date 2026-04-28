@@ -19,6 +19,19 @@ body{
   color:white;
 }
 
+/* 🔥 BOTÃO MENU MOBILE */
+.menu-toggle{
+  display:none;
+  position:fixed;
+  top:15px;
+  left:15px;
+  z-index:999;
+  font-size:26px;
+  background:#111;
+  padding:10px;
+  border-radius:10px;
+}
+
 /* SIDEBAR */
 .sidebar{
   width:260px;
@@ -32,6 +45,32 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  transition:0.3s;
+}
+
+/* 🔥 MOBILE */
+@media(max-width:900px){
+
+  .menu-toggle{
+    display:block;
+  }
+
+  .sidebar{
+    position:fixed;
+    left:-100%;
+    top:0;
+    z-index:998;
+  }
+
+  .sidebar.open{
+    left:0;
+  }
+
+  /* 🔥 CORREÇÃO DO BUG DO LOGO */
+  .logo{
+    margin-left:60px;
+  }
+
 }
 
 /* LOGO */
@@ -193,7 +232,12 @@ iframe{
 
 <body>
 
-<div class="sidebar">
+<!-- 🔥 BOTÃO MENU -->
+<div class="menu-toggle" onclick="toggleMenu()">
+  <i class="ri-menu-line"></i>
+</div>
+
+<div class="sidebar" id="sidebar">
 
   <div>
 
@@ -245,6 +289,17 @@ iframe{
 
 <script>
 
+/* MENU */
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+function fecharMenu(){
+  if(window.innerWidth < 900){
+    document.getElementById("sidebar").classList.remove("open");
+  }
+}
+
 let usuario = localStorage.getItem("usuario") || "Operador";
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
@@ -283,6 +338,8 @@ function abrir(pagina, el){
     .forEach(i => i.classList.remove("active"));
 
   el.classList.add("active");
+
+  fecharMenu();
 }
 
 function logout(){
@@ -290,12 +347,11 @@ function logout(){
   window.location.href = "login.html";
 }
 
-/* 🔥 SUPORTE */
 function abrirSuporte(){
   document.getElementById("frame").src = "suporte-operador.html";
+  fecharMenu();
 }
 
-/* 🔥 CONTROLE AUTOMÁTICO DO BOTÃO */
 document.getElementById("frame").addEventListener("load", function(){
 
   let pagina = this.src;
