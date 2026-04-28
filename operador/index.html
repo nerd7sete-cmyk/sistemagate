@@ -10,6 +10,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
+html, body{
+  height:100%;
+}
+
 body{
   display:flex;
   font-family:"Segoe UI", Arial;
@@ -19,7 +23,7 @@ body{
   color:white;
 }
 
-/* 🔥 HEADER FIXO DARK */
+/* HEADER */
 .header{
   position:fixed;
   top:0;
@@ -35,7 +39,6 @@ body{
   z-index:1001;
 }
 
-/* BOTÃO MENU */
 .menu-toggle{
   font-size:22px;
   background:#111;
@@ -44,13 +47,11 @@ body{
   cursor:pointer;
 }
 
-/* TITULO */
 .header-title{
   font-weight:600;
   color:#3b82f6;
 }
 
-/* AVATAR TOPO */
 .avatar-top{
   width:32px;
   height:32px;
@@ -62,7 +63,7 @@ body{
   font-weight:700;
 }
 
-/* 🔥 OVERLAY */
+/* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
@@ -85,62 +86,97 @@ body{
   flex-direction:column;
   justify-content:space-between;
   transition:0.3s;
+  overflow-y:auto;
 }
 
-/* 🔥 MOBILE */
-@media(max-width:900px){
+/* 🔥 DESCE NO DESKTOP */
+.sidebar > div:first-child{
+  margin-top:25px;
+}
 
-  body{
-    display:block;
-  }
+/* MOBILE */
+@media(max-width:900px){
+  body{display:block;}
 
   .sidebar{
     position:fixed;
     left:-100%;
-    top:0;
+    top:60px;
+    height:calc(100dvh - 60px);
     z-index:999;
   }
 
-  .sidebar.open{
-    left:0;
-  }
-
-  .overlay.show{
-    display:block;
-  }
-
+  .sidebar.open{left:0;}
+  .overlay.show{display:block;}
 }
 
-/* LOGO */
-.logo{
-  font-size:20px;
-  font-weight:700;
-  margin-bottom:25px;
-  color:#3b82f6;
-}
-
-/* USER */
+/* PERFIL */
 .user{
   display:flex;
   align-items:center;
   gap:12px;
   background:#111;
   border:1px solid rgba(59,130,246,0.25);
-  padding:16px;
+  padding:14px;
   border-radius:18px;
-  margin-bottom:25px;
+  margin-bottom:20px;
   cursor:pointer;
+  transition:0.2s;
 }
 
+.user:hover{
+  background:#151515;
+}
+
+/* resto igual */
 .avatar{
   width:42px;
   height:42px;
+  min-width:42px;
   border-radius:50%;
   background:linear-gradient(135deg,#3b82f6,#1e3a8a);
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:700;
+}
+
+.user-info{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  flex:1;
+}
+
+.user-info small{
+  color:#9ca3af;
+  font-size:11px;
+}
+
+.user-info strong{
+  font-size:14px;
+}
+
+.saldo-label{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:4px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.saldo-dot{
+  width:6px;
+  height:6px;
+  background:#22c55e;
+  border-radius:50%;
+}
+
+.saldo-valor{
+  font-size:16px;
+  font-weight:600;
+  color:#22c55e;
 }
 
 /* MENU */
@@ -166,86 +202,80 @@ body{
   border:1px solid rgba(59,130,246,0.3);
 }
 
+/* LOGOUT */
+.logout{
+  padding:12px;
+  border-radius:12px;
+  background:#111;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+  color:#aaa;
+}
+
+.logout:hover{
+  background:#151515;
+  color:#fff;
+}
+
 /* MAIN */
 .main{
   flex:1;
   display:flex;
   flex-direction:column;
-  margin-top:60px; /* 🔥 espaço do header */
+  margin-top:60px;
 }
 
 iframe{
   flex:1;
   width:100%;
-  height:100vh;
+  height:calc(100vh - 60px);
   border:none;
-}
-
-/* SUPORTE */
-.suporte-float{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 HEADER -->
 <div class="header">
   <div class="menu-toggle" onclick="toggleMenu()">
     <i class="ri-menu-line"></i>
   </div>
-
   <div class="header-title">PrimePay</div>
-
   <div class="avatar-top" id="avatarTop">A</div>
 </div>
 
-<!-- 🔥 OVERLAY -->
 <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
 
 <div class="sidebar" id="sidebar">
 
   <div>
 
-    <div class="logo">PrimePay</div>
-
+    <!-- 🔥 PERFIL AGORA CLICÁVEL -->
     <div class="user" id="userBox" onclick="abrir('perfil-operador.html', this)"></div>
 
     <div class="menu-item active" onclick="abrir('dashboard2.html', this)">
-      <i class="ri-home-5-line"></i> Visão Geral
+      <i class="ri-home-5-line"></i> Painel Geral
     </div>
 
     <div class="menu-item" onclick="abrir('pdv.html', this)">
-      <i class="ri-qr-code-line"></i> Pagamentos (PIX & QR Code)
+      <i class="ri-qr-code-line"></i> Recebimentos
     </div>
 
     <div class="menu-item" onclick="abrir('extrato.html', this)">
-      <i class="ri-bar-chart-line"></i> Relatórios Financeiros
+      <i class="ri-bar-chart-line"></i> Análise de Dados
     </div>
 
     <div class="menu-item" onclick="abrir('saques.html', this)">
-      <i class="ri-wallet-3-line"></i> Gestão de Saques
+      <i class="ri-wallet-3-line"></i> Retiradas
     </div>
 
     <div class="menu-item" onclick="abrir('perfil-financeiro-operador.html', this)">
-      <i class="ri-bank-line"></i> Dados Bancários
+      <i class="ri-bank-line"></i> Conta Bancária
     </div>
 
-    <div class="divider"></div>
-
-    <div class="menu-premium" onclick="abrir('nominal-especifica.html', this)">
-      <i class="ri-vip-crown-fill"></i> Conta Nominal Exclusiva
+    <div class="menu-item" onclick="abrir('suporte-operador.html', this)">
+      <i class="ri-customer-service-2-line"></i> Suporte & Atendimento
     </div>
 
   </div>
@@ -260,60 +290,39 @@ iframe{
   <iframe id="frame" src="dashboard2.html"></iframe>
 </div>
 
-<div class="suporte-float" id="btnSuporte" onclick="abrirSuporte()">
-  <i class="ri-customer-service-2-fill"></i>
-</div>
-
 <script>
-
-/* MENU */
 function toggleMenu(){
-  document.getElementById("sidebar").classList.add("open");
-  document.getElementById("overlay").classList.add("show");
+  sidebar.classList.add("open");
+  overlay.classList.add("show");
 }
 
 function fecharMenu(){
-  document.getElementById("sidebar").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
 }
 
 let usuario = localStorage.getItem("usuario") || "Operador";
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-
-let total = 0;
-
-transacoes.forEach(t=>{
-  if(t.operador === usuario){
-    total += Number(t.valor)||0;
-  }
-});
-
-let operador = operadores.find(o=>o.email===usuario);
-let taxa = operador?.taxa || 10;
-let saldo = total * (1 - taxa/100);
-
-function f(v){
-  return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-}
-
 let inicial = usuario.charAt(0).toUpperCase();
 
-document.getElementById("userBox").innerHTML = `
+avatarTop.innerText = inicial;
+
+userBox.innerHTML = `
   <div class="avatar">${inicial}</div>
   <div class="user-info">
+    <small>Bem-vindo</small>
     <strong>${usuario}</strong>
-    <small>Operador</small>
-    <div class="user-saldo">${f(saldo)}</div>
+    <div class="saldo-label">
+      <div class="saldo-dot"></div>
+      Saldo disponível
+    </div>
+    <div class="saldo-valor">R$ 0,00</div>
   </div>
 `;
 
-document.getElementById("avatarTop").innerText = inicial;
-
 function abrir(pagina, el){
-  document.getElementById("frame").src = pagina;
+  frame.src = pagina;
 
-  document.querySelectorAll(".menu-item, .menu-premium, .user")
+  document.querySelectorAll(".menu-item")
     .forEach(i => i.classList.remove("active"));
 
   el.classList.add("active");
@@ -325,24 +334,6 @@ function logout(){
   localStorage.clear();
   window.location.href = "login.html";
 }
-
-function abrirSuporte(){
-  document.getElementById("frame").src = "suporte-operador.html";
-  fecharMenu();
-}
-
-document.getElementById("frame").addEventListener("load", function(){
-
-  let pagina = this.src;
-
-  if(pagina.includes("suporte-operador.html")){
-    document.getElementById("btnSuporte").style.display = "none";
-  }else{
-    document.getElementById("btnSuporte").style.display = "flex";
-  }
-
-});
-
 </script>
 
 </body>
