@@ -12,6 +12,7 @@
 
 html, body{
   height:100%;
+  overflow:hidden;
 }
 
 body{
@@ -86,28 +87,38 @@ body{
   flex-direction:column;
   justify-content:space-between;
   transition:0.3s;
-  overflow-y:auto;
+  overflow:hidden;
 }
 
-/* 🔥 DESCE NO DESKTOP */
+/* DESKTOP */
 .sidebar > div:first-child{
   margin-top:25px;
 }
 
 /* MOBILE */
 @media(max-width:900px){
-  body{display:block;}
+  body{
+    display:block;
+  }
 
   .sidebar{
     position:fixed;
     left:-100%;
     top:60px;
-    height:calc(100dvh - 60px);
+    height:calc(100vh - 60px); /* 🔥 CORRIGIDO */
     z-index:999;
   }
 
   .sidebar.open{left:0;}
   .overlay.show{display:block;}
+
+  .main{
+    position:fixed;
+    top:60px;
+    left:0;
+    width:100%;
+    height:calc(100vh - 60px); /* 🔥 CORRIGIDO */
+  }
 }
 
 /* PERFIL */
@@ -121,18 +132,11 @@ body{
   border-radius:18px;
   margin-bottom:20px;
   cursor:pointer;
-  transition:0.2s;
 }
 
-.user:hover{
-  background:#151515;
-}
-
-/* resto igual */
 .avatar{
   width:42px;
   height:42px;
-  min-width:42px;
   border-radius:50%;
   background:linear-gradient(135deg,#3b82f6,#1e3a8a);
   display:flex;
@@ -142,41 +146,15 @@ body{
 }
 
 .user-info{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
   flex:1;
-}
-
-.user-info small{
-  color:#9ca3af;
-  font-size:11px;
+  overflow:hidden;
 }
 
 .user-info strong{
   font-size:14px;
-}
-
-.saldo-label{
-  font-size:11px;
-  color:#9ca3af;
-  margin-top:4px;
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.saldo-dot{
-  width:6px;
-  height:6px;
-  background:#22c55e;
-  border-radius:50%;
-}
-
-.saldo-valor{
-  font-size:16px;
-  font-weight:600;
-  color:#22c55e;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* MENU */
@@ -210,27 +188,21 @@ body{
   cursor:pointer;
   display:flex;
   gap:10px;
-  color:#aaa;
-}
-
-.logout:hover{
-  background:#151515;
-  color:#fff;
 }
 
 /* MAIN */
 .main{
   flex:1;
-  display:flex;
-  flex-direction:column;
   margin-top:60px;
+  height:calc(100vh - 60px); /* 🔥 ESSENCIAL */
 }
 
+/* IFRAME */
 iframe{
-  flex:1;
   width:100%;
-  height:calc(100vh - 60px);
+  height:100%;
   border:none;
+  display:block;
 }
 </style>
 </head>
@@ -251,7 +223,6 @@ iframe{
 
   <div>
 
-    <!-- 🔥 PERFIL AGORA CLICÁVEL -->
     <div class="user" id="userBox" onclick="abrir('perfil-operador.html', this)"></div>
 
     <div class="menu-item active" onclick="abrir('dashboard2.html', this)">
@@ -311,16 +282,13 @@ userBox.innerHTML = `
   <div class="user-info">
     <small>Bem-vindo</small>
     <strong>${usuario}</strong>
-    <div class="saldo-label">
-      <div class="saldo-dot"></div>
-      Saldo disponível
-    </div>
-    <div class="saldo-valor">R$ 0,00</div>
+    <div style="font-size:12px;color:#22c55e;">Saldo disponível</div>
+    <div style="font-size:15px;">R$ 0,00</div>
   </div>
 `;
 
 function abrir(pagina, el){
-  frame.src = pagina;
+  document.getElementById("frame").src = pagina;
 
   document.querySelectorAll(".menu-item")
     .forEach(i => i.classList.remove("active"));
