@@ -48,17 +48,17 @@ body{
 .user strong{
   display:block;
   font-size:14px;
+
+  /* 🔥 evita estourar layout */
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .user .painel{
   font-size:11px;
   color:#9ca3af;
   margin-bottom:5px;
-}
-
-.user small{
-  color:#22c55e;
-  font-size:11px;
 }
 
 /* MENU */
@@ -180,9 +180,7 @@ iframe{
       <i class="ri-wallet-3-line"></i> Retiradas
     </div>
 
-    <div class="menu-item" onclick="abrir('perfil-operador.html', this)">
-      <i class="ri-user-line"></i> Perfil
-    </div>
+    <!-- ❌ PERFIL REMOVIDO -->
 
     <div class="menu-item" onclick="abrir('suporte-operador.html', this)">
       <i class="ri-customer-service-2-line"></i> Suporte
@@ -212,14 +210,15 @@ iframe{
 // 🔥 PEGA USUÁRIO
 let usuario = localStorage.getItem("usuario") || "Operador";
 
-// 🔥 PEGA SÓ PRIMEIRO NOME
-let primeiroNome = usuario.split(" ")[0];
+// 🔥 TRATA NOME (FUNCIONA COM EMAIL OU NOME)
+let primeiroNome = usuario.includes("@")
+  ? usuario.split("@")[0]
+  : usuario.split(" ")[0];
 
-// UI
+// UI LIMPA
 document.getElementById("userBox").innerHTML = `
   <div class="painel">Painel do Operador</div>
   <strong>${primeiroNome}</strong>
-  <small>Saldo disponível</small>
 `;
 
 // MENU
