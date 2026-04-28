@@ -15,19 +15,21 @@
   font-family:"Segoe UI", Arial;
 }
 
+/* FUNDO */
 body{
-  background:#000;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+
   color:white;
   padding:25px;
 }
 
-/* CONTAINER */
 .container{
   max-width:1200px;
   margin:auto;
 }
 
-/* TOPO */
 .top{
   display:flex;
   justify-content:space-between;
@@ -35,117 +37,111 @@ body{
 }
 
 .level{
-  color:#aaa;
+  color:#3b82f6;
   font-size:13px;
 }
 
 /* ALERT */
 .alert{
-  background:#050505;
+  background:#0f0f0f;
   padding:18px;
   border-radius:14px;
-  border:1px solid rgba(255,255,255,0.06);
+  border:1px solid rgba(59,130,246,0.15);
   margin-bottom:25px;
-  transition:0.3s;
 }
 
-.alert:hover{
-  border-color:rgba(255,255,255,0.15);
-}
-
-/* 💎 SALDO PREMIUM */
-.saldo-box{
+/* CARDS */
+.premium-box{
   position:relative;
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.8),
+    inset 0 0 20px rgba(59,130,246,0.05);
+  transition:0.3s;
+  overflow:hidden;
+}
+
+.premium-box:hover{
+  transform:translateY(-3px);
+  border-color:#3b82f6;
+  box-shadow:0 15px 50px rgba(59,130,246,0.2);
+}
+
+/* SALDO */
+.saldo-box{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:25px;
-  border-radius:20px;
+  padding:30px;
+  border-radius:22px;
   margin-bottom:25px;
-
-  background:linear-gradient(145deg,#050505,#0a0a0a);
-  border:1px solid rgba(255,255,255,0.1);
-
-  box-shadow:
-    0 0 30px rgba(255,255,255,0.03),
-    inset 0 0 15px rgba(255,255,255,0.02);
-
-  transition:0.3s;
 }
 
-.saldo-box:hover{
-  transform:translateY(-4px);
-  box-shadow:
-    0 0 40px rgba(255,255,255,0.06),
-    inset 0 0 20px rgba(255,255,255,0.03);
-}
-
-/* brilho topo */
-.saldo-box::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:2px;
-  background:linear-gradient(90deg,transparent,#fff,transparent);
-  opacity:0.3;
-}
-
-.saldo-left{
+.saldo-content{
   display:flex;
-  gap:18px;
+  flex-direction:column;
+  gap:8px;
+}
+
+.saldo-title{
+  font-size:14px;
+  color:#9ca3af;
+  display:flex;
   align-items:center;
-}
-
-/* ICON */
-.icon{
-  background:linear-gradient(145deg,#0a0a0a,#111);
-  border:1px solid rgba(255,255,255,0.1);
-  padding:14px;
-  border-radius:14px;
-  font-size:22px;
-  transition:0.3s;
-}
-
-.saldo-box:hover .icon{
-  transform:scale(1.1);
-}
-
-/* TEXTO */
-.saldo-info small{
-  color:#666;
-  font-size:12px;
+  gap:8px;
+  cursor:pointer;
 }
 
 .saldo-info h1{
-  font-size:34px;
-  margin:6px 0;
+  font-size:42px;
+  font-weight:700;
 }
 
 /* BADGE */
 .badge{
-  font-size:11px;
-  padding:5px 10px;
+  font-size:13px;
+  padding:8px 14px;
   border-radius:999px;
-  background:rgba(34,197,94,0.1);
+  background:rgba(34,197,94,0.15);
   color:#22c55e;
 }
 
-/* BOTÃO */
+/* 🔥 BOTÃO PREMIUM MELHORADO */
 .saque-btn{
-  background:white;
-  color:black;
-  padding:12px 18px;
-  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  background:linear-gradient(135deg,#1f2937,#020617);
+  color:white;
+
+  padding:16px 22px;
+  border-radius:18px;
   font-weight:600;
   cursor:pointer;
-  transition:0.3s;
+
+  border:1px solid rgba(59,130,246,0.4);
+
+  min-width:180px;
+  transition:0.25s;
 }
 
-.saque-btn:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 15px rgba(255,255,255,0.2);
+.saque-btn:active{
+  transform:scale(0.97);
+}
+
+.saque-btn i{
+  background:#3b82f6;
+  color:#fff;
+  padding:9px;
+  border-radius:50%;
+  transition:0.2s;
+}
+
+.saque-btn:hover i{
+  transform:translateX(4px);
 }
 
 /* CARDS */
@@ -157,45 +153,18 @@ body{
 }
 
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  padding:18px;
-  border-radius:14px;
-  transition:0.3s;
-  position:relative;
-  overflow:hidden;
-}
-
-/* brilho lateral */
-.card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.08),transparent);
-  transition:0.5s;
-}
-
-.card:hover::before{
-  left:100%;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-  border:1px solid rgba(255,255,255,0.15);
-  box-shadow:0 0 20px rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:16px;
 }
 
 .card h3{
-  color:#666;
+  color:#60a5fa;
   font-size:12px;
 }
 
 .card h1{
   margin-top:10px;
-  font-size:22px;
+  font-size:24px;
 }
 
 /* GRID */
@@ -206,15 +175,8 @@ body{
 }
 
 .box{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  padding:18px;
-  border-radius:16px;
-  transition:0.3s;
-}
-
-.box:hover{
-  border-color:rgba(255,255,255,0.15);
+  padding:20px;
+  border-radius:18px;
 }
 
 /* LISTA */
@@ -222,13 +184,7 @@ body{
   display:flex;
   justify-content:space-between;
   padding:12px 0;
-  border-bottom:1px solid #111;
-  transition:0.2s;
-}
-
-.item:hover{
-  background:rgba(255,255,255,0.03);
-  padding-left:8px;
+  border-bottom:1px solid #1a1a1a;
 }
 
 .status{
@@ -242,10 +198,27 @@ body{
   color:#22c55e;
 }
 
-/* RESPONSIVO */
+/* 🔥 MOBILE TOP */
 @media(max-width:900px){
+
   .grid{
     grid-template-columns:1fr;
+  }
+
+  .saldo-box{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:20px;
+  }
+
+  .saldo-info h1{
+    font-size:34px;
+  }
+
+  .saque-btn{
+    width:100%;
+    justify-content:space-between;
+    padding:18px;
   }
 }
 </style>
@@ -257,47 +230,48 @@ body{
 
 <div class="top">
   <div class="level">Nível 1</div>
-  <div style="color:#666;font-size:13px;">Meta: R$ 0 / R$ 10.000</div>
 </div>
 
 <div class="alert">
   Sistema ativo e operando normalmente
 </div>
 
-<div class="saldo-box">
+<div class="saldo-box premium-box">
 
-  <div class="saldo-left">
-
-    <div class="icon">
-      <i class="ri-wallet-3-line"></i>
+  <div class="saldo-content">
+    <div class="saldo-title" onclick="toggleSaldo()">
+      Saldo disponível 
+      <i id="iconeOlho" class="ri-eye-line"></i>
     </div>
 
     <div class="saldo-info">
-      <small>Saldo disponível</small>
       <h1 id="saldo">R$ 0,00</h1>
-      <span class="badge">Disponível para saque</span>
     </div>
 
+    <div class="badge">
+      ● Disponível para saque
+    </div>
   </div>
 
-  <div class="saque-btn" onclick="window.location.href='saques.html'">
-    Sacar
+  <div class="saque-btn" onclick="irSaque()">
+    Sacar agora 
+    <i class="ri-arrow-right-line"></i>
   </div>
 
 </div>
 
 <div class="cards">
-  <div class="card">
+  <div class="card premium-box">
     <h3>Sua taxa</h3>
     <h1 id="taxa">0%</h1>
   </div>
 
-  <div class="card">
+  <div class="card premium-box">
     <h3>Total de vendas</h3>
     <h1 id="vendas">0</h1>
   </div>
 
-  <div class="card">
+  <div class="card premium-box">
     <h3>Volume total</h3>
     <h1 id="volume">R$ 0,00</h1>
   </div>
@@ -305,13 +279,13 @@ body{
 
 <div class="grid">
 
-  <div class="box">
-    <h3>Volume de vendas</h3>
+  <div class="box premium-box">
+    <h3 style="color:#60a5fa;">Volume de vendas</h3>
     <canvas id="grafico"></canvas>
   </div>
 
-  <div class="box">
-    <h3>Últimas vendas</h3>
+  <div class="box premium-box">
+    <h3 style="color:#60a5fa;">Últimas vendas</h3>
     <div id="lista"></div>
   </div>
 
@@ -321,6 +295,31 @@ body{
 
 <script>
 
+/* 🔥 MOSTRAR / ESCONDER SALDO */
+let saldoVisivel = true;
+let saldoRealFormatado = "";
+
+function toggleSaldo(){
+  let saldoEl = document.getElementById("saldo");
+  let icone = document.getElementById("iconeOlho");
+
+  saldoVisivel = !saldoVisivel;
+
+  if(saldoVisivel){
+    saldoEl.innerText = saldoRealFormatado;
+    icone.className = "ri-eye-line";
+  }else{
+    saldoEl.innerText = "••••••";
+    icone.className = "ri-eye-off-line";
+  }
+}
+
+/* IR PARA SAQUE */
+function irSaque(){
+  window.location.href = "saques.html";
+}
+
+/* SISTEMA */
 function formatar(valor){
   return valor.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
@@ -331,7 +330,6 @@ let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
 
 let minhas = transacoes.filter(t => t.operador === usuario);
 
-/* 🔥 ORDENA CERTO */
 minhas.sort((a,b)=> new Date(b.data) - new Date(a.data));
 
 let total = 0;
@@ -352,12 +350,14 @@ let taxa = operador?.taxa || 10;
 
 let saldo = total * (taxa/100);
 
-document.getElementById("saldo").innerText = formatar(saldo);
+/* 🔥 SALVA VALOR REAL */
+saldoRealFormatado = formatar(saldo);
+
+document.getElementById("saldo").innerText = saldoRealFormatado;
 document.getElementById("taxa").innerText = taxa + "%";
 document.getElementById("vendas").innerText = qtd;
 document.getElementById("volume").innerText = formatar(total);
 
-/* LISTA */
 let lista = document.getElementById("lista");
 lista.innerHTML = "";
 
@@ -375,18 +375,23 @@ minhas.slice(0,5).forEach(t=>{
   `;
 });
 
-/* GRÁFICO */
-new Chart(document.getElementById("grafico"), {
+let ctx = document.getElementById("grafico").getContext("2d");
+
+let gradient = ctx.createLinearGradient(0,0,0,300);
+gradient.addColorStop(0,"rgba(59,130,246,0.4)");
+gradient.addColorStop(1,"rgba(59,130,246,0)");
+
+new Chart(ctx, {
   type: 'line',
   data: {
     labels: Object.keys(porDia),
     datasets: [{
       data: Object.values(porDia),
-      borderColor: "#fff",
-      backgroundColor: "rgba(255,255,255,0.05)",
+      borderColor: "#3b82f6",
+      backgroundColor: gradient,
       tension:0.4,
       fill:true,
-      pointRadius:0
+      pointRadius:4
     }]
   },
   options:{
@@ -397,7 +402,6 @@ new Chart(document.getElementById("grafico"), {
     }
   }
 });
-
 </script>
 
 </body>

@@ -8,25 +8,26 @@
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
   display:flex;
-  background:#000;
-  color:white;
   font-family:"Segoe UI", Arial;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+  color:white;
 }
 
 /* SIDEBAR */
 .sidebar{
-  width:250px;
+  width:260px;
   height:100vh;
-  background:#000;
-  border-right:1px solid rgba(255,255,255,0.05);
+  background:#0f0f0f;
+  border-right:1px solid rgba(59,130,246,0.15);
+  box-shadow:
+    0 0 40px rgba(0,0,0,0.9),
+    inset 0 0 20px rgba(59,130,246,0.05);
   padding:20px;
   display:flex;
   flex-direction:column;
@@ -35,43 +36,61 @@ body{
 
 /* LOGO */
 .logo{
-  font-size:18px;
+  font-size:20px;
   font-weight:700;
   margin-bottom:25px;
-
-  background:linear-gradient(120deg,#fff,#777,#fff);
-  background-size:200%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:shine 6s linear infinite;
+  color:#3b82f6;
 }
 
-@keyframes shine{
-  0%{background-position:200%;}
-  100%{background-position:-200%;}
-}
-
-/* USER (AGORA CLICÁVEL) */
+/* USER */
 .user{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  padding:14px;
-  border-radius:14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#111;
+  border:1px solid rgba(59,130,246,0.25);
+  padding:16px;
+  border-radius:18px;
   margin-bottom:25px;
   cursor:pointer;
   transition:0.25s;
 }
 
 .user:hover{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.15);
-  transform:scale(1.02);
+  border-color:#3b82f6;
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(59,130,246,0.15);
 }
 
-.user strong{display:block;font-size:14px;}
-.user small{color:#666;font-size:11px;}
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#1e3a8a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
 
-/* MENU NORMAL */
+.user-info strong{
+  display:block;
+  font-size:14px;
+}
+
+.user-info small{
+  color:#9ca3af;
+  font-size:11px;
+}
+
+.user-saldo{
+  font-size:12px;
+  margin-top:4px;
+  color:#22c55e;
+  font-weight:600;
+}
+
+/* MENU */
 .menu-item{
   display:flex;
   align-items:center;
@@ -80,94 +99,66 @@ body{
   margin-bottom:10px;
   border-radius:12px;
   cursor:pointer;
-  color:#aaa;
+  color:#9ca3af;
   transition:0.2s;
 }
 
 .menu-item:hover{
-  background:#0a0a0a;
+  background:#111;
   color:#fff;
 }
 
 .active{
-  background:#0a0a0a;
+  background:#111;
   color:#fff;
-  border:1px solid rgba(255,255,255,0.08);
+  border:1px solid rgba(59,130,246,0.3);
 }
 
-/* DIVIDER */
 .divider{
   margin:20px 0 10px;
   height:1px;
-  background:linear-gradient(to right,transparent,#333,transparent);
+  background:linear-gradient(to right,transparent,#222,transparent);
 }
 
 /* PREMIUM */
 .menu-premium{
-  position:relative;
   display:flex;
   align-items:center;
   gap:10px;
   padding:14px;
-  border-radius:14px;
+  border-radius:16px;
   cursor:pointer;
-  color:#fff;
-  background:linear-gradient(135deg,#0a0a0a,#000);
-  border:1px solid rgba(255,255,255,0.15);
-  box-shadow:0 0 20px rgba(255,255,255,0.05);
-  transition:0.3s;
-}
-
-.menu-premium::before{
-  content:"";
-  position:absolute;
-  inset:-1px;
-  border-radius:14px;
-  padding:1px;
-  background:linear-gradient(120deg,#fff,transparent,#fff);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  opacity:0.2;
+  background:linear-gradient(135deg,#1f2937,#020617);
+  border:1px solid rgba(59,130,246,0.4);
+  color:white;
+  position:relative;
 }
 
 .menu-premium::after{
-  content:"PREMIUM";
+  content:"PRO";
   position:absolute;
   top:-8px;
   right:10px;
   font-size:9px;
-  padding:3px 7px;
-  border-radius:6px;
-  background:#fff;
-  color:#000;
-  font-weight:700;
-}
-
-.menu-premium:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 30px rgba(255,255,255,0.12);
-}
-
-.menu-premium.active{
-  border:1px solid #fff;
-  box-shadow:0 0 40px rgba(255,255,255,0.2);
+  padding:4px 8px;
+  border-radius:8px;
+  background:#3b82f6;
 }
 
 /* LOGOUT */
 .logout{
   padding:12px;
   border-radius:12px;
-  background:#0a0a0a;
+  background:#111;
   cursor:pointer;
   display:flex;
   gap:10px;
+  color:#aaa;
 }
 
 .logout:hover{
-  background:#141414;
+  background:#151515;
+  color:#fff;
 }
 
 /* MAIN */
@@ -177,124 +168,112 @@ body{
   flex-direction:column;
 }
 
-.topbar{
-  display:none;
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-}
-
-.menu-btn{
-  font-size:22px;
-  cursor:pointer;
-}
-
 iframe{
   flex:1;
   width:100%;
   border:none;
 }
 
-.overlay{
+/* SUPORTE */
+.suporte-float{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  z-index:1000;
-}
-
-/* MOBILE */
-@media(max-width:900px){
-
-  .sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:260px;
-    transform:translateX(-100%);
-    z-index:1001;
-    transition:0.3s;
-  }
-
-  .sidebar.active{
-    transform:translateX(0);
-  }
-
-  .topbar{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
+  bottom:25px;
+  right:25px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay" id="overlay" onclick="fecharMenu()"></div>
-
-<div class="sidebar" id="sidebar">
+<div class="sidebar">
 
   <div>
 
     <div class="logo">PrimePay</div>
 
-    <!-- 🔥 PERFIL CLICÁVEL -->
-    <div class="user" id="userBox" onclick="abrir('perfil-operador.html', this)">
-    </div>
+    <div class="user" id="userBox" onclick="abrir('perfil-operador.html', this)"></div>
 
-    <div class="menu-item active" onclick="abrir('dashboard.html', this)">
-      <i class="ri-home-5-line"></i> Dashboard
+    <div class="menu-item active" onclick="abrir('dashboard2.html', this)">
+      <i class="ri-home-5-line"></i> Visão Geral
     </div>
 
     <div class="menu-item" onclick="abrir('pdv.html', this)">
-      <i class="ri-bank-card-line"></i> PDV
+      <i class="ri-qr-code-line"></i> Pagamentos (PIX & QR Code)
     </div>
 
     <div class="menu-item" onclick="abrir('extrato.html', this)">
-      <i class="ri-bar-chart-line"></i> Extrato
+      <i class="ri-bar-chart-line"></i> Relatórios Financeiros
     </div>
 
     <div class="menu-item" onclick="abrir('saques.html', this)">
-      <i class="ri-wallet-3-line"></i> Saques
+      <i class="ri-wallet-3-line"></i> Gestão de Saques
     </div>
 
     <div class="menu-item" onclick="abrir('perfil-financeiro-operador.html', this)">
-      <i class="ri-bank-line"></i> Conta de Saque
+      <i class="ri-bank-line"></i> Dados Bancários
     </div>
 
     <div class="divider"></div>
 
     <div class="menu-premium" onclick="abrir('nominal-especifica.html', this)">
-      <i class="ri-vip-crown-fill"></i> Nominal Específica
+      <i class="ri-vip-crown-fill"></i> Conta Nominal Exclusiva
     </div>
 
   </div>
 
   <div class="logout" onclick="logout()">
-    <i class="ri-logout-box-r-line"></i> Sair
+    <i class="ri-logout-box-r-line"></i> Encerrar Sessão
   </div>
 
 </div>
 
 <div class="main">
+  <iframe id="frame" src="dashboard2.html"></iframe>
+</div>
 
-  <div class="topbar">
-    <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
-    <strong>PrimePay</strong>
-  </div>
-
-  <iframe id="frame" src="dashboard.html"></iframe>
-
+<div class="suporte-float" id="btnSuporte" onclick="abrirSuporte()">
+  <i class="ri-customer-service-2-fill"></i>
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("usuario") || "Operador";
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let total = 0;
+
+transacoes.forEach(t=>{
+  if(t.operador === usuario){
+    total += Number(t.valor)||0;
+  }
+});
+
+let operador = operadores.find(o=>o.email===usuario);
+let taxa = operador?.taxa || 10;
+let saldo = total * (1 - taxa/100);
+
+function f(v){
+  return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+let inicial = usuario.charAt(0).toUpperCase();
 
 document.getElementById("userBox").innerHTML = `
-  <strong>${usuario}</strong>
-  <small>Operador</small>
+  <div class="avatar">${inicial}</div>
+  <div class="user-info">
+    <strong>${usuario}</strong>
+    <small>Operador</small>
+    <div class="user-saldo">${f(saldo)}</div>
+  </div>
 `;
 
 function abrir(pagina, el){
@@ -304,27 +283,30 @@ function abrir(pagina, el){
     .forEach(i => i.classList.remove("active"));
 
   el.classList.add("active");
-
-  fecharMenu();
-}
-
-function abrirMenu(){
-  sidebar.classList.add("active");
-  overlay.style.display = "block";
-}
-
-function fecharMenu(){
-  sidebar.classList.remove("active");
-  overlay.style.display = "none";
 }
 
 function logout(){
-  document.body.style.opacity = "0";
-  setTimeout(()=>{
-    localStorage.clear();
-    window.location.href = "login.html";
-  },300);
+  localStorage.clear();
+  window.location.href = "login.html";
 }
+
+/* 🔥 SUPORTE */
+function abrirSuporte(){
+  document.getElementById("frame").src = "suporte-operador.html";
+}
+
+/* 🔥 CONTROLE AUTOMÁTICO DO BOTÃO */
+document.getElementById("frame").addEventListener("load", function(){
+
+  let pagina = this.src;
+
+  if(pagina.includes("suporte-operador.html")){
+    document.getElementById("btnSuporte").style.display = "none";
+  }else{
+    document.getElementById("btnSuporte").style.display = "flex";
+  }
+
+});
 
 </script>
 

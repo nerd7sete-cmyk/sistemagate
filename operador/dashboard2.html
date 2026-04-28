@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+/* 🔥 CORREÇÃO DO BUG */
+html, body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+body{
+  background:
+    radial-gradient(circle at top, rgba(59,130,246,0.12), transparent 60%),
+    #0a0a0a;
+  color:white;
+  padding:20px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.top h2{
+  color:#3b82f6;
+  letter-spacing:0.5px;
+}
+
+.filtro{
+  background:#0f0f0f;
+  border:1px solid #1a1a1a;
+  padding:10px 14px;
+  border-radius:12px;
+  color:white;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+
+.grid-dash{
+  display:grid;
+  grid-template-columns: 2fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:900px){
+  .grid-dash{grid-template-columns:1fr;}
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:20px;
+  border:1px solid rgba(59,130,246,0.15);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.7),
+    inset 0 0 15px rgba(59,130,246,0.05);
+  transition:0.25s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#3b82f6;
+}
+
+/* TEXTOS */
+.title{
+  font-size:12px;
+  color:#3b82f6;
+}
+
+.valor{
+  font-size:28px;
+  margin-top:6px;
+  font-weight:600;
+}
+
+/* SALDO */
+#saldo{
+  color:#22c55e;
+  text-shadow:0 0 10px rgba(34,197,94,0.4);
+}
+
+/* BOTÃO SACAR */
+.btn-sacar{
+  position:absolute;
+  top:15px;
+  right:15px;
+  padding:7px 14px;
+  border-radius:10px;
+  border:none;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
+
+  box-shadow:0 0 10px rgba(34,197,94,0.4);
+}
+
+/* PROGRESS */
+.progress{
+  height:8px;
+  background:#1a1a1a;
+  border-radius:999px;
+  margin:12px 0;
+  overflow:hidden;
+}
+
+.bar{
+  height:100%;
+  background:linear-gradient(90deg,#3b82f6,#60a5fa);
+}
+
+/* INDICES */
+.indices{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.indice{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.circle{
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 12px rgba(59,130,246,0.4);
+}
+
+/* 🔥 CORREÇÃO DO GRÁFICO */
+.chart{
+  margin-top:15px;
+  height:260px !important;
+  width:100% !important;
+}
+
+@media(max-width:700px){
+  .valor{font-size:22px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Dashboard</h2>
+  <select class="filtro" id="filtroTempo" onchange="filtrar()">
+    <option value="7">Últimos 7 dias</option>
+    <option value="15">Últimos 15 dias</option>
+    <option value="30" selected>Últimos 30 dias</option>
+    <option value="90">Últimos 90 dias</option>
+  </select>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="title">Total em vendas</div>
+    <div class="valor" id="total">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Pedidos</div>
+    <div class="valor" id="pedidos">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Ticket médio</div>
+    <div class="valor" id="ticket">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <button class="btn-sacar" onclick="sacar()">Sacar</button>
+    <div class="title">Saldo (com taxa)</div>
+    <div class="valor" id="saldo">R$ 0,00</div>
+  </div>
+</div>
+
+<br>
+
+<div class="grid-dash">
+
+  <div class="card">
+    <div class="title">Vendas por dia</div>
+    <canvas id="grafico" class="chart"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="title">Índices</div>
+
+    <div class="indices">
+      <div class="indice">
+        <div class="circle" id="pixCircle"><span id="pixPerc">0%</span></div>
+        <div><strong>PIX</strong><br><small style="color:#9ca3af">Conversão</small></div>
+      </div>
+
+      <div class="indice">
+        <div class="circle" id="boletoCircle"><span id="boletoPerc">0%</span></div>
+        <div><strong>Boleto</strong><br><small style="color:#9ca3af">Conversão</small></div>
+      </div>
+
+      <div class="indice">
+        <div class="circle" id="chargeCircle"><span id="chargePerc">0%</span></div>
+        <div><strong>Chargebacks</strong><br><small style="color:#9ca3af">Período atual</small></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<br>
+
+<div class="grid">
+  <div class="card">
+    <div class="title">PIX</div>
+    <div class="valor" id="pix">R$ 0,00</div>
+    <div class="progress"><div class="bar" id="pixBar"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Boleto</div>
+    <div class="valor" id="boleto">R$ 0,00</div>
+    <div class="progress"><div class="bar" id="boletoBar"></div></div>
+  </div>
+</div>
+
+<script>
+
+function sacar(){
+  if(window.parent && window.parent.document.getElementById("frame")){
+    window.parent.document.getElementById("frame").src = "saques.html";
+  }else{
+    window.location.href = "saques.html";
+  }
+}
+
+let usuario = localStorage.getItem("usuario");
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let chart;
+
+function filtrar(){
+  let dias = Number(document.getElementById("filtroTempo").value);
+  let agora = new Date();
+
+  let filtradas = transacoes.filter(t=>{
+    if(t.operador !== usuario) return false;
+    let data = new Date(t.data);
+    let diff = (agora - data) / (1000*60*60*24);
+    return diff <= dias;
+  });
+
+  carregar(filtradas);
+}
+
+function carregar(minhas){
+
+  let total=0, pix=0, boleto=0;
+  let pedidos = minhas.length;
+  let porDia={};
+
+  minhas.forEach(t=>{
+    let v = Number(t.valor)||0;
+    total+=v;
+    if(t.tipo==="pix") pix+=v;
+    if(t.tipo==="boleto") boleto+=v;
+    let dia=new Date(t.data).getDate();
+    porDia[dia]=(porDia[dia]||0)+v;
+  });
+
+  let operador = operadores.find(o=>o.email===usuario);
+  let taxa = operador?.taxa || 10;
+  let saldo = total * (1 - taxa/100);
+
+  function f(v){
+    return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  }
+
+  document.getElementById("total").innerText=f(total);
+  document.getElementById("pedidos").innerText=pedidos;
+  document.getElementById("ticket").innerText=f(total/(pedidos||1));
+  document.getElementById("saldo").innerText=f(saldo);
+
+  document.getElementById("pix").innerText=f(pix);
+  document.getElementById("boleto").innerText=f(boleto);
+
+  let pixPerc = total ? (pix/total)*100 : 0;
+  let boletoPerc = total ? (boleto/total)*100 : 0;
+
+  document.getElementById("pixBar").style.width=pixPerc+"%";
+  document.getElementById("boletoBar").style.width=boletoPerc+"%";
+
+  function setCircle(id,val){
+    document.getElementById(id).style.background =
+      `conic-gradient(#3b82f6 ${val*3.6}deg,#1a1a1a 0)`;
+  }
+
+  setCircle("pixCircle",pixPerc);
+  setCircle("boletoCircle",boletoPerc);
+  setCircle("chargeCircle",0);
+
+  document.getElementById("pixPerc").innerText=pixPerc.toFixed(1)+"%";
+  document.getElementById("boletoPerc").innerText=boletoPerc.toFixed(1)+"%";
+
+  if(chart) chart.destroy();
+
+  let ctx = document.getElementById("grafico").getContext("2d");
+
+  let gradient = ctx.createLinearGradient(0,0,0,260);
+  gradient.addColorStop(0,"rgba(59,130,246,0.5)");
+  gradient.addColorStop(1,"rgba(59,130,246,0)");
+
+  chart = new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:Object.keys(porDia),
+      datasets:[{
+        data:Object.values(porDia),
+        borderColor:"#3b82f6",
+        backgroundColor:gradient,
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{display:false}}
+    }
+  });
+
+}
+
+filtrar();
+
+</script>
+
+</body>
+</html>

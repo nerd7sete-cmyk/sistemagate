@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+  color:white;
+  padding:20px;
+}
+
+/* HEADER */
+.header{margin-bottom:20px;}
+.header h1{font-size:22px;}
+.header p{font-size:13px;color:#9ca3af;}
+
+/* FILTROS */
+.filtros{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.filtro{
+  padding:8px 14px;
+  border-radius:999px;
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+  font-size:13px;
+  color:#9ca3af;
+  cursor:pointer;
+}
+
+.filtro.active{
+  background:#3b82f6;
+  color:white;
+  border:none;
+}
+
+/* CARD */
+.card{
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+/* HEADER TABELA */
+.row.header{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1.2fr 1fr 1.2fr;
+  padding:14px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* LINHA */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1.2fr 1fr 1.2fr;
+  padding:16px;
+  border-top:1px solid #1a1a1a;
+  align-items:center;
+}
+
+.row:hover{background:#111;}
+
+/* VALORES */
+.bruto{font-weight:600;}
+.taxa{color:#ef4444;}
+.liquido{color:#22c55e;font-weight:600;}
+
+/* DESTINO */
+.destino{
+  font-size:12px;
+  display:flex;
+  flex-direction:column;
+}
+
+.destino span{
+  color:#9ca3af;
+  font-size:11px;
+}
+
+/* STATUS */
+.status{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+}
+
+.pendente{color:#f59e0b;background:rgba(245,158,11,0.15);}
+.pago{color:#22c55e;background:rgba(34,197,94,0.15);}
+.falha{color:#ef4444;background:rgba(239,68,68,0.15);}
+
+/* DATA */
+.data{
+  display:flex;
+  flex-direction:column;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.hora{font-size:11px;color:#6b7280;}
+
+.empty{
+  padding:30px;
+  text-align:center;
+  color:#6b7280;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  .row.header{display:none;}
+  .row{grid-template-columns:1fr;gap:6px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Histórico de Saques</h1>
+  <p>Controle completo das solicitações</p>
+</div>
+
+<div class="filtros">
+  <div class="filtro active" onclick="filtrar('todos', this)">Todos</div>
+  <div class="filtro" onclick="filtrar('pendente', this)">Pendentes</div>
+  <div class="filtro" onclick="filtrar('pago', this)">Pagos</div>
+  <div class="filtro" onclick="filtrar('falha', this)">Recusados</div>
+</div>
+
+<div class="card" id="tabela"></div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+let saques = JSON.parse(localStorage.getItem("saques_operador_"+usuario)) || [];
+
+const tabela = document.getElementById("tabela");
+
+function f(v){
+  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function statusBadge(s){
+  if(s === "pago") return `<span class="status pago">Pago</span>`;
+  if(s === "falha") return `<span class="status falha">Recusado</span>`;
+  return `<span class="status pendente">Pendente</span>`;
+}
+
+// 🔥 MASCARAR CHAVE (PROFISSIONAL)
+function mask(chave){
+  if(!chave) return "-";
+  if(chave.length <= 6) return chave;
+  return chave.slice(0,4) + "****" + chave.slice(-2);
+}
+
+saques.sort((a,b)=> new Date(b.data) - new Date(a.data));
+
+function render(lista){
+
+  tabela.innerHTML = `
+    <div class="row header">
+      <div>Bruto</div>
+      <div>Taxa</div>
+      <div>Líquido</div>
+      <div>Destino</div>
+      <div>Status</div>
+      <div>Data</div>
+    </div>
+  `;
+
+  if(lista.length === 0){
+    tabela.innerHTML += `<div class="empty">Nenhum saque encontrado</div>`;
+    return;
+  }
+
+  lista.forEach(s=>{
+
+    let d = new Date(s.data);
+
+    tabela.innerHTML += `
+      <div class="row">
+
+        <div class="bruto">${f(s.valor)}</div>
+
+        <div class="taxa">- ${f(s.taxa)}</div>
+
+        <div class="liquido">${f(s.liquido)}</div>
+
+        <div class="destino">
+          ${ (s.tipo || "pix").toUpperCase() }
+          <span>${mask(s.chave)}</span>
+        </div>
+
+        <div>${statusBadge(s.status)}</div>
+
+        <div class="data">
+          ${d.toLocaleDateString("pt-BR")}
+          <span class="hora">${d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</span>
+        </div>
+
+      </div>
+    `;
+  });
+}
+
+function filtrar(tipo, el){
+
+  document.querySelectorAll(".filtro")
+    .forEach(f => f.classList.remove("active"));
+
+  el.classList.add("active");
+
+  if(tipo === "todos"){
+    render(saques);
+  }else{
+    render(saques.filter(s => s.status === tipo));
+  }
+}
+
+render(saques);
+
+</script>
+
+</body>
+</html>

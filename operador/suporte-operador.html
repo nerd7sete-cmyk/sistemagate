@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#0a0a0a;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:15px;
+  background:#0f0f0f;
+  border-bottom:1px solid #1a1a1a;
+}
+
+/* 🔥 BOTÃO VOLTAR */
+.voltar{
+  font-size:22px;
+  cursor:pointer;
+  color:#9ca3af;
+}
+
+.voltar:hover{
+  color:#fff;
+}
+
+.icon-suporte{
+  font-size:26px;
+  color:#3b82f6;
+}
+
+.header-info{
+  display:flex;
+  flex-direction:column;
+}
+
+.header-info strong{
+  font-size:14px;
+}
+
+.status{
+  font-size:11px;
+  color:#22c55e;
+}
+
+/* CHAT */
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* MENSAGENS */
+.msg{
+  max-width:75%;
+  padding:12px 14px;
+  border-radius:16px;
+  font-size:13px;
+  line-height:1.4;
+  position:relative;
+}
+
+.user{
+  background:#3b82f6;
+  align-self:flex-end;
+  border-bottom-right-radius:6px;
+}
+
+.admin{
+  background:#1a1a1a;
+  align-self:flex-start;
+  border-bottom-left-radius:6px;
+}
+
+/* HORA */
+.time{
+  font-size:10px;
+  opacity:0.6;
+  margin-top:5px;
+  text-align:right;
+}
+
+/* INPUT */
+.input-area{
+  padding:10px;
+  border-top:1px solid #1a1a1a;
+  display:flex;
+  gap:10px;
+  background:#0f0f0f;
+}
+
+.input{
+  flex:1;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #1a1a1a;
+  background:#111;
+  color:white;
+  outline:none;
+}
+
+.input:focus{
+  border-color:#3b82f6;
+}
+
+.btn{
+  padding:14px 16px;
+  border-radius:12px;
+  background:#3b82f6;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  color:#6b7280;
+  margin-top:50px;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <!-- 🔥 BOTÃO VOLTAR -->
+  <i class="ri-arrow-left-line voltar" onclick="voltar()"></i>
+
+  <i class="ri-customer-service-2-fill icon-suporte"></i>
+
+  <div class="header-info">
+    <strong>Suporte</strong>
+    <span class="status">● Online</span>
+  </div>
+
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="input-area">
+  <input id="msg" class="input" placeholder="Digite sua mensagem...">
+  <div class="btn" onclick="enviar()">
+    <i class="ri-send-plane-fill"></i>
+  </div>
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario") || "usuario";
+
+/* 🔥 VOLTAR */
+function voltar(){
+  window.location.href = "dashboard2.html";
+}
+
+// BANCO
+function getChats(){
+  return JSON.parse(localStorage.getItem("chat_global")) || {};
+}
+
+function salvarChats(chats){
+  localStorage.setItem("chat_global", JSON.stringify(chats));
+}
+
+// CRIA CHAT
+let chats = getChats();
+
+if(!chats[usuario]){
+  chats[usuario] = [
+    {
+      tipo:"admin",
+      texto:"Olá! Nosso suporte já vai te responder.",
+      data:new Date().toISOString()
+    }
+  ];
+  salvarChats(chats);
+}
+
+// HORA
+function hora(data){
+  let d = new Date(data);
+  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+// RENDER
+function render(){
+
+  let chats = getChats();
+  let lista = chats[usuario] || [];
+
+  let chat = document.getElementById("chat");
+  chat.innerHTML = "";
+
+  if(lista.length === 0){
+    chat.innerHTML = `<div class="empty">Nenhuma mensagem</div>`;
+    return;
+  }
+
+  lista.forEach(m=>{
+    chat.innerHTML += `
+      <div class="msg ${m.tipo}">
+        ${m.texto}
+        <div class="time">${hora(m.data)}</div>
+      </div>
+    `;
+  });
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// ENVIAR
+function enviar(){
+
+  let input = document.getElementById("msg");
+  let texto = input.value.trim();
+
+  if(!texto) return;
+
+  let chats = getChats();
+
+  chats[usuario].push({
+    tipo:"user",
+    texto,
+    data:new Date().toISOString()
+  });
+
+  salvarChats(chats);
+
+  input.value = "";
+
+  render();
+}
+
+// ENTER
+document.getElementById("msg").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    enviar();
+  }
+});
+
+// AUTO UPDATE
+setInterval(render, 1000);
+
+render();
+
+</script>
+
+</body>
+</html>

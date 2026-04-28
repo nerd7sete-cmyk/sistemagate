@@ -16,20 +16,12 @@
   font-family:"Segoe UI";
 }
 
+/* 🔥 FUNDO PADRÃO */
 body{
-  background:#000;
-  color:#fff;
-}
-
-/* BACKGROUND PREMIUM */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(255,255,255,0.04), transparent 40%);
-  z-index:-1;
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+  color:#fff;
 }
 
 /* CONTAINER */
@@ -46,14 +38,13 @@ body::before{
 }
 
 .header h1{
-  font-size:28px;
+  font-size:30px;
   font-weight:700;
-  letter-spacing:0.5px;
 }
 
 .header p{
   font-size:14px;
-  color:#888;
+  color:#9ca3af;
   margin-top:8px;
 }
 
@@ -64,30 +55,49 @@ body::before{
   gap:25px;
 }
 
-/* CARD */
+/* 🔥 CARD PREMIUM */
 .card{
-  background:rgba(10,10,10,0.85);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:20px;
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+  border-radius:22px;
   padding:25px;
-  backdrop-filter:blur(12px);
+
+  box-shadow:
+    0 15px 60px rgba(0,0,0,0.9),
+    inset 0 0 20px rgba(59,130,246,0.05);
+
+  position:relative;
+  overflow:hidden;
   transition:0.3s;
 }
 
 .card:hover{
-  border:1px solid rgba(255,255,255,0.15);
   transform:translateY(-4px);
+  border-color:#3b82f6;
+}
+
+/* glow */
+.card::after{
+  content:"";
+  position:absolute;
+  top:-60px;
+  right:-60px;
+  width:160px;
+  height:160px;
+  background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);
+  filter:blur(40px);
 }
 
 /* BADGE */
 .badge{
   display:inline-block;
   padding:6px 12px;
-  border-radius:12px;
+  border-radius:999px;
   background:#111;
-  border:1px solid #222;
+  border:1px solid rgba(59,130,246,0.3);
   font-size:11px;
   margin-bottom:20px;
+  color:#9ca3af;
 }
 
 /* ITENS */
@@ -99,7 +109,7 @@ body::before{
 
 .item i{
   font-size:18px;
-  color:#fff;
+  color:#3b82f6;
 }
 
 .item strong{
@@ -108,50 +118,79 @@ body::before{
 
 .item span{
   font-size:12px;
-  color:#777;
+  color:#9ca3af;
 }
 
 /* PREÇO */
 .price{
   text-align:center;
-  margin:20px 0;
+  margin:25px 0;
 }
 
 .price h2{
-  font-size:38px;
+  font-size:42px;
   font-weight:700;
-  letter-spacing:1px;
+  color:#3b82f6;
 }
 
 .price span{
   font-size:12px;
-  color:#888;
+  color:#9ca3af;
 }
 
-/* BOTÃO TOP */
+/* 🔥 BOTÃO PREMIUM */
 .btn{
   width:100%;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#fff,#dcdcdc);
-  color:#000;
-  font-weight:700;
+  padding:18px;
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#1f2937,#020617);
+  color:white;
+
+  font-weight:600;
   cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 10px 30px rgba(255,255,255,0.1);
+
+  border:1px solid rgba(59,130,246,0.4);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  position:relative;
+  overflow:hidden;
+  transition:0.25s;
+}
+
+/* brilho */
+.btn::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);
+  transition:0.6s;
+}
+
+.btn:hover::before{
+  left:100%;
 }
 
 .btn:hover{
-  transform:translateY(-3px);
-  box-shadow:0 20px 40px rgba(255,255,255,0.15);
+  box-shadow:0 10px 30px rgba(59,130,246,0.3);
+}
+
+.btn:active{
+  transform:scale(0.96);
 }
 
 /* SEGURANÇA */
 .secure{
   text-align:center;
   font-size:11px;
-  color:#666;
+  color:#6b7280;
   margin-top:12px;
 }
 
@@ -163,6 +202,10 @@ body::before{
 
   .wrapper{
     margin:30px auto;
+  }
+
+  .price h2{
+    font-size:34px;
   }
 }
 </style>
@@ -236,9 +279,10 @@ body::before{
         <span>Sem mensalidade • Setup incluso</span>
       </div>
 
-      <button class="btn" onclick="gerarPix()">
-        <i class="ri-qr-code-line"></i> Gerar Cobrança PIX
-      </button>
+      <div class="btn" onclick="gerarPix()">
+        <i class="ri-qr-code-line"></i>
+        Gerar Cobrança PIX
+      </div>
 
       <div class="secure">
         🔒 Ambiente seguro • Dados protegidos

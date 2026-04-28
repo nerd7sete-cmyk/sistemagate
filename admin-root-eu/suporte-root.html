@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte Admin</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  display:flex;
+  height:100vh;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:300px;
+  background:#0f0f0f;
+  border-right:1px solid #1a1a1a;
+  display:flex;
+  flex-direction:column;
+}
+
+/* BUSCA */
+.search{
+  padding:12px;
+  border-bottom:1px solid #1a1a1a;
+}
+
+.search input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  background:#111;
+  color:white;
+}
+
+/* LISTA */
+.users{
+  flex:1;
+  overflow-y:auto;
+}
+
+.user{
+  padding:14px;
+  border-bottom:1px solid #1a1a1a;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.user:hover{background:#111;}
+.user.active{background:#1a1a1a;}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nome{
+  font-size:14px;
+}
+
+.badge{
+  background:#ef4444;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:11px;
+}
+
+.preview{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
+.time{
+  font-size:10px;
+  color:#6b7280;
+}
+
+/* CHAT */
+.chat-box{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.chat-header{
+  padding:15px;
+  border-bottom:1px solid #1a1a1a;
+  background:#0f0f0f;
+  display:flex;
+  justify-content:space-between;
+}
+
+.status{
+  font-size:12px;
+  color:#22c55e;
+}
+
+.chat{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+}
+
+/* MSG */
+.msg{
+  max-width:70%;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  font-size:13px;
+}
+
+.user-msg{background:#1a1a1a;}
+.admin-msg{
+  background:#3b82f6;
+  margin-left:auto;
+}
+
+.msg-time{
+  font-size:10px;
+  opacity:0.6;
+  margin-top:5px;
+}
+
+/* INPUT */
+.input-area{
+  display:flex;
+  padding:10px;
+  border-top:1px solid #1a1a1a;
+  gap:10px;
+}
+
+input{
+  flex:1;
+  padding:12px;
+  background:#111;
+  border:none;
+  color:white;
+  border-radius:10px;
+}
+
+button{
+  padding:12px 16px;
+  background:#3b82f6;
+  border:none;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+  <div class="search">
+    <input id="buscar" placeholder="Buscar usuário...">
+  </div>
+
+  <div class="users" id="users"></div>
+
+</div>
+
+<div class="chat-box">
+
+  <div class="chat-header">
+    <div id="headerNome">Selecione um usuário</div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="input-area">
+    <input id="msg" placeholder="Digite sua resposta...">
+    <button onclick="responder()">Enviar</button>
+  </div>
+
+</div>
+
+<script>
+
+let selecionado = null;
+
+// 🔥 BANCO
+function getChats(){
+  return JSON.parse(localStorage.getItem("chat_global")) || {};
+}
+
+function salvar(chats){
+  localStorage.setItem("chat_global", JSON.stringify(chats));
+}
+
+// FORMATAR HORA
+function hora(data){
+  let d = new Date(data);
+  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+// LISTAR
+function carregar(){
+
+  let chats = getChats();
+  let usersDiv = document.getElementById("users");
+  let busca = document.getElementById("buscar").value.toLowerCase();
+
+  usersDiv.innerHTML = "";
+
+  Object.keys(chats).forEach(u=>{
+
+    if(!u.toLowerCase().includes(busca)) return;
+
+    let lista = chats[u];
+    let ultima = lista[lista.length - 1];
+
+    let naoLidas = lista.filter(m=>m.tipo === "user").length;
+
+    usersDiv.innerHTML += `
+      <div class="user ${selecionado===u?'active':''}" onclick="abrir('${u}')">
+        <div class="top">
+          <div class="nome">${u}</div>
+          ${naoLidas ? `<div class="badge">${naoLidas}</div>` : ""}
+        </div>
+        <div class="preview">${ultima?.texto || ""}</div>
+        <div class="time">${hora(ultima?.data)}</div>
+      </div>
+    `;
+  });
+}
+
+// ABRIR
+function abrir(u){
+  selecionado = u;
+
+  document.getElementById("headerNome").innerText = u;
+  document.getElementById("status").innerText = "Online";
+
+  render();
+}
+
+// RENDER CHAT
+function render(){
+
+  if(!selecionado) return;
+
+  let chats = getChats();
+  let lista = chats[selecionado] || [];
+
+  let chat = document.getElementById("chat");
+  chat.innerHTML = "";
+
+  lista.forEach(m=>{
+    chat.innerHTML += `
+      <div class="msg ${m.tipo === 'admin' ? 'admin-msg' : 'user-msg'}">
+        ${m.texto}
+        <div class="msg-time">${hora(m.data)}</div>
+      </div>
+    `;
+  });
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// RESPONDER
+function responder(){
+
+  let texto = document.getElementById("msg").value.trim();
+  if(!texto || !selecionado) return;
+
+  let chats = getChats();
+
+  chats[selecionado].push({
+    tipo:"admin",
+    texto,
+    data:new Date().toISOString()
+  });
+
+  salvar(chats);
+
+  document.getElementById("msg").value = "";
+
+  render();
+}
+
+// ENTER
+document.getElementById("msg").addEventListener("keypress", e=>{
+  if(e.key === "Enter") responder();
+});
+
+// BUSCA
+document.getElementById("buscar").addEventListener("input", carregar);
+
+// AUTO UPDATE
+setInterval(()=>{
+  carregar();
+  render();
+},1000);
+
+carregar();
+
+</script>
+
+</body>
+</html>

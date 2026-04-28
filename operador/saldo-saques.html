@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+  color:white;
+  padding:25px;
+}
+
+/* CARD */
+.card{
+  max-width:500px;
+  margin:auto;
+  padding:25px;
+  border-radius:20px;
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* TITULO */
+h2{margin-bottom:20px;}
+
+/* SALDO */
+.saldo{
+  font-size:34px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+/* BOX INFO */
+.box{
+  display:flex;
+  justify-content:space-between;
+  padding:12px;
+  border-bottom:1px solid #1a1a1a;
+  font-size:14px;
+}
+
+.recebido{color:#22c55e;}
+.sacado{color:#ef4444;}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>Saldo</h2>
+
+  <div class="saldo" id="saldo">R$ 0,00</div>
+
+  <div class="box">
+    <span>Total recebido</span>
+    <span class="recebido" id="recebido"></span>
+  </div>
+
+  <div class="box">
+    <span>Total sacado</span>
+    <span class="sacado" id="sacado"></span>
+  </div>
+
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+function f(v){
+  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function calcular(){
+
+  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let saques = JSON.parse(localStorage.getItem("saques_operador_"+usuario)) || [];
+
+  let recebido = 0;
+  let sacado = 0;
+
+  // 💰 ENTRADAS
+  transacoes.forEach(t=>{
+    if(t.operador === usuario && t.status === "aprovado"){
+      recebido += Number(t.valor || 0);
+    }
+  });
+
+  // 💸 SAÍDAS
+  saques.forEach(s=>{
+    if(s.status !== "falha"){
+      sacado += Number(s.valor || 0);
+    }
+  });
+
+  let saldo = recebido - sacado;
+
+  document.getElementById("saldo").innerText = f(saldo);
+  document.getElementById("recebido").innerText = f(recebido);
+  document.getElementById("sacado").innerText = "- " + f(sacado);
+}
+
+calcular();
+
+</script>
+
+</body>
+</html>
