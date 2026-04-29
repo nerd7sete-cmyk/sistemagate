@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Histórico de Saques</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -9,89 +12,89 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
+  background:#0a0a0a;
   color:white;
-  padding:25px;
+  padding:20px;
 }
 
 /* TOPO */
 .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
+  margin-bottom:15px;
 }
 
 h2{
-  font-size:22px;
-  font-weight:600;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
-/* FILTROS */
-.filters{
+/* 🔥 FILTROS PREMIUM (ESTILO BANCO) */
+.filtros{
   display:flex;
   gap:10px;
-}
-
-.input{
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
-  color:white;
-}
-
-/* CARDS */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:18px;
-  margin-bottom:25px;
-}
-
-.card{
-  background:linear-gradient(145deg,#050505,#0a0a0a);
-  padding:20px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-
-.title{
-  font-size:11px;
-  color:#666;
-  text-transform:uppercase;
-}
-
-.value{
-  font-size:26px;
-  margin-top:10px;
-  color:#fff;
-  font-weight:600;
-}
-
-/* TABELA */
-.table{
-  width:100%;
-  border-collapse:collapse;
+  margin-bottom:18px;
   background:#050505;
+  padding:6px;
   border-radius:16px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* BOTÕES */
+.filtro-btn{
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  border-radius:14px;
+  font-size:12px;
+  cursor:pointer;
+  color:#9ca3af;
+  transition:0.25s;
+  position:relative;
+}
+
+/* ATIVO 🔥 */
+.filtro-btn.active{
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  color:#fff;
+  box-shadow:
+    0 0 12px rgba(59,130,246,0.4),
+    inset 0 0 6px rgba(255,255,255,0.1);
+}
+
+/* HOVER */
+.filtro-btn:hover{
+  color:#fff;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.05);
   overflow:hidden;
 }
 
-.table th,
-.table td{
+/* ITEM */
+.item{
   padding:16px;
-  text-align:left;
-  border-bottom:1px solid #111;
-  font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:0.2s;
 }
 
-.table th{
-  color:#666;
+.item:hover{
+  background:#0f0f0f;
 }
 
-.table tr:hover{
-  background:#0a0a0a;
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.valor{
+  font-size:16px;
+  font-weight:600;
 }
 
 /* STATUS */
@@ -99,19 +102,46 @@ h2{
   font-size:11px;
   padding:4px 10px;
   border-radius:20px;
-  border:1px solid rgba(34,197,94,0.3);
-  color:#22c55e;
+  border:1px solid;
 }
 
-/* VALORES */
-.valor{
-  color:#fff;
-  font-weight:600;
+.pendente{
+  color:#facc15;
+  border-color:rgba(250,204,21,0.3);
 }
 
-.comissao{
+.pago{
   color:#22c55e;
-  font-weight:600;
+  border-color:rgba(34,197,94,0.3);
+}
+
+.recusado{
+  color:#ef4444;
+  border-color:rgba(239,68,68,0.3);
+}
+
+/* INFO */
+.info{
+  margin-top:8px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.info span{
+  display:block;
+  margin-bottom:3px;
+}
+
+.chave{
+  color:#3b82f6;
+  word-break:break-all;
+}
+
+/* VAZIO */
+.vazio{
+  padding:20px;
+  text-align:center;
+  color:#666;
 }
 </style>
 </head>
@@ -119,130 +149,91 @@ h2{
 <body>
 
 <div class="top">
-  <h2>Transações</h2>
-
-  <div class="filters">
-    <input type="date" id="inicio" class="input">
-    <input type="date" id="fim" class="input">
-  </div>
+  <h2><i class="ri-time-line"></i> Histórico de saques</h2>
 </div>
 
-<!-- CARDS -->
-<div class="stats">
-
-  <div class="card">
-    <div class="title">Total Pago</div>
-    <div class="value" id="total">R$ 0,00</div>
-  </div>
-
-  <div class="card">
-    <div class="title">Comissão do Gerente</div>
-    <div class="value" id="comissao">R$ 0,00</div>
-  </div>
-
-  <div class="card">
-    <div class="title">Transações Pagas</div>
-    <div class="value" id="qtd">0</div>
-  </div>
-
+<!-- 🔥 FILTROS -->
+<div class="filtros">
+  <div class="filtro-btn active" onclick="setFiltro('todos', this)">Todos</div>
+  <div class="filtro-btn" onclick="setFiltro('pendente', this)">Pendentes</div>
+  <div class="filtro-btn" onclick="setFiltro('pago', this)">Pagos</div>
+  <div class="filtro-btn" onclick="setFiltro('recusado', this)">Recusados</div>
 </div>
 
-<!-- TABELA -->
-<table class="table">
-  <thead>
-    <tr>
-      <th>Data</th>
-      <th>Hora</th>
-      <th>Operador</th>
-      <th>Valor</th>
-      <th>Comissão</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody id="lista"></tbody>
-</table>
+<div class="card" id="lista"></div>
 
 <script>
 
-// DADOS
-let gerenteLogado = localStorage.getItem("usuario");
+let usuario = localStorage.getItem("usuario");
+let filtroAtual = "todos";
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
-
-let gerente = gerentes.find(g => g.email === gerenteLogado);
-
-// operadores do gerente
-let meusOperadores = operadores.filter(o => o.gerente === gerenteLogado);
-
-// FILTRO DATA
-function dentroPeriodo(data){
-
-  let inicio = document.getElementById("inicio").value;
-  let fim = document.getElementById("fim").value;
-
-  if(!inicio && !fim) return true;
-
-  let d = new Date(data);
-
-  if(inicio && d < new Date(inicio)) return false;
-  if(fim && d > new Date(fim + " 23:59:59")) return false;
-
-  return true;
+/* FORMAT */
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-// RENDER
+function formatarData(d){
+  let data = new Date(d);
+  return data.toLocaleDateString("pt-BR") + " • " +
+         data.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function mascarar(chave){
+  if(!chave) return "-";
+  return chave.substring(0,4) + "****" + chave.slice(-4);
+}
+
+/* TROCAR FILTRO */
+function setFiltro(tipo, el){
+  filtroAtual = tipo;
+
+  document.querySelectorAll(".filtro-btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+
+  render();
+}
+
+/* RENDER */
 function render(){
 
   let lista = document.getElementById("lista");
+  let saques = JSON.parse(localStorage.getItem("saques_gerente_"+usuario)) || [];
+
+  if(filtroAtual !== "todos"){
+    saques = saques.filter(s=>s.status === filtroAtual);
+  }
+
+  if(saques.length === 0){
+    lista.innerHTML = `<div class="vazio">Nenhum saque encontrado</div>`;
+    return;
+  }
+
   lista.innerHTML = "";
 
-  let total = 0;
-  let comissaoTotal = 0;
-  let qtd = 0;
-
-  transacoes.forEach(t => {
-
-    // 🔥 SOMENTE PAGAS
-    if(t.status !== "pago") return;
-
-    let operador = meusOperadores.find(o => o.email === t.operador);
-    if(!operador) return;
-
-    if(!dentroPeriodo(t.data)) return;
-
-    let data = new Date(t.data);
-    let valor = t.valor || 0;
-
-    let taxa = gerente?.taxa || 5;
-    let comissao = valor * taxa / 100;
-
-    total += valor;
-    comissaoTotal += comissao;
-    qtd++;
-
+  saques.forEach(s=>{
     lista.innerHTML += `
-    <tr>
-      <td>${data.toLocaleDateString()}</td>
-      <td>${data.toLocaleTimeString()}</td>
-      <td>${operador.nome}</td>
-      <td class="valor">R$ ${valor.toFixed(2)}</td>
-      <td class="comissao">R$ ${comissao.toFixed(2)}</td>
-      <td><span class="status">Pago</span></td>
-    </tr>
+    <div class="item">
+
+      <div class="row">
+        <div class="valor">${f(s.valor)}</div>
+        <div class="status ${s.status}">
+          ${s.status}
+        </div>
+      </div>
+
+      <div class="info">
+        <span>💰 Líquido: ${f(s.liquido)}</span>
+        <span>🏦 Tipo: ${s.tipo}</span>
+        <span class="chave">🔑 ${mascarar(s.chave)}</span>
+        <span>📅 ${formatarData(s.data)}</span>
+      </div>
+
+    </div>
     `;
   });
-
-  document.getElementById("total").innerText = "R$ " + total.toFixed(2);
-  document.getElementById("comissao").innerText = "R$ " + comissaoTotal.toFixed(2);
-  document.getElementById("qtd").innerText = qtd;
 }
 
-// EVENTOS
-document.getElementById("inicio").addEventListener("change", render);
-document.getElementById("fim").addEventListener("change", render);
-
+/* INIT */
 render();
 
 </script>

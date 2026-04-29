@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Suporte</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#0a0a0a;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+
+/* HEADER */
+.top{
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.top i{
+  font-size:20px;
+  color:#3b82f6;
+}
+
+.top h2{
+  font-size:16px;
+}
+
+/* CHAT */
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* MENSAGENS */
+.msg{
+  max-width:75%;
+  padding:12px;
+  border-radius:14px;
+  font-size:13px;
+  position:relative;
+  line-height:1.4;
+}
+
+/* ENVIADA */
+.me{
+  align-self:flex-end;
+  background:linear-gradient(145deg,#3b82f6,#1d4ed8);
+  box-shadow:0 0 10px rgba(59,130,246,0.4);
+}
+
+/* RECEBIDA */
+.support{
+  align-self:flex-start;
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* HORA */
+.time{
+  font-size:10px;
+  opacity:0.6;
+  margin-top:5px;
+  display:block;
+  text-align:right;
+}
+
+/* INPUT AREA */
+.input-area{
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  gap:10px;
+}
+
+.input{
+  flex:1;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+.btn{
+  padding:14px 16px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px rgba(59,130,246,0.4);
+}
+
+/* SCROLL */
+.chat::-webkit-scrollbar{width:4px;}
+.chat::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="top">
+  <i class="ri-customer-service-2-line"></i>
+  <h2>Suporte</h2>
+</div>
+
+<!-- CHAT -->
+<div class="chat" id="chat"></div>
+
+<!-- INPUT -->
+<div class="input-area">
+  <input id="mensagem" class="input" placeholder="Digite sua mensagem...">
+  <div class="btn" onclick="enviar()">
+    <i class="ri-send-plane-fill"></i>
+  </div>
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario") || "gerente";
+
+/* FORMATAR HORA */
+function hora(){
+  let d = new Date();
+  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* CARREGAR */
+function render(){
+
+  let chat = document.getElementById("chat");
+  chat.innerHTML = "";
+
+  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
+
+  msgs.forEach(m=>{
+    chat.innerHTML += `
+      <div class="msg ${m.tipo}">
+        ${m.texto}
+        <span class="time">${m.hora}</span>
+      </div>
+    `;
+  });
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* ENVIAR */
+function enviar(){
+
+  let input = document.getElementById("mensagem");
+  let texto = input.value.trim();
+
+  if(!texto) return;
+
+  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
+
+  msgs.push({
+    texto:texto,
+    tipo:"me",
+    hora:hora()
+  });
+
+  localStorage.setItem("chat_suporte_"+usuario, JSON.stringify(msgs));
+
+  input.value="";
+  render();
+
+  setTimeout(()=>{
+    respostaAutomatica();
+  },1000);
+}
+
+/* RESPOSTA FAKE */
+function respostaAutomatica(){
+
+  let respostas = [
+    "Recebemos sua mensagem.",
+    "Nosso suporte vai responder em breve.",
+    "Estamos analisando sua solicitação.",
+    "Obrigado pelo contato."
+  ];
+
+  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
+
+  msgs.push({
+    texto:respostas[Math.floor(Math.random()*respostas.length)],
+    tipo:"support",
+    hora:hora()
+  });
+
+  localStorage.setItem("chat_suporte_"+usuario, JSON.stringify(msgs));
+
+  render();
+}
+
+/* ENTER */
+mensagem.addEventListener("keypress", e=>{
+  if(e.key === "Enter") enviar();
+});
+
+/* INIT */
+render();
+
+</script>
+
+</body>
+</html>

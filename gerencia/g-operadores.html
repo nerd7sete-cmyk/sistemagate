@@ -12,9 +12,9 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
+  background:#0a0a0a;
   color:white;
-  padding:25px;
+  padding:20px;
 }
 
 /* TOPO */
@@ -22,16 +22,47 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
+.top h2{
+  color:#ffffff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:20px;
+}
+
+/* 🔥 BOTÃO PREMIUM */
 .btn{
-  background:white;
-  color:black;
-  padding:10px 15px;
-  border-radius:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:14px;
   cursor:pointer;
-  font-weight:bold;
+  font-weight:600;
+  color:#fff;
+
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  border:none;
+
+  box-shadow:
+    0 0 12px rgba(59,130,246,0.5),
+    0 6px 20px rgba(0,0,0,0.6);
+
+  transition:0.25s;
+}
+
+.btn i{
+  font-size:18px;
+}
+
+.btn:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:
+    0 0 20px rgba(59,130,246,0.8),
+    0 10px 30px rgba(0,0,0,0.8);
 }
 
 /* FILTROS */
@@ -43,17 +74,18 @@ body{
 
 .input{
   padding:12px;
-  border-radius:10px;
-  border:1px solid #1e293b;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
   background:#0a0a0a;
   color:white;
+  width:100%;
 }
 
-/* CARD */
+/* CARD LISTA */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.05);
   overflow:hidden;
 }
 
@@ -62,13 +94,13 @@ body{
   display:flex;
   justify-content:space-between;
   padding:18px;
-  border-bottom:1px solid #111;
+  border-bottom:1px solid rgba(255,255,255,0.04);
   align-items:center;
   transition:0.2s;
 }
 
 .item:hover{
-  background:#0a0a0a;
+  background:#0f0f0f;
 }
 
 /* INFO */
@@ -79,7 +111,7 @@ body{
 
 .info small{
   display:block;
-  color:#94a3b8;
+  color:#9ca3af;
   font-size:12px;
 }
 
@@ -94,15 +126,16 @@ body{
   font-size:11px;
   padding:4px 10px;
   border-radius:20px;
-  background:#0f172a;
+  background:#020617;
+  border:1px solid rgba(59,130,246,0.2);
 }
 
-/* STATUS PROFISSIONAL */
+/* STATUS */
 .status{
   font-size:11px;
   padding:4px 10px;
   border-radius:20px;
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid;
 }
 
 .ativo{
@@ -118,26 +151,27 @@ body{
 /* ACTIONS */
 .actions{
   display:flex;
-  gap:10px;
+  gap:8px;
 }
 
-/* BOTÕES */
+/* BOTÕES AÇÃO */
 .btn-action{
-  width:38px;
-  height:38px;
+  width:36px;
+  height:36px;
   border-radius:10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.08);
   cursor:pointer;
-  color:#fff;
+  color:#9ca3af;
   transition:0.2s;
 }
 
 .btn-action:hover{
-  background:#111;
-  transform:scale(1.08);
+  color:#fff;
+  border-color:#3b82f6;
+  background:#0f0f0f;
 }
 
 /* MODAL */
@@ -151,11 +185,12 @@ body{
 }
 
 .modal{
-  background:#050505;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   padding:25px;
-  border-radius:16px;
+  border-radius:20px;
   width:100%;
   max-width:420px;
+  border:1px solid rgba(255,255,255,0.05);
 }
 
 /* FORM */
@@ -174,19 +209,19 @@ body{
 
 .save{
   flex:1;
-  background:white;
-  color:black;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   text-align:center;
   cursor:pointer;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  color:white;
 }
 
 .cancel{
   flex:1;
-  border:1px solid #1e293b;
+  border:1px solid #1a1a1a;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   text-align:center;
   cursor:pointer;
 }
@@ -196,11 +231,12 @@ body{
   position:fixed;
   bottom:20px;
   right:20px;
-  background:#050505;
+  background:#0f0f0f;
   padding:15px;
-  border-radius:10px;
+  border-radius:12px;
   opacity:0;
   transition:0.3s;
+  border:1px solid rgba(255,255,255,0.05);
 }
 
 .toast.show{opacity:1;}
@@ -210,12 +246,16 @@ body{
 <body>
 
 <div class="top">
-  <h2>Operadores</h2>
-  <div class="btn" onclick="abrirModal()">+ Criar Operador</div>
+  <h2><i class="ri-user-3-line"></i> Operadores</h2>
+
+  <div class="btn" onclick="abrirModal()">
+    <i class="ri-add-line"></i>
+    Criar Operador
+  </div>
 </div>
 
 <div class="filters">
-  <input id="busca" class="input" placeholder="Buscar..." onkeyup="render()">
+  <input id="busca" class="input" placeholder="Buscar operador..." onkeyup="render()">
   <select id="filtro" class="input" onchange="render()">
     <option value="todos">Todos</option>
     <option value="ativos">Ativos</option>
@@ -244,7 +284,7 @@ body{
   </div>
 </div>
 
-<!-- MODAL EDIT TAXA -->
+<!-- MODAL EDIT -->
 <div class="modal-bg" id="modalEdit">
   <div class="modal">
     <h3>Editar taxa (%)</h3>
@@ -263,6 +303,8 @@ body{
 <div id="toast" class="toast"></div>
 
 <script>
+
+// 🔥 JS ORIGINAL (INALTERADO)
 
 const buscaInput = document.getElementById("busca");
 const filtroSelect = document.getElementById("filtro");
@@ -345,9 +387,7 @@ function render(){
   });
 }
 
-/* CRIAR */
 function criar(){
-
   if(!nomeInput.value || !emailInput.value || !senhaInput.value){
     show("Preencha tudo");
     return;
@@ -374,23 +414,19 @@ function criar(){
   show("Operador criado");
 }
 
-/* EDIT TAXA */
 function abrirEdit(i){
   indexEdit = i;
   modalEdit.style.display="flex";
 }
 
 function salvarEdit(){
-
   let v = parseFloat(valorEdit.value);
-
   if(isNaN(v)){
     show("Valor inválido");
     return;
   }
 
   operadores[indexEdit].taxa = v;
-
   salvar();
   fecharEdit();
   render();
@@ -402,7 +438,6 @@ function fecharEdit(){
   valorEdit.value="";
 }
 
-/* OUTROS */
 function toggle(i){
   operadores[i].ativo=!operadores[i].ativo;
   salvar();

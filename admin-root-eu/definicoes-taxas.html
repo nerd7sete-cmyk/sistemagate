@@ -4,309 +4,245 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configurações - PrimePay</title>
+<title>Painel Root - PrimePay</title>
 
-<script src="/auth.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
 
 body{
-  background:#000;
-  color:#fff;
-  padding:20px;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
+    #0a0a0a;
+  color:white;
+  padding:25px;
 }
 
-/* TOAST */
-.toast{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.1);
-  padding:12px 18px;
-  border-radius:10px;
-  font-size:12px;
-  color:#fff;
-  opacity:0;
-  transform:translateY(-10px);
-  transition:0.3s;
-  z-index:9999;
+.container{
+  max-width:900px;
+  margin:auto;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translateY(0);
-}
+.header{margin-bottom:25px;}
+.header h1{font-size:22px;}
+.header p{color:#9ca3af;font-size:13px;}
 
-/* CARD */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:18px;
-  padding:20px;
+  background:#0f0f0f;
+  border:1px solid rgba(59,130,246,0.2);
+  border-radius:20px;
+  padding:25px;
   margin-bottom:20px;
-  transition:0.2s;
 }
 
-.card:hover{
-  border:1px solid rgba(255,255,255,0.08);
-}
-
-.card h3{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  margin-bottom:5px;
-}
-
-.desc{
-  font-size:11px;
-  color:#666;
-  margin-bottom:15px;
-}
-
-/* INPUT */
-.input{
-  width:100%;
-  padding:11px;
-  border-radius:10px;
-  border:1px solid #111;
-  background:#0a0a0a;
-  color:#fff;
-  margin-bottom:12px;
-}
-
-.input:focus{
-  border:1px solid #333;
-  outline:none;
-}
-
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:15px;
 }
 
-/* BOTÃO */
-.btn{
-  padding:10px 16px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(180deg,#fff,#dcdcdc);
-  color:#000;
+.label{
   font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.2s;
+  color:#9ca3af;
+  margin-bottom:5px;
 }
 
-.btn:hover{
-  opacity:0.85;
-  transform:translateY(-1px);
-}
-
-.actions-right{
-  display:flex;
-  justify-content:flex-end;
-  margin-top:10px;
-}
-
-/* LISTA */
-.item{
-  display:flex;
-  justify-content:space-between;
-  padding:12px;
-  border-radius:10px;
+.input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #1a1a1a;
   background:#0a0a0a;
-  border:1px solid #111;
-  margin-top:10px;
-  font-size:12px;
+  color:white;
 }
 
-.btn-small{
-  padding:6px 10px;
-  border-radius:8px;
-  border:none;
-  background:#fff;
-  color:#000;
+.full{grid-column:1/3;}
+
+.btn{
+  margin-top:20px;
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#1f2937,#020617);
+  border:1px solid rgba(59,130,246,0.4);
+  text-align:center;
   cursor:pointer;
-  font-size:11px;
 }
 
-.list-title{
+.status{
+  margin-top:10px;
+  text-align:center;
+  font-size:13px;
+  color:#22c55e;
+}
+
+.info{
   margin-top:15px;
-  font-size:11px;
-  color:#777;
+  padding:12px;
+  border-radius:12px;
+  background:#0a0a0a;
+  border:1px solid rgba(59,130,246,0.2);
+  font-size:13px;
+  color:#9ca3af;
+}
+
+.info strong{color:#fff;}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
+  .full{grid-column:1;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOAST -->
-<div id="toast" class="toast"></div>
+<div class="container">
 
-<!-- SAQUE -->
-<div class="card">
-  <h3><i class="ri-wallet-3-line"></i> Taxa de Saque</h3>
-  <div class="desc">Valor fixo cobrado em todos os saques.</div>
-
-  <input class="input" id="saqueValor" placeholder="Valor (R$)">
-  <div class="actions-right">
-    <button class="btn" onclick="salvarSaque()">Salvar</button>
-  </div>
-</div>
-
-<!-- GLOBAL -->
-<div class="card">
-  <h3><i class="ri-global-line"></i> Taxa Global</h3>
-  <div class="desc">Aplicada quando não existe taxa individual.</div>
-
-  <div class="grid">
-    <input class="input" id="g_op" placeholder="Operadores (%)">
-    <input class="input" id="g_ge" placeholder="Gerentes (%)">
-    <input class="input" id="g_ad" placeholder="Admins (%)">
+  <div class="header">
+    <h1>Painel Root</h1>
+    <p>Controle global do sistema</p>
   </div>
 
-  <div class="actions-right">
-    <button class="btn" onclick="salvarGlobal()">Salvar</button>
+  <!-- 🔥 PDV -->
+  <div class="card">
+
+    <h2 style="margin-bottom:15px;">Configuração PDV</h2>
+
+    <div class="grid">
+
+      <div>
+        <div class="label">Valor mínimo</div>
+        <input id="min" class="input">
+      </div>
+
+      <div>
+        <div class="label">Valor máximo</div>
+        <input id="max" class="input">
+      </div>
+
+      <div class="full">
+        <div class="label">Valor fixo</div>
+        <input id="fixo" class="input">
+      </div>
+
+    </div>
+
+    <div class="btn" onclick="salvarPDV()">Salvar PDV</div>
+    <div id="msg1" class="status"></div>
+
+    <div class="info" id="infoPDV"></div>
+
   </div>
-</div>
 
-<!-- INDIVIDUAL -->
-<div class="card">
-  <h3><i class="ri-user-line"></i> Taxa Individual</h3>
-  <div class="desc">Prioridade máxima sobre todas as taxas.</div>
+  <!-- 🔥 SAQUE -->
+  <div class="card">
 
-  <input class="input" id="email" placeholder="Email do usuário">
-  <input class="input" id="taxa" placeholder="Taxa (%)">
+    <h2 style="margin-bottom:15px;">Configuração de Saque</h2>
 
-  <div class="actions-right">
-    <button class="btn" onclick="salvarIndividual()">Adicionar</button>
+    <div class="grid">
+
+      <div>
+        <div class="label">Mínimo saque</div>
+        <input id="s_min" class="input">
+      </div>
+
+      <div>
+        <div class="label">Máximo saque</div>
+        <input id="s_max" class="input">
+      </div>
+
+      <div class="full">
+        <div class="label">Taxa saque (R$)</div>
+        <input id="s_taxa" class="input">
+      </div>
+
+    </div>
+
+    <div class="btn" onclick="salvarSaque()">Salvar Saque</div>
+    <div id="msg2" class="status"></div>
+
+    <div class="info" id="infoSaque"></div>
+
   </div>
 
-  <div class="list-title">Admins</div>
-  <div id="listaAdmins"></div>
-
-  <div class="list-title">Gerentes</div>
-  <div id="listaGerentes"></div>
-
-  <div class="list-title">Operadores</div>
-  <div id="listaOperadores"></div>
 </div>
 
 <script>
 
-/* TOAST FUNÇÃO */
-function showToast(msg){
-  let t = document.getElementById("toast");
-  t.innerText = msg;
-  t.classList.add("show");
+// 🔥 PDV
+let configPDV = JSON.parse(localStorage.getItem("config_pdv")) || {
+  valor_min:10,
+  valor_max:1000,
+  valor_fixo:0
+};
 
-  setTimeout(()=>{
-    t.classList.remove("show");
-  },2000);
+min.value = configPDV.valor_min;
+max.value = configPDV.valor_max;
+fixo.value = configPDV.valor_fixo || "";
+
+function salvarPDV(){
+
+  configPDV = {
+    valor_min: parseFloat(min.value),
+    valor_max: parseFloat(max.value),
+    valor_fixo: parseFloat(fixo.value) || 0
+  };
+
+  localStorage.setItem("config_pdv", JSON.stringify(configPDV));
+
+  msg1.innerText = "PDV atualizado";
+
+  atualizarInfoPDV();
 }
 
-/* PROTEÇÃO */
-if(localStorage.getItem("tipo") !== "root"){
-  window.location.href = "login.html";
+function atualizarInfoPDV(){
+  infoPDV.innerHTML = `
+    <strong>Atual</strong><br>
+    Min: R$ ${configPDV.valor_min}<br>
+    Max: R$ ${configPDV.valor_max}<br>
+    Fixo: ${configPDV.valor_fixo || "Desativado"}
+  `;
 }
 
-/* SAQUE */
+atualizarInfoPDV();
+
+// 🔥 SAQUE
+let configSaque = JSON.parse(localStorage.getItem("config_saque")) || {
+  min:119.90,
+  max:1000,
+  taxa:9.90
+};
+
+s_min.value = configSaque.min;
+s_max.value = configSaque.max;
+s_taxa.value = configSaque.taxa;
+
 function salvarSaque(){
-  localStorage.setItem("taxa_saque", saqueValor.value);
-  showToast("Taxa de saque salva");
+
+  configSaque = {
+    min: parseFloat(s_min.value),
+    max: parseFloat(s_max.value),
+    taxa: parseFloat(s_taxa.value)
+  };
+
+  localStorage.setItem("config_saque", JSON.stringify(configSaque));
+
+  msg2.innerText = "Saque atualizado";
+
+  atualizarInfoSaque();
 }
 
-/* GLOBAL */
-function salvarGlobal(){
-  localStorage.setItem("taxa_global", JSON.stringify({
-    operador:g_op.value,
-    gerente:g_ge.value,
-    admin:g_ad.value
-  }));
-  showToast("Taxa global atualizada");
+function atualizarInfoSaque(){
+  infoSaque.innerHTML = `
+    <strong>Atual</strong><br>
+    Min: R$ ${configSaque.min}<br>
+    Max: R$ ${configSaque.max}<br>
+    Taxa: R$ ${configSaque.taxa}
+  `;
 }
 
-/* INDIVIDUAL */
-function salvarIndividual(){
-
-  let lista = JSON.parse(localStorage.getItem("taxa_individual")) || [];
-  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-  let user = usuarios.find(u => u.email === email.value);
-
-  if(!user){
-    showToast("Usuário não encontrado");
-    return;
-  }
-
-  lista = lista.filter(u => u.email !== email.value);
-
-  lista.push({
-    email: email.value,
-    taxa: taxa.value,
-    tipo: user.tipo
-  });
-
-  localStorage.setItem("taxa_individual", JSON.stringify(lista));
-
-  showToast("Taxa individual aplicada");
-  render();
-}
-
-/* RENDER */
-function render(){
-
-  let lista = JSON.parse(localStorage.getItem("taxa_individual")) || [];
-
-  listaAdmins.innerHTML = "";
-  listaGerentes.innerHTML = "";
-  listaOperadores.innerHTML = "";
-
-  lista.forEach((u,i)=>{
-
-    let html = `
-      <div class="item">
-        <span>${u.email} — ${u.taxa}%</span>
-        <button class="btn-small" onclick="remover(${i})">Remover</button>
-      </div>
-    `;
-
-    if(u.tipo === "admin") listaAdmins.innerHTML += html;
-    if(u.tipo === "gerente") listaGerentes.innerHTML += html;
-    if(u.tipo === "operador") listaOperadores.innerHTML += html;
-
-  });
-}
-
-function remover(i){
-  let lista = JSON.parse(localStorage.getItem("taxa_individual")) || [];
-  lista.splice(i,1);
-  localStorage.setItem("taxa_individual", JSON.stringify(lista));
-  showToast("Removido");
-  render();
-}
-
-/* LOAD */
-function carregar(){
-  saqueValor.value = localStorage.getItem("taxa_saque") || "";
-
-  let g = JSON.parse(localStorage.getItem("taxa_global")) || {};
-
-  g_op.value = g.operador || "";
-  g_ge.value = g.gerente || "";
-  g_ad.value = g.admin || "";
-
-  render();
-}
-
-carregar();
+atualizarInfoSaque();
 
 </script>
 
