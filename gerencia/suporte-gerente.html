@@ -44,48 +44,49 @@ body{
   padding:15px;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
 }
 
-/* MENSAGENS */
+/* MSG */
 .msg{
   max-width:75%;
   padding:12px;
   border-radius:14px;
   font-size:13px;
-  position:relative;
-  line-height:1.4;
 }
 
-/* ENVIADA */
 .me{
   align-self:flex-end;
-  background:linear-gradient(145deg,#3b82f6,#1d4ed8);
-  box-shadow:0 0 10px rgba(59,130,246,0.4);
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
 }
 
-/* RECEBIDA */
 .support{
   align-self:flex-start;
   background:#0f0f0f;
   border:1px solid rgba(255,255,255,0.05);
 }
 
-/* HORA */
+.msg img{
+  width:100%;
+  border-radius:10px;
+  margin-top:6px;
+}
+
+/* TIME */
 .time{
   font-size:10px;
   opacity:0.6;
   margin-top:5px;
-  display:block;
   text-align:right;
 }
 
-/* INPUT AREA */
+/* INPUT */
 .input-area{
   padding:12px;
   border-top:1px solid rgba(255,255,255,0.05);
   display:flex;
-  gap:10px;
+  gap:8px;
+  align-items:center;
 }
 
 .input{
@@ -97,15 +98,20 @@ body{
   color:white;
 }
 
+/* BOTÕES */
 .btn{
-  padding:14px 16px;
-  border-radius:14px;
-  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  padding:12px;
+  border-radius:12px;
+  background:#0f0f0f;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 0 10px rgba(59,130,246,0.4);
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.send{
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
 }
 
 /* SCROLL */
@@ -116,46 +122,89 @@ body{
 
 <body>
 
-<!-- HEADER -->
 <div class="top">
   <i class="ri-customer-service-2-line"></i>
   <h2>Suporte</h2>
 </div>
 
-<!-- CHAT -->
 <div class="chat" id="chat"></div>
 
-<!-- INPUT -->
 <div class="input-area">
+
+  <!-- 📷 FOTO -->
+  <div class="btn" onclick="file.click()">
+    <i class="ri-image-line"></i>
+  </div>
+
+  <input type="file" id="file" hidden accept="image/*" onchange="enviarImagem(event)">
+
   <input id="mensagem" class="input" placeholder="Digite sua mensagem...">
-  <div class="btn" onclick="enviar()">
+
+  <div class="btn send" onclick="enviar()">
     <i class="ri-send-plane-fill"></i>
   </div>
+
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("usuario") || "gerente";
 
-/* FORMATAR HORA */
-function hora(){
-  let d = new Date();
-  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+/* 🔥 BANCO GLOBAL (ROOT) */
+function getConversas(){
+  return JSON.parse(localStorage.getItem("suporte_root")) || [];
 }
 
-/* CARREGAR */
+function salvarConversas(lista){
+  localStorage.setItem("suporte_root", JSON.stringify(lista));
+}
+
+/* 🔥 GARANTE CONVERSA */
+function getMinha(){
+
+  let lista = getConversas();
+
+  let conv = lista.find(c => c.admin === usuario);
+
+  if(!conv){
+    conv = {
+      admin: usuario,
+      tipo: "gerente",
+      mensagens: [
+        {
+          tipo:"support",
+          texto:"Olá! Nosso suporte já vai te responder.",
+          hora:hora()
+        }
+      ]
+    };
+
+    lista.push(conv);
+    salvarConversas(lista);
+  }
+
+  return conv;
+}
+
+/* HORA */
+function hora(){
+  return new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* RENDER */
 function render(){
 
+  let conv = getMinha();
   let chat = document.getElementById("chat");
+
   chat.innerHTML = "";
 
-  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
-
-  msgs.forEach(m=>{
+  conv.mensagens.forEach(m=>{
     chat.innerHTML += `
-      <div class="msg ${m.tipo}">
-        ${m.texto}
-        <span class="time">${m.hora}</span>
+      <div class="msg ${m.tipo === 'me' ? 'me' : 'support'}">
+        ${m.texto ? m.texto : ""}
+        ${m.img ? `<img src="${m.img}">` : ""}
+        <div class="time">${m.hora}</div>
       </div>
     `;
   });
@@ -163,53 +212,51 @@ function render(){
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* ENVIAR */
+/* ENVIAR TEXTO */
 function enviar(){
 
-  let input = document.getElementById("mensagem");
-  let texto = input.value.trim();
-
+  let texto = mensagem.value.trim();
   if(!texto) return;
 
-  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
+  let lista = getConversas();
+  let conv = lista.find(c => c.admin === usuario);
 
-  msgs.push({
-    texto:texto,
+  conv.mensagens.push({
     tipo:"me",
+    texto,
     hora:hora()
   });
 
-  localStorage.setItem("chat_suporte_"+usuario, JSON.stringify(msgs));
+  salvarConversas(lista);
 
-  input.value="";
+  mensagem.value="";
   render();
-
-  setTimeout(()=>{
-    respostaAutomatica();
-  },1000);
 }
 
-/* RESPOSTA FAKE */
-function respostaAutomatica(){
+/* ENVIAR IMAGEM */
+function enviarImagem(e){
 
-  let respostas = [
-    "Recebemos sua mensagem.",
-    "Nosso suporte vai responder em breve.",
-    "Estamos analisando sua solicitação.",
-    "Obrigado pelo contato."
-  ];
+  let file = e.target.files[0];
+  if(!file) return;
 
-  let msgs = JSON.parse(localStorage.getItem("chat_suporte_"+usuario)) || [];
+  let reader = new FileReader();
 
-  msgs.push({
-    texto:respostas[Math.floor(Math.random()*respostas.length)],
-    tipo:"support",
-    hora:hora()
-  });
+  reader.onload = function(ev){
 
-  localStorage.setItem("chat_suporte_"+usuario, JSON.stringify(msgs));
+    let lista = getConversas();
+    let conv = lista.find(c => c.admin === usuario);
 
-  render();
+    conv.mensagens.push({
+      tipo:"me",
+      img:ev.target.result,
+      hora:hora()
+    });
+
+    salvarConversas(lista);
+    render();
+  };
+
+  reader.readAsDataURL(file);
 }
 
 /* ENTER */
@@ -217,7 +264,9 @@ mensagem.addEventListener("keypress", e=>{
   if(e.key === "Enter") enviar();
 });
 
-/* INIT */
+/* AUTO UPDATE */
+setInterval(render,1000);
+
 render();
 
 </script>

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Suporte</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
@@ -10,31 +11,34 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-body{
+html,body{
+  height:100%;
   background:#0a0a0a;
-  color:white;
+}
+
+body{
   display:flex;
   flex-direction:column;
-  height:100vh;
+  color:white;
 }
 
 /* HEADER */
-.header{
+.top{
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:15px;
-  background:#0f0f0f;
-  border-bottom:1px solid #1a1a1a;
+  gap:10px;
 }
 
-.icon-suporte{
-  font-size:26px;
+.top i{
+  font-size:20px;
   color:#3b82f6;
 }
 
-.header-info strong{font-size:14px;}
-.status{font-size:11px;color:#22c55e;}
+.top h2{
+  font-size:16px;
+}
 
 /* CHAT */
 .chat{
@@ -43,26 +47,17 @@ body{
   padding:15px;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
 }
 
-/* MSG */
 .msg{
   max-width:75%;
   padding:12px;
-  border-radius:16px;
+  border-radius:14px;
   font-size:13px;
 }
 
-.user{
-  background:#3b82f6;
-  align-self:flex-end;
-}
-
-.support{
-  background:#1a1a1a;
-  align-self:flex-start;
-}
+.texto{margin-bottom:5px;}
 
 .msg img{
   width:100%;
@@ -70,21 +65,31 @@ body{
   margin-top:6px;
 }
 
-/* HORA */
+.me{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+}
+
+.support{
+  align-self:flex-start;
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
 .time{
   font-size:10px;
   opacity:0.6;
   margin-top:5px;
+  display:block;
   text-align:right;
 }
 
-/* INPUT */
 .input-area{
-  padding:10px;
-  border-top:1px solid #1a1a1a;
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,0.05);
   display:flex;
   gap:8px;
-  background:#0f0f0f;
+  align-items:center;
 }
 
 .input{
@@ -92,56 +97,50 @@ body{
   padding:14px;
   border-radius:14px;
   border:1px solid #1a1a1a;
-  background:#111;
+  background:#0a0a0a;
   color:white;
 }
 
 .btn{
   padding:12px;
   border-radius:12px;
-  background:#111;
+  background:#0f0f0f;
   cursor:pointer;
   display:flex;
   align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.05);
 }
 
-.send{
-  background:#3b82f6;
+.btn-send{
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
 }
 
-/* EMPTY */
-.empty{
-  text-align:center;
-  color:#6b7280;
-  margin-top:50px;
-}
+.chat::-webkit-scrollbar{width:4px;}
+.chat::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <i class="ri-customer-service-2-fill icon-suporte"></i>
-  <div>
-    <strong>Suporte</strong>
-    <div class="status">● Online</div>
-  </div>
+<div class="top">
+  <i class="ri-customer-service-2-line"></i>
+  <h2>Suporte</h2>
 </div>
 
 <div class="chat" id="chat"></div>
 
 <div class="input-area">
 
-  <!-- 📷 FOTO -->
   <div class="btn" onclick="file.click()">
     <i class="ri-image-line"></i>
   </div>
 
   <input type="file" id="file" hidden accept="image/*" onchange="enviarImagem(event)">
 
-  <input id="msg" class="input" placeholder="Digite sua mensagem...">
+  <input id="mensagem" class="input" placeholder="Digite sua mensagem...">
 
-  <div class="btn send" onclick="enviar()">
+  <div class="btn btn-send" onclick="enviar()">
     <i class="ri-send-plane-fill"></i>
   </div>
 
@@ -149,9 +148,14 @@ body{
 
 <script>
 
-let usuario = localStorage.getItem("usuario") || "operador";
+let usuario = localStorage.getItem("usuario") || "admin";
 
-/* 🔥 BANCO ROOT */
+/* HORA */
+function hora(){
+  return new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* 🔥 BUSCAR TODAS CONVERSAS */
 function getConversas(){
   return JSON.parse(localStorage.getItem("suporte_root")) || [];
 }
@@ -160,57 +164,36 @@ function salvarConversas(lista){
   localStorage.setItem("suporte_root", JSON.stringify(lista));
 }
 
-/* 🔥 GARANTE CONVERSA */
-function getMinha(){
+/* 🔥 GARANTIR CONVERSA */
+function getOuCriarConversa(){
 
-  let lista = getConversas();
+  let conversas = getConversas();
 
-  let conv = lista.find(c => c.admin === usuario);
+  let conv = conversas.find(c => c.admin === usuario);
 
   if(!conv){
-    conv = {
-      admin: usuario,
-      tipo: "operador",
-      mensagens: [
-        {
-          tipo:"support",
-          texto:"Olá! Nosso suporte já vai te responder.",
-          hora:hora()
-        }
-      ]
-    };
-
-    lista.push(conv);
-    salvarConversas(lista);
+    conv = { admin:usuario, mensagens:[] };
+    conversas.push(conv);
+    salvarConversas(conversas);
   }
 
   return conv;
 }
 
-/* HORA */
-function hora(){
-  return new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-}
-
 /* RENDER */
 function render(){
 
-  let conv = getMinha();
   let chat = document.getElementById("chat");
-
   chat.innerHTML = "";
 
-  if(conv.mensagens.length === 0){
-    chat.innerHTML = `<div class="empty">Nenhuma mensagem</div>`;
-    return;
-  }
+  let conv = getOuCriarConversa();
 
   conv.mensagens.forEach(m=>{
     chat.innerHTML += `
-      <div class="msg ${m.tipo === 'me' ? 'user' : 'support'}">
-        ${m.texto ? m.texto : ""}
+      <div class="msg ${m.tipo}">
+        ${m.texto ? `<div class="texto">${m.texto}</div>` : ""}
         ${m.img ? `<img src="${m.img}">` : ""}
-        <div class="time">${m.hora}</div>
+        <span class="time">${m.hora}</span>
       </div>
     `;
   });
@@ -218,25 +201,41 @@ function render(){
   chat.scrollTop = chat.scrollHeight;
 }
 
+/* SALVAR MSG */
+function salvarMensagem(msg){
+
+  let conversas = getConversas();
+
+  let index = conversas.findIndex(c => c.admin === usuario);
+
+  if(index === -1){
+    conversas.push({
+      admin:usuario,
+      mensagens:[{...msg, hora:hora()}]
+    });
+  }else{
+    conversas[index].mensagens.push({
+      ...msg,
+      hora:hora()
+    });
+  }
+
+  salvarConversas(conversas);
+  render();
+}
+
 /* ENVIAR TEXTO */
 function enviar(){
 
-  let texto = msg.value.trim();
+  let texto = mensagem.value.trim();
   if(!texto) return;
 
-  let lista = getConversas();
-  let conv = lista.find(c => c.admin === usuario);
-
-  conv.mensagens.push({
-    tipo:"me",
-    texto,
-    hora:hora()
+  salvarMensagem({
+    texto:texto,
+    tipo:"me"
   });
 
-  salvarConversas(lista);
-
-  msg.value="";
-  render();
+  mensagem.value="";
 }
 
 /* ENVIAR IMAGEM */
@@ -249,30 +248,22 @@ function enviarImagem(e){
 
   reader.onload = function(ev){
 
-    let lista = getConversas();
-    let conv = lista.find(c => c.admin === usuario);
-
-    conv.mensagens.push({
-      tipo:"me",
+    salvarMensagem({
       img:ev.target.result,
-      hora:hora()
+      tipo:"me"
     });
 
-    salvarConversas(lista);
-    render();
   };
 
   reader.readAsDataURL(file);
 }
 
 /* ENTER */
-msg.addEventListener("keypress", e=>{
+mensagem.addEventListener("keypress", e=>{
   if(e.key === "Enter") enviar();
 });
 
-/* AUTO */
-setInterval(render,1000);
-
+/* INIT */
 render();
 
 </script>

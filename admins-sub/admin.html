@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <title>PrimePay - Admin</title>
 
@@ -14,14 +14,13 @@
 
 html, body{
   height:100%;
-  -webkit-text-size-adjust:100%;
 }
 
 body{
   display:flex;
   background:#000;
-  color:#fff;
-  font-family:"Segoe UI", Arial;
+  color:white;
+  font-family:"Segoe UI";
 }
 
 /* SIDEBAR */
@@ -34,12 +33,7 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  overflow-y:auto;
-  -webkit-overflow-scrolling: touch;
 }
-
-.sidebar::-webkit-scrollbar{width:4px;}
-.sidebar::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
 
 .logo{
   font-size:16px;
@@ -49,30 +43,32 @@ body{
 
 .user{
   background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.06);
   padding:12px;
   border-radius:12px;
-  margin-bottom:25px;
+  margin-bottom:20px;
 }
 
-.user strong{font-size:14px;}
-.user small{color:#777;font-size:11px;}
-
+/* MENU */
 .menu-item{
   display:flex;
   align-items:center;
-  gap:10px;
+  justify-content:space-between;
   padding:12px;
   border-radius:12px;
-  margin-bottom:10px;
+  margin-bottom:8px;
   cursor:pointer;
   color:#aaa;
-  transition:0.2s;
 }
 
 .menu-item:hover{
   background:#0a0a0a;
   color:#fff;
+}
+
+.menu-left{
+  display:flex;
+  gap:10px;
+  align-items:center;
 }
 
 .active{
@@ -81,181 +77,169 @@ body{
   border:1px solid rgba(255,255,255,0.08);
 }
 
-.logout{
-  margin-top:20px;
-  padding:12px;
-  border-radius:12px;
-  background:#0a0a0a;
-  cursor:pointer;
-  display:flex;
-  gap:10px;
+/* SUBMENU */
+.submenu{
+  display:none;
+  padding-left:10px;
+}
+
+.submenu.open{
+  display:block;
+}
+
+/* SAQUES */
+.destaque{
+  color:#facc15;
+  border:1px solid rgba(250,204,21,0.2);
+}
+
+/* SUPORTE */
+.suporte{
+  color:#3b82f6;
+  border:1px solid rgba(59,130,246,0.2);
 }
 
 /* MAIN */
 .main{
   flex:1;
-  display:flex;
-  flex-direction:column;
-  height:100dvh;
-}
-
-.topbar{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 iframe{
-  flex:1;
   width:100%;
+  height:100vh;
   border:none;
-  background:#000;
 }
 
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  z-index:1000;
-}
-
-.menu-btn{
-  font-size:22px;
+/* LOGOUT */
+.logout{
+  padding:12px;
+  background:#0a0a0a;
+  border-radius:12px;
   cursor:pointer;
-}
-
-@media(max-width:900px){
-
-  .sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    transform:translateX(-100%);
-    z-index:1001;
-    transition:0.3s;
-  }
-
-  .sidebar.active{
-    transform:translateX(0);
-  }
-
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+<div class="sidebar">
 
-<div class="sidebar" id="sidebar">
+<div>
 
-  <div>
+<div class="logo">PrimePay</div>
 
-    <div class="logo">PrimePay Admin</div>
+<div class="user" id="userBox"></div>
 
-    <div class="user" id="userBox"></div>
+<!-- DASHBOARD -->
+<div class="menu-item active" onclick="abrir('admin-dashboard.html', this)">
+  <div class="menu-left">
+    <i class="ri-home-5-line"></i> Dashboard
+  </div>
+</div>
 
-    <!-- MENU CORRIGIDO -->
-    <div class="menu-item active" onclick="abrir('admin-dashboard.html', this)">
-      <i class="ri-home-5-line"></i> Dashboard
-    </div>
+<!-- USUÁRIOS -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-team-line"></i> Usuários
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
 
-    <div class="menu-item" onclick="abrir('admins-sub/admin-gerentes.html', this)">
-      <i class="ri-user-star-line"></i> Gerentes
-    </div>
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('criar-gerentes-admin.html', this)">Gerentes</div>
+  <div class="menu-item" onclick="abrir('criar-operadores-admin.html', this)">Operadores</div>
+</div>
 
-    <div class="menu-item" onclick="abrir('admins-sub/operadores-admin.html', this)">
-      <i class="ri-team-line"></i> Operadores
-    </div>
+<!-- FINANCEIRO -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-wallet-3-line"></i> Financeiro
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
 
-    <div class="menu-item" onclick="abrir('admins-sub/transacoes-admin.html', this)">
-      <i class="ri-exchange-dollar-line"></i> Transações
-    </div>
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('transacoes-admin.html', this)">Transações</div>
 
-    <div class="menu-item" onclick="abrir('admins-sub/saques-admin.html', this)">
-      <i class="ri-wallet-3-line"></i> Saques
-    </div>
-
-    <div class="menu-item" onclick="abrir('admins-sub/relatorio-admin.html', this)">
-      <i class="ri-bar-chart-line"></i> Relatórios
-    </div>
-
-    <div class="menu-item" onclick="abrir('admins-sub/pdv-admin.html', this)">
-      <i class="ri-qr-code-line"></i> Cobrança PIX
-    </div>
-
-    <div class="menu-item" onclick="abrir('admins-sub/config-admin.html', this)">
-      <i class="ri-settings-3-line"></i> Configurações
-    </div>
-
+  <div class="menu-item destaque" onclick="abrir('saques-admin.html', this)">
+    Saque do Admin
   </div>
 
-  <div class="logout" onclick="logout()">
-    <i class="ri-logout-box-r-line"></i> Sair
+  <div class="menu-item" onclick="abrir('relatorio-admin.html', this)">Relatórios</div>
+</div>
+
+<!-- COBRANÇA -->
+<div class="menu-item" onclick="abrir('pdv-admin.html', this)">
+  <div class="menu-left">
+    <i class="ri-qr-code-line"></i> Cobrança PIX
   </div>
+</div>
+
+<!-- SUPORTE -->
+<div class="menu-item suporte" onclick="abrir('suporte-admin.html', this)">
+  <div class="menu-left">
+    <i class="ri-customer-service-2-line"></i> Suporte
+  </div>
+</div>
+
+</div>
+
+<div class="logout" onclick="logout()">
+  <i class="ri-logout-box-r-line"></i> Sair
+</div>
 
 </div>
 
 <div class="main">
-
-  <div class="topbar">
-    <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
-    <strong>Painel Admin</strong>
-  </div>
-
   <iframe id="frame"></iframe>
-
 </div>
 
 <script>
 
-/* 🔐 PROTEÇÃO */
+/* 🔥 SEGURANÇA */
+let logado = localStorage.getItem("logado");
 let tipo = localStorage.getItem("tipo");
-if(tipo !== "admin"){
+
+if(!logado || tipo !== "admin"){
   window.location.href = "login.html";
 }
 
 /* USER */
-let usuario = localStorage.getItem("usuario") || "Admin";
+let usuario = localStorage.getItem("usuario") || "ADMIN";
 
-document.getElementById("userBox").innerHTML = `
-  <strong>${usuario}</strong>
-  <small>ADMIN</small>
+userBox.innerHTML = `
+<strong>${usuario}</strong>
+<small>ADMIN</small>
 `;
 
-/* 🔥 FUNÇÃO PERFEITA */
+/* 🔥 ABRIR PÁGINA */
 function abrir(pagina, el){
 
-  const frame = document.getElementById("frame");
+  document.getElementById("frame").src = pagina;
 
-  // evita bug de reload
-  frame.src = pagina;
+  // salva última tela
+  localStorage.setItem("pagina_admin", pagina);
 
   document.querySelectorAll(".menu-item")
-    .forEach(i => i.classList.remove("active"));
+    .forEach(i=>i.classList.remove("active"));
 
   el.classList.add("active");
-
-  fecharMenu();
 }
 
-/* LOAD INICIAL */
-window.onload = () => {
-  abrir('admins-sub/admin-dashboard.html', document.querySelector('.menu-item'));
-};
-
-/* MOBILE */
-function abrirMenu(){
-  document.getElementById("sidebar").classList.add("active");
-  document.getElementById("overlay").style.display = "block";
+/* SUBMENU */
+function toggleMenu(el){
+  el.nextElementSibling.classList.toggle("open");
 }
 
-function fecharMenu(){
-  document.getElementById("sidebar").classList.remove("active");
-  document.getElementById("overlay").style.display = "none";
+/* 🔥 INIT (CORREÇÃO DO BUG BRANCO) */
+window.onload = function(){
+
+  let ultima = localStorage.getItem("pagina_admin");
+
+  // se não tiver, abre dashboard
+  let pagina = ultima || "admin-dashboard.html";
+
+  document.getElementById("frame").src = pagina;
 }
 
 /* LOGOUT */

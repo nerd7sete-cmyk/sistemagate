@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Operadores</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#0a0a0a;
+  color:white;
+  padding:20px;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.top h2{
+  color:#ffffff;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.05);
+  margin-bottom:20px;
+}
+
+/* FORM */
+.form{
+  display:grid;
+  gap:12px;
+}
+
+.input{
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* GRID */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+/* BOTÃO */
+.btn{
+  margin-top:10px;
+  padding:14px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 0 10px rgba(59,130,246,0.4);
+}
+
+/* LISTA */
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+.nome{font-weight:600;font-size:14px;}
+.info small{color:#9ca3af;font-size:12px;}
+
+/* BADGE */
+.badge{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  border:1px solid;
+}
+
+.ativo{
+  color:#22c55e;
+  border-color:rgba(34,197,94,0.3);
+}
+
+.inativo{
+  color:#ef4444;
+  border-color:rgba(239,68,68,0.3);
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-action{
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+  color:#9ca3af;
+}
+
+.btn-action:hover{
+  color:#fff;
+  border-color:#3b82f6;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#0f0f0f;
+  padding:12px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Operadores</h2>
+</div>
+
+<!-- 🔥 FORM -->
+<div class="card">
+  <h3>Criar operador</h3>
+
+  <div class="form">
+    <input id="nome" class="input" placeholder="Nome completo">
+    <input id="email" class="input" placeholder="Email">
+    <input id="senha" class="input" placeholder="Senha">
+
+    <!-- 🔥 SELECIONAR GERENTE -->
+    <select id="gerente" class="input"></select>
+
+    <div class="row">
+      <input id="taxa" class="input" placeholder="Taxa (%)" value="15">
+      <select id="status" class="input">
+        <option value="true">Ativo</option>
+        <option value="false">Inativo</option>
+      </select>
+    </div>
+
+    <div class="btn" onclick="criar()">Criar operador</div>
+  </div>
+</div>
+
+<!-- LISTA -->
+<div class="card" id="lista"></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+
+/* DADOS */
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+/* TOAST */
+function show(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"),2000);
+}
+
+/* SALVAR */
+function salvar(){
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+}
+
+/* 🔥 CARREGAR GERENTES */
+function carregarGerentes(){
+  let select = document.getElementById("gerente");
+
+  let lista = gerentes.filter(g=>g.admin===usuario && g.ativo);
+
+  if(lista.length === 0){
+    select.innerHTML = `<option>Sem gerentes</option>`;
+    return;
+  }
+
+  select.innerHTML = "";
+
+  lista.forEach(g=>{
+    select.innerHTML += `<option value="${g.usuario}">${g.nome}</option>`;
+  });
+}
+
+/* CRIAR */
+function criar(){
+
+  let nome = nomeInput.value;
+  let email = emailInput.value;
+  let senha = senhaInput.value;
+  let gerente = gerenteInput.value;
+  let taxa = parseFloat(taxaInput.value);
+  let status = statusInput.value === "true";
+
+  if(!nome || !email || !senha){
+    show("Preencha tudo");
+    return;
+  }
+
+  operadores.unshift({
+    nome,
+    email,
+    senha,
+    gerente,
+    taxa,
+    ativo:status,
+    admin:usuario
+  });
+
+  salvar();
+  render();
+  show("Operador criado");
+
+  document.querySelectorAll(".input").forEach(i=>i.value="");
+}
+
+/* TOGGLE */
+function toggle(i){
+  operadores[i].ativo = !operadores[i].ativo;
+  salvar();
+  render();
+}
+
+/* REMOVER */
+function remover(i){
+  operadores.splice(i,1);
+  salvar();
+  render();
+}
+
+/* RENDER */
+function render(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let dados = operadores.filter(o=>o.admin===usuario);
+
+  if(dados.length === 0){
+    lista.innerHTML = "<div style='padding:15px;color:#666;'>Nenhum operador</div>";
+    return;
+  }
+
+  dados.forEach((o,i)=>{
+    lista.innerHTML += `
+    <div class="item">
+
+      <div class="info">
+        <div class="nome">${o.nome}</div>
+        <small>${o.email}</small>
+        <small>Gerente: ${o.gerente} • Taxa: ${o.taxa}%</small>
+      </div>
+
+      <div class="actions">
+
+        <div class="badge ${o.ativo ? 'ativo' : 'inativo'}">
+          ${o.ativo ? 'Ativo' : 'Inativo'}
+        </div>
+
+        <div class="btn-action" onclick="toggle(${i})">
+          <i class="ri-toggle-line"></i>
+        </div>
+
+        <div class="btn-action" onclick="remover(${i})">
+          <i class="ri-delete-bin-line"></i>
+        </div>
+
+      </div>
+
+    </div>
+    `;
+  });
+}
+
+/* INIT */
+carregarGerentes();
+render();
+
+</script>
+
+</body>
+</html>

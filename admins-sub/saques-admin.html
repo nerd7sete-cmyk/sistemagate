@@ -2,10 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Saques</title>
+<title>Saque do Sistema</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -13,220 +12,258 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
+  background:#0a0a0a;
   color:white;
-  padding:25px;
+  padding:20px;
+  display:flex;
+  justify-content:center;
 }
 
-/* HEADER */
+.container{width:100%;max-width:420px;}
+
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
 .top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:20px;
-}
-
-.title{
-  font-size:20px;
-  font-weight:600;
-}
-
-/* FILTROS */
-.filters{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
   margin-bottom:15px;
 }
 
-.input, select{
-  padding:10px;
+h2{font-size:18px;display:flex;gap:6px;}
+
+.historico{
+  font-size:12px;
+  padding:8px 12px;
   border-radius:10px;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#9ca3af;
+}
+
+.historico:hover{
+  color:#fff;
+  border-color:#3b82f6;
+}
+
+.saldo{
+  font-size:30px;
+  font-weight:700;
+  color:#22c55e;
+}
+
+.info{
+  margin-top:10px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.input{
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border-radius:14px;
   border:1px solid #1a1a1a;
   background:#0a0a0a;
   color:white;
 }
 
-/* CARD */
-.card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
-  overflow:hidden;
-}
-
-/* ROW */
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
-  padding:14px;
-  border-bottom:1px solid #111;
+.resumo{
+  margin-top:15px;
+  background:#020617;
+  padding:12px;
+  border-radius:12px;
   font-size:13px;
-  align-items:center;
 }
 
-.header{
-  background:#0a0a0a;
-  color:#666;
-  font-size:12px;
+.resumo div{
+  display:flex;
+  justify-content:space-between;
 }
 
-/* STATUS */
-.status{
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:20px;
-}
-
-.aprovado{
-  color:#22c55e;
-  background:rgba(34,197,94,0.1);
-}
-
-.pendente{
-  color:#aaa;
-  background:rgba(255,255,255,0.05);
-}
-
-/* EMPTY */
-.empty{
-  padding:20px;
+.btn{
+  margin-top:18px;
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
   text-align:center;
-  color:#666;
+  cursor:pointer;
+  font-weight:600;
 }
 
-/* RESPONSIVO */
-@media(max-width:900px){
-  .row{
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-  }
-  .header{display:none;}
+.msg{
+  margin-top:10px;
+  font-size:13px;
+  color:#facc15;
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
+<div class="card">
+
 <div class="top">
-  <div class="title">Relatório de Saques</div>
+  <h2><i class="ri-bank-card-line"></i> Saque do sistema</h2>
+  <div class="historico" onclick="irHistorico()">Histórico</div>
 </div>
 
-<!-- FILTROS -->
-<div class="filters">
+<small>Lucro disponível</small>
+<div class="saldo" id="saldo">R$ 0,00</div>
 
-  <input id="busca" class="input" placeholder="Buscar nome..." onkeyup="render()">
+<div class="info" id="regras"></div>
 
-  <select id="status" onchange="render()">
-    <option value="todos">Status</option>
-    <option value="aprovado">Aprovados</option>
-    <option value="pendente">Pendentes</option>
-  </select>
+<input id="valor" class="input" placeholder="Valor (R$)">
+<input id="pix" class="input" placeholder="Chave PIX">
 
-  <select id="periodo" onchange="render()">
-    <option value="todos">Período</option>
-    <option value="7">7 dias</option>
-    <option value="15">15 dias</option>
-    <option value="30">30 dias</option>
-  </select>
+<select id="tipo" class="input">
+  <option value="cpf">CPF</option>
+  <option value="email">Email</option>
+  <option value="telefone">Telefone</option>
+  <option value="aleatoria">Aleatória</option>
+</select>
+
+<div class="resumo">
+  <div><span>Taxa</span><b id="taxa">R$ 0,00</b></div>
+  <div><span>Você recebe</span><b id="liquido">R$ 0,00</b></div>
+</div>
+
+<div class="btn" onclick="sacar()">Solicitar saque</div>
+
+<div id="msg" class="msg"></div>
 
 </div>
 
-<!-- TABELA -->
-<div class="card" id="tabela"></div>
+</div>
 
 <script>
 
 let usuario = localStorage.getItem("usuario");
 
-let saques = JSON.parse(localStorage.getItem("saques")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+/* CONFIG ROOT */
+let config = JSON.parse(localStorage.getItem("config_saque")) || {
+  min:50,
+  max:100000,
+  taxa:5
+};
 
-// FORMATA
-function dinheiro(v){
-  return "R$ " + (v || 0).toFixed(2).replace(".", ",");
+/* FORMAT */
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-// RENDER
+/* REGRAS */
+regras.innerHTML = `
+Mín: ${f(config.min)}<br>
+Máx: ${f(config.max)}<br>
+Taxa: ${config.taxa}%
+`;
+
+/* LUCRO */
+function calcularLucro(){
+
+  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let configSistema = JSON.parse(localStorage.getItem("config")) || {taxa:15};
+
+  let total = 0;
+
+  transacoes.forEach(t=>{
+    if(t.admin === usuario){
+      total += Number(t.valor || 0) * (configSistema.taxa / 100);
+    }
+  });
+
+  let saques = JSON.parse(localStorage.getItem("saques_admin_"+usuario)) || [];
+
+  saques.forEach(s=>{
+    if(s.status !== "recusado"){
+      total -= s.valor;
+    }
+  });
+
+  return total;
+}
+
+/* RESUMO */
+valor.addEventListener("input", ()=>{
+  let v = parseFloat(valor.value) || 0;
+
+  let taxa = v * (config.taxa/100);
+  let liquido = v - taxa;
+
+  taxa.innerText = f(taxa);
+  liquido.innerText = f(liquido);
+});
+
+/* RENDER */
 function render(){
+  saldo.innerText = f(calcularLucro());
+}
 
-  let tabela = document.getElementById("tabela");
+/* SACAR */
+function sacar(){
 
-  tabela.innerHTML = `
-    <div class="row header">
-      <div>Valor</div>
-      <div>Usuário</div>
-      <div>Tipo</div>
-      <div>Status</div>
-      <div>Data</div>
-      <div>Origem</div>
-    </div>
-  `;
+  let v = parseFloat(valor.value);
+  let chave = pix.value;
+  let saldoAtual = calcularLucro();
 
-  let busca = document.getElementById("busca").value.toLowerCase();
-  let status = document.getElementById("status").value;
-  let periodo = document.getElementById("periodo").value;
+  msg.innerText = "";
 
-  let dados = saques.filter(s => s.admin === usuario);
-
-  // FILTRO STATUS
-  if(status !== "todos"){
-    dados = dados.filter(s => s.status === status);
-  }
-
-  // FILTRO TEMPO
-  if(periodo !== "todos"){
-    let limite = new Date();
-    limite.setDate(limite.getDate() - parseInt(periodo));
-
-    dados = dados.filter(s => new Date(s.data) >= limite);
-  }
-
-  // BUSCA
-  if(busca){
-    dados = dados.filter(s =>
-      s.usuario?.toLowerCase().includes(busca)
-    );
-  }
-
-  if(dados.length === 0){
-    tabela.innerHTML += `<div class="empty">Nenhum saque encontrado</div>`;
+  if(!v || v < config.min){
+    msg.innerText = "Valor mínimo: " + f(config.min);
     return;
   }
 
-  dados.slice().reverse().forEach(s => {
+  if(v > config.max){
+    msg.innerText = "Valor máximo: " + f(config.max);
+    return;
+  }
 
-    let operador = operadores.find(o => o.email === s.usuario);
-    let gerente = gerentes.find(g => g.email === operador?.gerente);
+  if(v > saldoAtual){
+    msg.innerText = "Saldo insuficiente";
+    return;
+  }
 
-    let nome = operador?.nome || gerente?.nome || "Admin";
-    let tipo = operador ? "Operador" : gerente ? "Gerente" : "Admin";
-    let origem = gerente ? gerente.nome : operador ? "Direto admin" : "-";
+  if(!chave){
+    msg.innerText = "Informe a chave PIX";
+    return;
+  }
 
-    tabela.innerHTML += `
-      <div class="row">
+  let taxaCalc = v * (config.taxa/100);
+  let liquidoCalc = v - taxaCalc;
 
-        <div>${dinheiro(s.valor)}</div>
+  let lista = JSON.parse(localStorage.getItem("saques_admin_"+usuario)) || [];
 
-        <div>${nome}</div>
-
-        <div>${tipo}</div>
-
-        <div>
-          <span class="status ${s.status}">
-            ${s.status}
-          </span>
-        </div>
-
-        <div>${new Date(s.data).toLocaleDateString()}</div>
-
-        <div>${origem}</div>
-
-      </div>
-    `;
+  lista.unshift({
+    valor:v,
+    taxa:taxaCalc,
+    liquido:liquidoCalc,
+    chave,
+    tipo:tipo.value,
+    status:"pendente",
+    data:new Date().toISOString() 
   });
 
+  localStorage.setItem("saques_admin_"+usuario, JSON.stringify(lista));
+
+  msg.innerText = "Saque solicitado";
+
+  valor.value="";
+  pix.value="";
+
+  render();
+}
+
+/* 🔥 AJUSTADO AQUI */
+function irHistorico(){
+  window.location.href = "meus-saques-admin.html";
 }
 
 render();

@@ -2,122 +2,154 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Relatórios</title>
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+html, body{
+  height:100%;
+  background:#0a0a0a;
+}
 
 body{
-  background:#000;
   color:white;
-  padding:25px;
+  padding:20px;
+  min-height:100vh;
 }
 
 /* HEADER */
 .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
+  margin-bottom:18px;
 }
 
-.title{
+.top h2{
   font-size:22px;
-  font-weight:600;
+  color:#ffffff;
 }
 
-.filters{
+/* FILTRO */
+.filtros{
   display:flex;
   gap:10px;
+  margin-bottom:18px;
 }
 
-.select{
-  padding:10px;
-  border-radius:10px;
-  background:#0a0a0a;
-  border:1px solid #1a1a1a;
-  color:white;
-}
-
-/* KPI CARDS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
-  padding:18px;
+.filtro{
+  flex:1;
+  text-align:center;
+  padding:12px;
+  border-radius:14px;
+  background:#0f0f0f;
+  font-size:12px;
+  cursor:pointer;
+  color:#9ca3af;
+  border:1px solid rgba(255,255,255,0.05);
   transition:0.2s;
 }
 
+.filtro:hover{
+  transform:translateY(-1px);
+}
+
+.filtro.active{
+  color:#fff;
+  border-color:#3b82f6;
+  box-shadow:0 0 15px rgba(59,130,246,0.4);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.25s;
+}
+
 .card:hover{
-  transform:translateY(-2px);
+  transform:translateY(-3px);
+  border-color:#3b82f6;
 }
 
-.icon{
-  font-size:18px;
-  color:#888;
-  margin-bottom:6px;
-}
-
-.label{
+.title{
   font-size:12px;
-  color:#666;
+  color:#9ca3af;
 }
 
 .value{
   font-size:22px;
-  margin-top:5px;
+  margin-top:6px;
   font-weight:600;
 }
 
-/* GRID 2 COLUNAS */
-.grid-2{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:15px;
+.green{color:#22c55e;}
+.red{color:#ef4444;}
+
+/* 🔥 GRAFICO AJUSTADO */
+.chart{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:18px;
+  border:1px solid rgba(255,255,255,0.05);
+  height:260px;
 }
 
-/* BOX */
-.box{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
+@media(min-width:900px){
+  .chart{
+    height:320px;
+  }
+}
+
+canvas{
+  width:100% !important;
+  height:100% !important;
+}
+
+/* RANKING */
+.rank{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:18px;
   padding:18px;
+  border:1px solid rgba(255,255,255,0.05);
 }
 
-/* LISTA */
+.rank h3{
+  font-size:14px;
+  margin-bottom:12px;
+  color:#3b82f6;
+}
+
 .item{
+  font-size:13px;
+  margin-bottom:8px;
   display:flex;
   justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid #111;
-  font-size:13px;
+  color:#ccc;
 }
 
-.item:last-child{border:none;}
-
-.small{
-  font-size:11px;
+.vazio{
+  font-size:12px;
   color:#666;
-}
-
-/* RESPONSIVO */
-@media(max-width:900px){
-  .grid-2{
-    grid-template-columns:1fr;
-  }
 }
 </style>
 </head>
@@ -125,173 +157,186 @@ body{
 <body>
 
 <div class="top">
-  <div class="title">Relatório Financeiro</div>
-
-  <div class="filters">
-    <select id="periodo" class="select" onchange="render()">
-      <option value="7">7 dias</option>
-      <option value="15">15 dias</option>
-      <option value="30" selected>30 dias</option>
-    </select>
-  </div>
+  <h2>Relatórios</h2>
 </div>
 
-<!-- KPIs -->
+<div class="filtros">
+  <div class="filtro active" onclick="setFiltro(7,this)">7 dias</div>
+  <div class="filtro" onclick="setFiltro(30,this)">30 dias</div>
+  <div class="filtro" onclick="setFiltro(999,this)">Total</div>
+</div>
+
 <div class="grid">
 
   <div class="card">
-    <div class="icon"><i class="ri-money-dollar-circle-line"></i></div>
-    <div class="label">Faturamento</div>
-    <div class="value" id="total">R$ 0</div>
+    <div class="title">Faturamento</div>
+    <div class="value" id="faturamento">R$ 0</div>
   </div>
 
   <div class="card">
-    <div class="icon"><i class="ri-percent-line"></i></div>
-    <div class="label">Lucro</div>
-    <div class="value" id="lucro">R$ 0</div>
+    <div class="title">Lucro</div>
+    <div class="value green" id="lucro">R$ 0</div>
   </div>
 
   <div class="card">
-    <div class="icon"><i class="ri-exchange-dollar-line"></i></div>
-    <div class="label">Transações</div>
+    <div class="title">Transações</div>
     <div class="value" id="transacoes">0</div>
   </div>
 
   <div class="card">
-    <div class="icon"><i class="ri-bar-chart-line"></i></div>
-    <div class="label">Ticket médio</div>
-    <div class="value" id="ticket">R$ 0</div>
+    <div class="title">Saques</div>
+    <div class="value red" id="saques">0</div>
   </div>
 
 </div>
 
-<!-- GRÁFICO + RANK -->
-<div class="grid-2">
-
-  <div class="box">
-    <div class="label" style="margin-bottom:10px;">Faturamento por dia</div>
-    <canvas id="grafico"></canvas>
-  </div>
-
-  <div class="box">
-    <div class="label" style="margin-bottom:10px;">Top operadores</div>
-    <div id="ranking"></div>
-  </div>
-
+<div class="chart">
+  <canvas id="grafico"></canvas>
 </div>
 
-<!-- ATIVIDADE -->
-<div class="box" style="margin-top:15px;">
-  <div class="label" style="margin-bottom:10px;">Atividade recente</div>
-  <div id="atividade"></div>
+<div class="grid">
+
+  <div class="rank">
+    <h3>Top Operadores</h3>
+    <div id="topOperadores"></div>
+  </div>
+
+  <div class="rank">
+    <h3>Top Gerentes</h3>
+    <div id="topGerentes"></div>
+  </div>
+
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("usuario");
+let diasFiltro = 7;
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-
-// FILTRO
-function filtrar(){
-
-  let dias = parseInt(document.getElementById("periodo").value);
-
-  let limite = new Date();
-  limite.setDate(limite.getDate() - dias);
-
-  return transacoes.filter(t =>
-    t.admin === usuario &&
-    new Date(t.data) >= limite &&
-    t.status === "pago"
-  );
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-// RENDER
+function setFiltro(dias, el){
+  diasFiltro = dias;
+
+  document.querySelectorAll(".filtro")
+    .forEach(b=>b.classList.remove("active"));
+
+  el.classList.add("active");
+
+  render();
+}
+
+function dentroDoPeriodo(data){
+  if(diasFiltro === 999) return true;
+
+  let hoje = new Date();
+  let limite = new Date();
+  limite.setDate(hoje.getDate() - diasFiltro);
+
+  return new Date(data) >= limite;
+}
+
 function render(){
 
-  let dados = filtrar();
+  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+  let config = JSON.parse(localStorage.getItem("config")) || {taxa:15};
+
+  transacoes = transacoes.filter(t =>
+    t.admin === usuario && dentroDoPeriodo(t.data)
+  );
 
   let total = 0;
+  let lucro = 0;
   let porDia = {};
-  let ranking = {};
+  let opMap = {};
+  let gerMap = {};
 
-  dados.forEach(t=>{
-    let v = t.valor || 0;
+  transacoes.forEach(t=>{
+    let v = Number(t.valor || 0);
+
     total += v;
+    lucro += v * (config.taxa / 100);
 
-    let dia = new Date(t.data).toLocaleDateString();
+    let dia = new Date(t.data).toLocaleDateString("pt-BR");
     porDia[dia] = (porDia[dia] || 0) + v;
 
-    ranking[t.operador] = (ranking[t.operador] || 0) + v;
+    if(t.operador)
+      opMap[t.operador] = (opMap[t.operador] || 0) + v;
+
+    if(t.gerente)
+      gerMap[t.gerente] = (gerMap[t.gerente] || 0) + v;
   });
 
-  let lucro = total * 0.15;
-  let ticket = dados.length ? total / dados.length : 0;
+  let totalSaques = 0;
 
-  document.getElementById("total").innerText = "R$ " + total.toFixed(2);
-  document.getElementById("lucro").innerText = "R$ " + lucro.toFixed(2);
-  document.getElementById("transacoes").innerText = dados.length;
-  document.getElementById("ticket").innerText = "R$ " + ticket.toFixed(2);
+  gerentes
+    .filter(g=>g.admin === usuario)
+    .forEach(g=>{
+      let lista = JSON.parse(localStorage.getItem("saques_gerente_"+g.usuario)) || [];
 
-  // RANKING
-  let r = document.getElementById("ranking");
-  r.innerHTML="";
+      lista.forEach(s=>{
+        if(dentroDoPeriodo(s.data)){
+          totalSaques++;
+        }
+      });
+    });
 
-  Object.entries(ranking)
-  .sort((a,b)=>b[1]-a[1])
-  .slice(0,5)
-  .forEach(([email,valor])=>{
+  faturamento.innerText = f(total);
+  lucro.innerText = f(lucro);
+  transacoesEl = document.getElementById("transacoes");
+  transacoesEl.innerText = transacoes.length;
+  saques.innerText = totalSaques;
 
-    let op = operadores.find(o=>o.email===email);
+  /* TOP OPERADORES */
+  let topOp = Object.entries(opMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
-    r.innerHTML += `
-      <div class="item">
-        <span>${op?.nome || "Admin"}</span>
-        <span>R$ ${valor.toFixed(2)}</span>
-      </div>
-    `;
-  });
+  topOperadores.innerHTML = topOp.length ? topOp.map(o=>`
+    <div class="item">
+      <span>${o[0]}</span>
+      <span>${f(o[1])}</span>
+    </div>
+  `).join("") : `<div class="vazio">Sem dados</div>`;
 
-  // ATIVIDADE
-  let atv = document.getElementById("atividade");
-  atv.innerHTML="";
+  /* TOP GERENTES */
+  let topGer = Object.entries(gerMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
-  dados.slice(-6).reverse().forEach(t=>{
-    atv.innerHTML += `
-      <div class="item">
-        <span>R$ ${t.valor}</span>
-        <span class="small">${new Date(t.data).toLocaleDateString()}</span>
-      </div>
-    `;
-  });
+  topGerentes.innerHTML = topGer.length ? topGer.map(g=>`
+    <div class="item">
+      <span>${g[0]}</span>
+      <span>${f(g[1])}</span>
+    </div>
+  `).join("") : `<div class="vazio">Sem dados</div>`;
 
-  // GRÁFICO
-  if(window.grafico) grafico.destroy();
+  /* GRAFICO */
+  let ctx = document.getElementById("grafico").getContext("2d");
 
-  window.grafico = new Chart(document.getElementById("grafico"), {
+  if(window.chart) window.chart.destroy();
+
+  let gradient = ctx.createLinearGradient(0,0,0,300);
+  gradient.addColorStop(0,"rgba(59,130,246,0.4)");
+  gradient.addColorStop(1,"rgba(59,130,246,0)");
+
+  window.chart = new Chart(ctx,{
     type:"line",
     data:{
       labels:Object.keys(porDia),
       datasets:[{
         data:Object.values(porDia),
-        borderColor:"#fff",
-        backgroundColor:"rgba(255,255,255,0.05)",
+        borderColor:"#3b82f6",
+        backgroundColor:gradient,
         fill:true,
-        tension:0.4,
-        pointRadius:0
+        tension:0.4
       }]
     },
     options:{
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{color:"#666"}},
-        y:{ticks:{color:"#666"}}
-      }
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{display:false}}
     }
   });
-
 }
 
 render();

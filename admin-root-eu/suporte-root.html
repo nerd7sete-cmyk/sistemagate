@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suporte Admin</title>
+<title>Suporte Root</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -41,7 +41,7 @@ body{
   color:white;
 }
 
-/* LISTA */
+/* USERS */
 .users{
   flex:1;
   overflow-y:auto;
@@ -51,27 +51,18 @@ body{
   padding:14px;
   border-bottom:1px solid #1a1a1a;
   cursor:pointer;
-  transition:0.2s;
 }
 
 .user:hover{background:#111;}
 .user.active{background:#1a1a1a;}
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
 .nome{
   font-size:14px;
 }
 
-.badge{
-  background:#ef4444;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:11px;
+.tipo{
+  font-size:10px;
+  color:#3b82f6;
 }
 
 .preview{
@@ -96,13 +87,6 @@ body{
   padding:15px;
   border-bottom:1px solid #1a1a1a;
   background:#0f0f0f;
-  display:flex;
-  justify-content:space-between;
-}
-
-.status{
-  font-size:12px;
-  color:#22c55e;
 }
 
 .chat{
@@ -126,6 +110,12 @@ body{
   margin-left:auto;
 }
 
+.msg img{
+  width:100%;
+  border-radius:10px;
+  margin-top:6px;
+}
+
 .msg-time{
   font-size:10px;
   opacity:0.6;
@@ -137,7 +127,7 @@ body{
   display:flex;
   padding:10px;
   border-top:1px solid #1a1a1a;
-  gap:10px;
+  gap:8px;
 }
 
 input{
@@ -149,13 +139,15 @@ input{
   border-radius:10px;
 }
 
-button{
-  padding:12px 16px;
-  background:#3b82f6;
-  border:none;
-  color:white;
+.btn{
+  padding:10px;
   border-radius:10px;
+  background:#111;
   cursor:pointer;
+}
+
+.send{
+  background:#3b82f6;
 }
 </style>
 </head>
@@ -163,27 +155,32 @@ button{
 <body>
 
 <div class="sidebar">
-
   <div class="search">
     <input id="buscar" placeholder="Buscar usuário...">
   </div>
-
   <div class="users" id="users"></div>
-
 </div>
 
 <div class="chat-box">
 
-  <div class="chat-header">
-    <div id="headerNome">Selecione um usuário</div>
-    <div class="status" id="status"></div>
+  <div class="chat-header" id="headerNome">
+    Selecione um usuário
   </div>
 
   <div class="chat" id="chat"></div>
 
   <div class="input-area">
-    <input id="msg" placeholder="Digite sua resposta...">
-    <button onclick="responder()">Enviar</button>
+    <div class="btn" onclick="file.click()">
+      <i class="ri-image-line"></i>
+    </div>
+
+    <input type="file" id="file" hidden accept="image/*" onchange="enviarImagem(event)">
+
+    <input id="msg" placeholder="Digite...">
+
+    <div class="btn send" onclick="responder()">
+      <i class="ri-send-plane-fill"></i>
+    </div>
   </div>
 
 </div>
@@ -192,78 +189,71 @@ button{
 
 let selecionado = null;
 
-// 🔥 BANCO
+/* 🔥 BANCO REAL */
 function getChats(){
-  return JSON.parse(localStorage.getItem("chat_global")) || {};
+  return JSON.parse(localStorage.getItem("suporte_root")) || [];
 }
 
-function salvar(chats){
-  localStorage.setItem("chat_global", JSON.stringify(chats));
+function salvar(lista){
+  localStorage.setItem("suporte_root", JSON.stringify(lista));
 }
 
-// FORMATAR HORA
 function hora(data){
-  let d = new Date(data);
-  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  return new Date(data).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 
-// LISTAR
+/* LISTAR */
 function carregar(){
 
-  let chats = getChats();
+  let lista = getChats();
   let usersDiv = document.getElementById("users");
   let busca = document.getElementById("buscar").value.toLowerCase();
 
   usersDiv.innerHTML = "";
 
-  Object.keys(chats).forEach(u=>{
+  lista.forEach(c=>{
 
-    if(!u.toLowerCase().includes(busca)) return;
+    if(!c.admin.toLowerCase().includes(busca)) return;
 
-    let lista = chats[u];
-    let ultima = lista[lista.length - 1];
-
-    let naoLidas = lista.filter(m=>m.tipo === "user").length;
+    let ultima = c.mensagens[c.mensagens.length-1];
 
     usersDiv.innerHTML += `
-      <div class="user ${selecionado===u?'active':''}" onclick="abrir('${u}')">
-        <div class="top">
-          <div class="nome">${u}</div>
-          ${naoLidas ? `<div class="badge">${naoLidas}</div>` : ""}
+      <div class="user ${selecionado===c.admin?'active':''}" onclick="abrir('${c.admin}')">
+        <div class="nome">${c.admin}</div>
+        <div class="tipo">${c.tipo || 'admin'}</div>
+        <div class="preview">
+          ${ultima?.texto || (ultima?.img ? '📷 Imagem' : '')}
         </div>
-        <div class="preview">${ultima?.texto || ""}</div>
-        <div class="time">${hora(ultima?.data)}</div>
+        <div class="time">${hora(ultima?.hora)}</div>
       </div>
     `;
   });
 }
 
-// ABRIR
+/* ABRIR */
 function abrir(u){
   selecionado = u;
-
   document.getElementById("headerNome").innerText = u;
-  document.getElementById("status").innerText = "Online";
-
   render();
 }
 
-// RENDER CHAT
+/* RENDER CHAT */
 function render(){
 
   if(!selecionado) return;
 
-  let chats = getChats();
-  let lista = chats[selecionado] || [];
+  let lista = getChats();
+  let conv = lista.find(c=>c.admin === selecionado);
 
   let chat = document.getElementById("chat");
   chat.innerHTML = "";
 
-  lista.forEach(m=>{
+  conv.mensagens.forEach(m=>{
     chat.innerHTML += `
-      <div class="msg ${m.tipo === 'admin' ? 'admin-msg' : 'user-msg'}">
-        ${m.texto}
-        <div class="msg-time">${hora(m.data)}</div>
+      <div class="msg ${m.tipo === 'me' ? 'user-msg' : 'admin-msg'}">
+        ${m.texto || ""}
+        ${m.img ? `<img src="${m.img}">` : ""}
+        <div class="msg-time">${m.hora}</div>
       </div>
     `;
   });
@@ -271,36 +261,58 @@ function render(){
   chat.scrollTop = chat.scrollHeight;
 }
 
-// RESPONDER
+/* RESPONDER */
 function responder(){
 
-  let texto = document.getElementById("msg").value.trim();
+  let texto = msg.value.trim();
   if(!texto || !selecionado) return;
 
-  let chats = getChats();
+  let lista = getChats();
+  let conv = lista.find(c=>c.admin === selecionado);
 
-  chats[selecionado].push({
-    tipo:"admin",
+  conv.mensagens.push({
+    tipo:"support",
     texto,
-    data:new Date().toISOString()
+    hora:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})
   });
 
-  salvar(chats);
-
-  document.getElementById("msg").value = "";
-
+  salvar(lista);
+  msg.value="";
   render();
 }
 
-// ENTER
-document.getElementById("msg").addEventListener("keypress", e=>{
+/* ENVIAR IMG */
+function enviarImagem(e){
+
+  let file = e.target.files[0];
+  if(!file || !selecionado) return;
+
+  let reader = new FileReader();
+
+  reader.onload = function(ev){
+
+    let lista = getChats();
+    let conv = lista.find(c=>c.admin === selecionado);
+
+    conv.mensagens.push({
+      tipo:"support",
+      img:ev.target.result,
+      hora:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})
+    });
+
+    salvar(lista);
+    render();
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* ENTER */
+msg.addEventListener("keypress", e=>{
   if(e.key === "Enter") responder();
 });
 
-// BUSCA
-document.getElementById("buscar").addEventListener("input", carregar);
-
-// AUTO UPDATE
+/* AUTO */
 setInterval(()=>{
   carregar();
   render();

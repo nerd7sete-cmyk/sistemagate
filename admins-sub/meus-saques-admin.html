@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Transações Admin</title>
+<title>Saques do Admin</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -27,21 +27,7 @@ body{
   display:flex;
   align-items:center;
   gap:6px;
-  color:#ffffff;
-}
-
-/* BUSCA */
-.search{
-  margin-bottom:12px;
-}
-
-.search input{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
-  color:white;
+  color:#3b82f6;
 }
 
 /* FILTROS */
@@ -53,14 +39,14 @@ body{
 
 .filtro{
   flex:1;
-  padding:10px;
   text-align:center;
+  padding:10px;
   border-radius:12px;
-  background:#0f0f0f;
-  color:#9ca3af;
   font-size:12px;
   cursor:pointer;
+  background:#0f0f0f;
   border:1px solid rgba(255,255,255,0.05);
+  color:#9ca3af;
 }
 
 .filtro.active{
@@ -69,16 +55,17 @@ body{
   box-shadow:0 0 10px rgba(59,130,246,0.3);
 }
 
-/* LISTA */
+/* CARD */
 .card{
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:18px;
+  border-radius:20px;
   border:1px solid rgba(255,255,255,0.05);
   overflow:hidden;
 }
 
+/* ITEM */
 .item{
-  padding:14px;
+  padding:16px;
   border-bottom:1px solid rgba(255,255,255,0.04);
 }
 
@@ -86,7 +73,7 @@ body{
   background:#0f0f0f;
 }
 
-/* ROW */
+/* TOP ITEM */
 .row{
   display:flex;
   justify-content:space-between;
@@ -95,6 +82,7 @@ body{
 
 /* VALOR */
 .valor{
+  font-size:16px;
   font-weight:600;
 }
 
@@ -123,11 +111,23 @@ body{
 
 /* INFO */
 .info{
-  margin-top:6px;
+  margin-top:8px;
   font-size:12px;
   color:#9ca3af;
 }
 
+.info span{
+  display:block;
+  margin-bottom:3px;
+}
+
+/* CHAVE */
+.chave{
+  color:#3b82f6;
+  word-break:break-all;
+}
+
+/* VAZIO */
 .vazio{
   padding:20px;
   text-align:center;
@@ -139,12 +139,7 @@ body{
 <body>
 
 <div class="top">
-  <h2><i class="ri-exchange-dollar-line"></i> Transações</h2>
-</div>
-
-<!-- BUSCA -->
-<div class="search">
-  <input id="busca" placeholder="Buscar operador...">
+  <h2><i class="ri-wallet-3-line"></i> Meus saques</h2>
 </div>
 
 <!-- FILTROS -->
@@ -160,26 +155,31 @@ body{
 <script>
 
 let usuario = localStorage.getItem("usuario");
-let filtro = "todos";
+let filtroAtual = "todos";
 
 /* FORMAT */
 function f(v){
   return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
+/* DATA */
 function formatarData(d){
   let data = new Date(d);
   return data.toLocaleDateString("pt-BR") + " • " +
          data.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 
-/* FILTRO */
+/* MASCARAR PIX */
+function mascarar(chave){
+  if(!chave) return "-";
+  return chave.substring(0,4) + "****" + chave.slice(-4);
+}
+
+/* TROCAR FILTRO */
 function setFiltro(tipo, el){
-  filtro = tipo;
+  filtroAtual = tipo;
 
-  document.querySelectorAll(".filtro")
-    .forEach(b=>b.classList.remove("active"));
-
+  document.querySelectorAll(".filtro").forEach(b=>b.classList.remove("active"));
   el.classList.add("active");
 
   render();
@@ -189,48 +189,36 @@ function setFiltro(tipo, el){
 function render(){
 
   let lista = document.getElementById("lista");
-  let busca = document.getElementById("busca").value.toLowerCase();
 
-  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let saques = JSON.parse(localStorage.getItem("saques_admin_"+usuario)) || [];
 
-  /* 🔥 FILTRA POR ADMIN */
-  transacoes = transacoes.filter(t => t.admin === usuario);
-
-  /* FILTRO STATUS */
-  if(filtro !== "todos"){
-    transacoes = transacoes.filter(t => t.status === filtro);
+  if(filtroAtual !== "todos"){
+    saques = saques.filter(s=>s.status === filtroAtual);
   }
 
-  /* BUSCA */
-  if(busca){
-    transacoes = transacoes.filter(t =>
-      (t.operador || "").toLowerCase().includes(busca)
-    );
-  }
-
-  if(transacoes.length === 0){
-    lista.innerHTML = `<div class="vazio">Nenhuma transação encontrada</div>`;
+  if(saques.length === 0){
+    lista.innerHTML = `<div class="vazio">Nenhum saque encontrado</div>`;
     return;
   }
 
   lista.innerHTML = "";
 
-  transacoes.forEach(t=>{
-
+  saques.forEach(s=>{
     lista.innerHTML += `
     <div class="item">
 
       <div class="row">
-        <div class="valor">${f(t.valor)}</div>
-        <div class="status ${t.status}">
-          ${t.status}
+        <div class="valor">${f(s.valor)}</div>
+        <div class="status ${s.status}">
+          ${s.status}
         </div>
       </div>
 
       <div class="info">
-        👤 Operador: ${t.operador || "-"} <br>
-        ⭐ Gerente: ${t.gerente || "-"} <br>
-        📅 ${formatarData(t.data)}
+        <span>💰 Líquido: ${f(s.liquido)}</span>
+        <span>🏦 Tipo: ${s.tipo}</span>
+        <span class="chave">🔑 ${mascarar(s.chave)}</span>
+        <span>📅 ${formatarData(s.data)}</span>
       </div>
 
     </div>
@@ -238,10 +226,6 @@ function render(){
   });
 }
 
-/* BUSCA REALTIME */
-busca.addEventListener("input", render);
-
-/* INIT */
 render();
 
 </script>
