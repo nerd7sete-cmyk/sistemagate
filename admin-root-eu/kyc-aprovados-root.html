@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KYC Aprovados</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  background:#0a0a0a;
+}
+
+body{
+  color:#fff;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+.subtitle{
+  font-size:12px;
+  color:#777;
+  margin-top:4px;
+}
+
+.stat{
+  margin-top:15px;
+  display:inline-block;
+  background:#0f0f0f;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:15px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* TOP */
+.top{
+  margin-bottom:15px;
+}
+
+.name{
+  font-size:15px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#777;
+}
+
+/* DOC GRID */
+.images{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.img-box{
+  background:#000;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+
+.img-box span{
+  font-size:10px;
+  color:#777;
+  display:block;
+  padding:6px;
+}
+
+.img-box img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  transition:.2s;
+}
+
+.btn-view{
+  background:#111;
+  border:1px solid rgba(59,130,246,0.4);
+  color:#fff;
+}
+
+.btn-view:hover{
+  border-color:#3b82f6;
+}
+
+.btn-pdf{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;
+}
+
+/* 🔥 MODAL PROFISSIONAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  padding:20px;
+}
+
+/* BOX CENTRAL */
+.modal-box{
+  width:100%;
+  max-width:600px;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:15px;
+  position:relative;
+}
+
+/* IMG */
+.modal img{
+  width:100%;
+  border-radius:12px;
+}
+
+/* BOTÃO FECHAR */
+.close-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#111;
+  border:1px solid rgba(59,130,246,0.4);
+  color:#fff;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:16px;
+  transition:.2s;
+}
+
+.close-btn:hover{
+  border-color:#3b82f6;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:40px;
+  color:#555;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  .images{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title">KYC Aprovados</div>
+    <div class="subtitle">Verificação validada pelo sistema</div>
+
+    <div class="stat" id="totalAprovados">Total: 0</div>
+  </div>
+
+  <div id="lista"></div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="close-btn" onclick="fechar()">
+      <i class="ri-close-line"></i>
+    </div>
+    <img id="imgModal">
+  </div>
+</div>
+
+<script>
+
+const { jsPDF } = window.jspdf;
+
+function abrirImg(src){
+  modal.style.display = "flex";
+  imgModal.src = src;
+}
+
+function fechar(){
+  modal.style.display = "none";
+}
+
+/* PDF */
+function gerarPDF(d,email){
+
+  const doc = new jsPDF();
+
+  doc.text("Relatório KYC", 20, 20);
+  doc.text("Nome: " + (d.nome || "-"), 20, 35);
+  doc.text("Email: " + email, 20, 42);
+  doc.text("CPF: " + (d.cpf || "-"), 20, 49);
+
+  doc.save("kyc_"+email+".pdf");
+}
+
+/* LOAD */
+function carregar(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let total = 0;
+
+  for(let i=0;i<localStorage.length;i++){
+
+    let key = localStorage.key(i);
+
+    if(key.startsWith("kyc_")){
+      let d = JSON.parse(localStorage.getItem(key));
+
+      if(d.status === "aprovado"){
+
+        total++;
+
+        let email = key.replace("kyc_","");
+
+        lista.innerHTML += `
+          <div class="card">
+
+            <div class="top">
+              <div class="name">${d.nome || "Sem nome"}</div>
+              <div class="email">${email}</div>
+            </div>
+
+            <div class="images">
+
+              <div class="img-box" onclick="abrirImg('${d.frente}')">
+                <span>Documento Frente</span>
+                <img src="${d.frente}">
+              </div>
+
+              <div class="img-box" onclick="abrirImg('${d.verso}')">
+                <span>Documento Verso</span>
+                <img src="${d.verso}">
+              </div>
+
+              <div class="img-box" onclick="abrirImg('${d.selfie}')">
+                <span>Selfie</span>
+                <img src="${d.selfie}">
+              </div>
+
+            </div>
+
+            <div class="actions">
+
+              <button class="btn btn-view" onclick="abrirImg('${d.frente}')">
+                Ver Documento
+              </button>
+
+              <button class="btn btn-pdf" onclick='gerarPDF(${JSON.stringify(d)}, "${email}")'>
+                Baixar PDF
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      }
+    }
+  }
+
+  if(total === 0){
+    lista.innerHTML = `<div class="empty">Nenhum aprovado</div>`;
+  }
+
+  totalAprovados.innerText = "Total: " + total;
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>

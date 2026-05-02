@@ -11,145 +11,77 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html, body{
+  height:100%;
+  background:#0a0a0a;
+}
+
 body{
-  background:#000;
   color:#fff;
   padding:20px;
 }
 
 /* HEADER */
-.header{
-  margin-bottom:25px;
-}
-
-.header h2{
-  font-size:18px;
-  font-weight:600;
-}
-
-.header span{
-  font-size:12px;
-  color:#888;
-}
+.header{margin-bottom:25px;}
+.header h2{font-size:18px;font-weight:600;}
+.header span{font-size:12px;color:#888;}
 
 /* BUSCA */
 .search{
   width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #111;
-  background:#0a0a0a;
-  color:#fff;
-  margin-bottom:20px;
-  transition:0.2s;
-}
-
-.search:focus{
-  border-color:#333;
-  outline:none;
-}
-
-/* LISTA */
-.user{
   padding:14px;
   border-radius:14px;
-  border:1px solid #111;
-  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#0f0f0f;
+  color:#fff;
+  margin-bottom:20px;
+}
+
+/* USER CARD */
+.user{
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   margin-bottom:12px;
   cursor:pointer;
-  transition:0.2s;
 }
 
-.user:hover{
-  border-color:#333;
-  transform:translateY(-1px);
+/* BADGE */
+.tipo{
+  font-size:10px;
+  padding:4px 10px;
+  border-radius:20px;
+  margin-top:6px;
+  display:inline-block;
 }
 
-/* NOME */
-.user strong{
-  font-size:14px;
-}
-
-.user small{
-  color:#777;
-  font-size:11px;
-}
+.root{background:#3b82f6;color:#fff;}
+.admin{background:#f59e0b;color:#000;}
+.gerente{background:#7c3aed;color:#fff;}
+.operador{background:#22c55e;color:#000;}
+.usuario{background:#111;color:#888;}
 
 /* MODAL */
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:#0a0a0a;
   display:none;
   padding:20px;
   overflow:auto;
-  z-index:999;
 }
 
-/* CARD */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.05);
+  background:#0f0f0f;
   border-radius:16px;
-  padding:18px;
-  margin-bottom:15px;
+  padding:15px;
+  margin-bottom:10px;
 }
 
-/* TITULO */
-.title{
-  font-size:12px;
-  color:#aaa;
-  margin-bottom:12px;
-  letter-spacing:0.5px;
-}
-
-/* INFO */
-.info{
-  font-size:13px;
-  line-height:1.6;
-}
-
-/* ITEM */
-.item{
-  padding:10px;
-  border-bottom:1px solid #111;
-  font-size:12px;
-  display:flex;
-  justify-content:space-between;
-}
-
-.item:last-child{
-  border-bottom:none;
-}
-
-/* VALOR */
-.valor{
-  font-weight:600;
-}
-
-/* STATUS */
-.status{
-  font-size:11px;
-  color:#777;
-}
-
-/* BOTAO */
-.btn{
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(180deg,#fff,#dcdcdc);
-  color:#000;
-  cursor:pointer;
-  width:100%;
-  font-weight:600;
-  margin-top:10px;
-}
-
-/* EMPTY */
 .empty{
+  text-align:center;
   color:#555;
-  font-size:12px;
 }
 </style>
 </head>
@@ -158,33 +90,20 @@ body{
 
 <div class="header">
   <h2>Central de Usuários</h2>
-  <span>Gerencie, analise e visualize dados completos dos usuários</span>
+  <span>Busca global do sistema</span>
 </div>
 
-<input class="search" id="busca" placeholder="Buscar por nome ou email..." onkeyup="buscar()">
+<input class="search" id="busca" placeholder="Buscar tudo...">
 
-<div id="listaUsuarios"></div>
+<div id="listaUsuarios">
+  <div class="empty">Digite algo para buscar...</div>
+</div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
-
   <div class="card">
-    <div class="title">INFORMAÇÕES DA CONTA</div>
-    <div class="info" id="info"></div>
+    <div id="info"></div>
   </div>
-
-  <div class="card">
-    <div class="title">HISTÓRICO DE TRANSAÇÕES</div>
-    <div id="transacoes"></div>
-  </div>
-
-  <div class="card">
-    <div class="title">HISTÓRICO DE SAQUES</div>
-    <div id="saques"></div>
-  </div>
-
-  <button class="btn" onclick="fechar()">Fechar</button>
-
+  <button onclick="fechar()">Fechar</button>
 </div>
 
 <script>
@@ -194,96 +113,119 @@ if(localStorage.getItem("tipo") !== "root"){
   window.location.href = "login.html";
 }
 
+/* ELEMENTOS */
+const busca = document.getElementById("busca");
+const listaUsuarios = document.getElementById("listaUsuarios");
+const modal = document.getElementById("modal");
+const info = document.getElementById("info");
+
 /* DADOS */
 let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let saques = JSON.parse(localStorage.getItem("saques")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+let rootNome = localStorage.getItem("usuario") || "ROOT";
+
+/* 🔥 JUNTA TUDO */
+function getTodos(){
+
+  let lista = [];
+
+  // ROOT
+  lista.push({
+    nome: rootNome,
+    email: "root@system",
+    tipo: "root"
+  });
+
+  // ADMINS
+  admins.forEach(a=>{
+    lista.push({...a, tipo:"admin"});
+  });
+
+  // GERENTES
+  gerentes.forEach(g=>{
+    lista.push({...g, tipo:"gerente"});
+  });
+
+  // OPERADORES
+  operadores.forEach(o=>{
+    lista.push({...o, tipo:"operador"});
+  });
+
+  // USUÁRIOS
+  usuarios.forEach(u=>{
+    lista.push({...u, tipo:"usuario"});
+  });
+
+  return lista;
+}
 
 /* RENDER */
 function render(lista){
 
   listaUsuarios.innerHTML = "";
 
-  if(lista.length === 0){
-    listaUsuarios.innerHTML = `<div class="empty">Nenhum usuário encontrado</div>`;
+  if(!lista.length){
+    listaUsuarios.innerHTML = `<div class="empty">Nada encontrado</div>`;
     return;
   }
 
   lista.forEach(u=>{
-    listaUsuarios.innerHTML += `
-      <div class="user" onclick="abrir('${u.email}')">
-        <strong>${u.nome}</strong><br>
-        <small>${u.email}</small>
+
+    let div = document.createElement("div");
+    div.className = "user";
+
+    div.innerHTML = `
+      <strong>${u.nome || "Sem nome"}</strong>
+      <small>${u.email || "-"}</small>
+      <div class="tipo ${u.tipo}">
+        ${u.tipo.toUpperCase()}
       </div>
     `;
-  });
 
+    div.onclick = ()=> abrir(u);
+
+    listaUsuarios.appendChild(div);
+  });
 }
 
 /* BUSCA */
-function buscar(){
+busca.addEventListener("input", ()=>{
 
-  let termo = busca.value.toLowerCase();
+  let termo = busca.value.toLowerCase().trim();
 
-  let filtrado = usuarios.filter(u =>
-    u.nome.toLowerCase().includes(termo) ||
-    u.email.toLowerCase().includes(termo)
+  if(!termo){
+    listaUsuarios.innerHTML = `<div class="empty">Digite algo para buscar...</div>`;
+    return;
+  }
+
+  let filtrado = getTodos().filter(u =>
+    (u.nome || "").toLowerCase().includes(termo) ||
+    (u.email || "").toLowerCase().includes(termo) ||
+    (u.tipo || "").toLowerCase().includes(termo)
   );
 
   render(filtrado);
+});
 
-}
-
-/* ABRIR PERFIL */
-function abrir(email){
-
-  let u = usuarios.find(x=>x.email===email);
-
-  let t = transacoes.filter(x=>x.email===email);
-  let s = saques.filter(x=>x.email===email);
+/* ABRIR */
+function abrir(u){
 
   info.innerHTML = `
     <b>Nome:</b> ${u.nome}<br>
-    <b>Email:</b> ${u.email}<br>
-    <b>Tipo:</b> ${u.tipo}<br>
-    <b>Saldo:</b> R$ ${(u.saldo||0).toFixed(2)}
+    <b>Email:</b> ${u.email || "-"}<br>
+    <b>Tipo:</b> ${u.tipo}
   `;
 
-  transacoes.innerHTML = t.length ? "" : `<div class="empty">Nenhuma transação</div>`;
-  saques.innerHTML = s.length ? "" : `<div class="empty">Nenhum saque</div>`;
-
-  t.forEach(x=>{
-    transacoes.innerHTML += `
-      <div class="item">
-        <div>
-          <div class="valor">R$ ${Number(x.valor).toFixed(2)}</div>
-          <div class="status">${x.status}</div>
-        </div>
-      </div>
-    `;
-  });
-
-  s.forEach(x=>{
-    saques.innerHTML += `
-      <div class="item">
-        <div>
-          <div class="valor">R$ ${Number(x.valor).toFixed(2)}</div>
-          <div class="status">${x.status}</div>
-        </div>
-      </div>
-    `;
-  });
-
   modal.style.display = "block";
-
 }
 
 /* FECHAR */
 function fechar(){
   modal.style.display = "none";
 }
-
-render(usuarios);
 
 </script>
 

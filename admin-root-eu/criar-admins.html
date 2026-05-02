@@ -12,7 +12,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
+  background:#0a0a0a;
   color:white;
   padding:25px;
 }
@@ -26,30 +26,39 @@ body{
 }
 
 .btn{
-  background:#fff;
-  color:#000;
+  background:#3b82f6;
+  color:#fff;
   padding:10px 16px;
   border-radius:10px;
   cursor:pointer;
   font-weight:600;
+  transition:0.2s;
+}
+
+.btn:hover{
+  opacity:0.85;
 }
 
 /* CARD */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
   overflow:hidden;
 }
 
 /* ITEM */
 .item{
   padding:18px;
-  border-bottom:1px solid #111;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:0.2s;
 }
 
-.item:hover{background:#0a0a0a;}
+.item:hover{
+  background:#0f0f0f;
+}
 
+/* ROW */
 .row{
   display:flex;
   justify-content:space-between;
@@ -57,10 +66,12 @@ body{
 }
 
 /* INFO */
-.nome{font-weight:600;}
+.nome{
+  font-weight:600;
+}
 
 .info small{
-  color:#777;
+  color:#9ca3af;
   font-size:12px;
 }
 
@@ -77,6 +88,7 @@ body{
   padding:4px 10px;
   border-radius:20px;
   background:#111;
+  color:#ccc;
 }
 
 /* STATUS */
@@ -86,8 +98,15 @@ body{
   border-radius:20px;
 }
 
-.ativo{color:#22c55e;background:rgba(34,197,94,0.1);}
-.expirado{color:#ef4444;background:rgba(239,68,68,0.1);}
+.ativo{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.expirado{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
 
 /* ACTIONS */
 .actions{
@@ -99,12 +118,14 @@ body{
   padding:8px 10px;
   border-radius:8px;
   font-size:12px;
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.08);
   cursor:pointer;
+  transition:0.2s;
 }
 
 .btn-action:hover{
-  background:#111;
+  background:#0a0a0a;
+  border-color:#3b82f6;
 }
 
 /* MODAL */
@@ -118,24 +139,26 @@ body{
 }
 
 .modal{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.05);
   padding:25px;
-  border-radius:16px;
+  border-radius:18px;
   width:100%;
   max-width:420px;
 }
 
+/* INPUT */
 .input{
   width:100%;
   margin-top:10px;
   padding:12px;
   border-radius:10px;
-  border:1px solid #1a1a1a;
+  border:1px solid rgba(255,255,255,0.05);
   background:#0a0a0a;
   color:white;
 }
 
+/* MODAL ACTIONS */
 .actions-modal{
   display:flex;
   gap:10px;
@@ -144,8 +167,8 @@ body{
 
 .save{
   flex:1;
-  background:#fff;
-  color:#000;
+  background:#3b82f6;
+  color:#fff;
   padding:12px;
   border-radius:10px;
   text-align:center;
@@ -154,7 +177,7 @@ body{
 
 .cancel{
   flex:1;
-  border:1px solid #1a1a1a;
+  border:1px solid rgba(255,255,255,0.08);
   padding:12px;
   border-radius:10px;
   text-align:center;
@@ -205,24 +228,20 @@ body{
 let admins = JSON.parse(localStorage.getItem("admins")) || [];
 let usuario = localStorage.getItem("usuario");
 
-// SALVAR
 function salvar(){
   localStorage.setItem("admins", JSON.stringify(admins));
 }
 
-// FORMATAR DATA
 function formatarData(data){
   if(!data) return "Vitalício";
   return new Date(data).toLocaleDateString();
 }
 
-// EXPIRADO
 function isExpirado(data){
   if(!data) return false;
   return new Date() > new Date(data);
 }
 
-// RENDER
 function render(){
 
   let lista = document.getElementById("lista");
@@ -276,7 +295,6 @@ function render(){
   });
 }
 
-// CRIAR
 function criar(){
 
   let nome = document.getElementById("nome").value.trim();
@@ -313,14 +331,12 @@ function criar(){
   fecharModal();
 }
 
-// TOGGLE ATIVO
 function toggle(i){
   admins[i].ativo = !admins[i].ativo;
   salvar();
   render();
 }
 
-// EDITAR TAXA
 function editarTaxa(i){
   let nova = prompt("Nova taxa %:", admins[i].taxa);
   if(nova){
@@ -330,7 +346,6 @@ function editarTaxa(i){
   }
 }
 
-// REMOVER
 function remover(i){
   if(confirm("Excluir admin?")){
     admins.splice(i,1);
@@ -339,7 +354,6 @@ function remover(i){
   }
 }
 
-// MODAL
 function abrirModal(){
   modal.style.display="flex";
 }

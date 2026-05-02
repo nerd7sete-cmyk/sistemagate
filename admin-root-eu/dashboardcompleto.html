@@ -4,123 +4,274 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard Completo - PrimePay</title>
+<title>Dashboard Root</title>
 
-<script src="/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Segoe UI";
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-/* 🔥 SCROLL GLOBAL (BONITO E DISCRETO) */
-html{
-  scroll-behavior:smooth;
-}
-
-::-webkit-scrollbar{
-  width:6px;
-}
-
-::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,0.08);
-  border-radius:10px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-  background:rgba(255,255,255,0.15);
-}
-
-/* FIREFOX */
-*{
-  scrollbar-width:thin;
-  scrollbar-color:rgba(255,255,255,0.1) transparent;
-}
-
-/* BODY */
 body{
-  background:#000;
-  color:#fff;
-  overflow-x:hidden;
+  background:#0a0a0a;
+  color:white;
+  padding:20px;
 }
 
-/* CONTAINER */
-.container{
-  width:100%;
-  padding:15px;
+.top{margin-bottom:20px;}
+.top h2{font-size:20px;color:#ffffff;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  margin-bottom:15px;
 }
 
-/* 🔥 SECTIONS MAIS PROFISSIONAIS */
-.section{
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.05);
+  position:relative;
+  transition:0.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#3b82f6;
+}
+
+.icon{
+  position:absolute;
+  top:15px;
+  right:15px;
+  font-size:18px;
+  color:#3b82f6;
+}
+
+.title{font-size:12px;color:#9ca3af;}
+.value{font-size:24px;margin-top:6px;font-weight:600;}
+
+.green{color:#22c55e;}
+.red{color:#ef4444;}
+
+.chart-card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.05);
   margin-bottom:20px;
 }
 
-/* TÍTULO */
-.section-title{
-  font-size:12px;
-  color:#666;
-  margin:10px 10px 8px;
-  letter-spacing:0.5px;
+.chart-title{
+  font-size:13px;
+  color:#3b82f6;
+  margin-bottom:10px;
 }
 
-/* 🔥 IFRAME SEM SCROLL INTERNO */
-iframe{
-  width:100%;
-  height:100vh;
-  border:none;
-  background:#000;
-  display:block;
-  border-radius:12px;
-  overflow:hidden;
-}
-
-/* REMOVE SCROLL INTERNO (caso apareça) */
-iframe::-webkit-scrollbar{
-  display:none;
-}
-
-/* LOADER */
-.loader{
-  text-align:center;
-  padding:8px;
-  font-size:11px;
-  color:#444;
-}
+canvas{height:280px !important;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="top">
+  <h2>Dashboard ROOT</h2>
+</div>
 
-  <!-- DASHBOARD 1 -->
-  <div class="section">
-    <div class="section-title">Visão Geral</div>
-    <iframe src="root-admin-dashboard.html" onload="hideLoader('l1')"></iframe>
-    <div class="loader" id="l1">Carregando...</div>
+<div class="grid">
+  <div class="card">
+    <i class="ri-money-dollar-circle-line icon"></i>
+    <div class="title">Volume total</div>
+    <div class="value" id="total">R$ 0,00</div>
   </div>
 
-  <!-- DASHBOARD 2 -->
-  <div class="section">
-    <div class="section-title">Análise Financeira</div>
-    <iframe src="root-admin-dashboard2.html" onload="hideLoader('l2')"></iframe>
-    <div class="loader" id="l2">Carregando...</div>
+  <div class="card">
+    <i class="ri-exchange-dollar-line icon"></i>
+    <div class="title">Transações</div>
+    <div class="value" id="transacoes">0</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-line-chart-line icon"></i>
+    <div class="title">Lucro total sistema</div>
+    <div class="value green" id="lucro">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-bank-line icon"></i>
+    <div class="title">Admins ativos</div>
+    <div class="value" id="admins">0</div>
+  </div>
+
+  <!-- 🔥 NOVO CARD -->
+  <div class="card">
+    <i class="ri-bank-card-line icon"></i>
+    <div class="title">Saldo dos admins</div>
+    <div class="value" id="saldoAdmins">R$ 0,00</div>
+  </div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title">Movimentação global</div>
+  <canvas id="grafico"></canvas>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <i class="ri-wallet-3-line icon"></i>
+    <div class="title">Saques totais</div>
+    <div class="value" id="saques">0</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-user-3-line icon"></i>
+    <div class="title">Usuários totais</div>
+    <div class="value" id="usuarios">0</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-user-star-line icon"></i>
+    <div class="title">Gerentes</div>
+    <div class="value" id="gerentes">0</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-team-line icon"></i>
+    <div class="title">Operadores</div>
+    <div class="value" id="operadores">0</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-user-settings-line icon"></i>
+    <div class="title">Saldo operadores</div>
+    <div class="value" id="saldoOperadores">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-user-star-fill icon"></i>
+    <div class="title">Saldo gerentes</div>
+    <div class="value" id="saldoGerentes">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <i class="ri-error-warning-line icon"></i>
+    <div class="title">Total a pagar</div>
+    <div class="value red" id="totalPagar">R$ 0,00</div>
   </div>
 
 </div>
 
 <script>
-function hideLoader(id){
-  let el = document.getElementById(id);
-  if(el) el.style.display = "none";
+
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+let config = JSON.parse(localStorage.getItem("config")) || {taxa:15};
+
+let totalOperadores = operadores.length;
+
+gerentes.forEach(g=>{
+  let lista = JSON.parse(localStorage.getItem("operadores_gerente_"+g.usuario)) || [];
+  totalOperadores += lista.length;
+});
+
+/* CALCULOS */
+let total = 0;
+let lucro = 0;
+let saldoAdmins = 0;
+let porDia = {};
+
+transacoes.forEach(t=>{
+  let v = Number(t.valor || 0);
+  total += v;
+  lucro += v * (config.taxa / 100);
+
+  if(t.admin){
+    saldoAdmins += v;
+  }
+
+  let dia = new Date(t.data || Date.now()).getDate();
+  porDia[dia] = (porDia[dia] || 0) + v;
+});
+
+/* SAQUES */
+let totalSaques = 0;
+let saldoGerentes = 0;
+
+gerentes.forEach(g=>{
+  let lista = JSON.parse(localStorage.getItem("saques_gerente_"+g.usuario)) || [];
+
+  totalSaques += lista.length;
+
+  lista.forEach(s=>{
+    if(s.status !== "recusado"){
+      saldoGerentes += Number(s.valor || 0);
+    }
+  });
+});
+
+/* SALDO OPERADORES */
+let saldoOperadores = 0;
+
+transacoes.forEach(t=>{
+  if(t.operador){
+    saldoOperadores += Number(t.valor || 0);
+  }
+});
+
+/* TOTAL */
+let totalPagar = saldoOperadores + saldoGerentes;
+let totalUsuarios = totalOperadores + gerentes.length;
+
+/* RENDER */
+document.getElementById("total").innerText = f(total);
+document.getElementById("transacoes").innerText = transacoes.length;
+document.getElementById("saques").innerText = totalSaques;
+document.getElementById("usuarios").innerText = totalUsuarios;
+document.getElementById("gerentes").innerText = gerentes.length;
+document.getElementById("operadores").innerText = totalOperadores;
+document.getElementById("lucro").innerText = f(lucro);
+document.getElementById("saldoOperadores").innerText = f(saldoOperadores);
+document.getElementById("saldoGerentes").innerText = f(saldoGerentes);
+document.getElementById("totalPagar").innerText = f(totalPagar);
+document.getElementById("admins").innerText = admins.length;
+document.getElementById("saldoAdmins").innerText = f(saldoAdmins);
+
+/* GRAFICO */
+let ctx = document.getElementById("grafico").getContext("2d");
+
+let gradient = ctx.createLinearGradient(0,0,0,280);
+gradient.addColorStop(0,"rgba(59,130,246,0.4)");
+gradient.addColorStop(1,"rgba(59,130,246,0)");
+
+new Chart(ctx,{
+  type:"line",
+  data:{
+    labels:Object.keys(porDia),
+    datasets:[{
+      data:Object.values(porDia),
+      borderColor:"#3b82f6",
+      backgroundColor:gradient,
+      fill:true,
+      tension:0.4
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{display:false}}
+  }
+});
+
 </script>
 
 </body>

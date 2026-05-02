@@ -4,56 +4,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Painel ROOT - Verificação</title>
+<title>Verificação KYC</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  background:#0a0a0a;
+}
+
 body{
-  margin:0;
-  background:#050505;
   color:#fff;
-  font-family:"Segoe UI";
 }
 
 /* CONTAINER */
 .container{
-  max-width:1000px;
+  max-width:900px;
   margin:auto;
-  padding:25px;
+  padding:20px;
 }
 
 /* HEADER */
 .header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   margin-bottom:25px;
 }
 
 .title{
-  font-size:22px;
+  font-size:20px;
   font-weight:600;
+}
+
+.subtitle{
+  font-size:12px;
+  color:#777;
+  margin-top:4px;
 }
 
 .stats{
   display:flex;
   gap:10px;
+  margin-top:15px;
 }
 
+/* 🔥 PENDENTES (neutro premium) */
 .stat{
-  background:#0a0a0a;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.08);
   padding:10px 14px;
-  border-radius:10px;
+  border-radius:12px;
   font-size:12px;
-  border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;
+  transition:.25s;
+  color:#ccc;
+}
+
+.stat:hover{
+  border-color:rgba(255,255,255,0.2);
+  transform:translateY(-1px);
+}
+
+/* 🔥 APROVADOS (DESTAQUE AZUL) */
+.stat.aprovados{
+  border:1px solid rgba(59,130,246,0.7);
+  color:#3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.15);
+}
+
+.stat.aprovados:hover{
+  background:rgba(59,130,246,0.08);
+  box-shadow:0 0 14px rgba(59,130,246,0.35);
 }
 
 /* CARD */
 .card{
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   border-radius:16px;
-  padding:18px;
+  padding:16px;
   margin-bottom:12px;
   border:1px solid rgba(255,255,255,0.05);
   transition:0.2s;
@@ -76,73 +105,102 @@ body{
 }
 
 .email{
-  font-size:12px;
-  color:#9ca3af;
+  font-size:11px;
+  color:#777;
 }
 
 /* STATUS */
 .status{
-  font-size:11px;
+  font-size:10px;
   padding:5px 12px;
-  border-radius:999px;
+  border-radius:20px;
+  font-weight:600;
+  background:rgba(250,204,21,0.12);
+  color:#facc15;
 }
-
-.analise{background:#3f2f00;color:#facc15;}
-.aprovado{background:#052e16;color:#22c55e;}
-.reprovado{background:#3f0000;color:#ef4444;}
 
 /* ACTIONS */
 .actions{
-  margin-top:12px;
   display:flex;
   gap:8px;
+  margin-top:12px;
 }
 
-/* BUTTON */
+/* BASE BUTTON */
 .btn{
-  padding:8px 12px;
-  border-radius:8px;
-  border:none;
+  flex:1;
+  padding:10px;
+  border-radius:10px;
   font-size:12px;
   cursor:pointer;
-  transition:0.2s;
+  font-weight:600;
+  transition:.25s;
 }
 
+/* VER */
 .btn-view{
   background:#111;
-  color:#fff;
+  border:1px solid rgba(255,255,255,0.05);
+  color:#aaa;
 }
 
 .btn-view:hover{
-  border:1px solid #3b82f6;
+  border-color:#3b82f6;
+  color:#fff;
 }
 
+/* 🔥 APROVAR (PREMIUM REAL) */
 .btn-aprovar{
-  background:#16a34a;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  border:none;
   color:#fff;
+  box-shadow:
+    0 6px 18px rgba(34,197,94,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
+.btn-aprovar:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:
+    0 10px 25px rgba(34,197,94,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.btn-aprovar:active{
+  transform:scale(0.97);
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,0.4);
+}
+
+/* 🔥 REPROVAR (DISCRETO) */
 .btn-reprovar{
-  background:#ef4444;
-  color:#fff;
+  background:#111;
+  border:1px solid rgba(239,68,68,0.6);
+  color:#ef4444;
+}
+
+.btn-reprovar:hover{
+  background:rgba(239,68,68,0.08);
+  box-shadow:0 0 8px rgba(239,68,68,0.25);
 }
 
 /* MODAL */
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:#0a0a0a;
   display:none;
-  justify-content:center;
-  align-items:center;
+  overflow:auto;
+  z-index:999;
+  padding:20px;
 }
 
 .modal-box{
-  background:#0a0a0a;
-  padding:20px;
+  max-width:500px;
+  margin:auto;
+  background:#0f0f0f;
   border-radius:16px;
-  width:90%;
-  max-width:550px;
+  padding:20px;
   border:1px solid rgba(255,255,255,0.05);
 }
 
@@ -152,11 +210,17 @@ body{
   border-radius:10px;
 }
 
-/* CLOSE */
 .close{
-  float:right;
+  text-align:right;
   cursor:pointer;
-  font-size:18px;
+  color:#aaa;
+  margin-bottom:10px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#555;
 }
 </style>
 </head>
@@ -166,11 +230,15 @@ body{
 <div class="container">
 
   <div class="header">
-    <div class="title">Verificação de Contas</div>
+    <div class="title">Verificação KYC</div>
+    <div class="subtitle">Análise e aprovação de documentos</div>
 
     <div class="stats">
       <div class="stat" id="pendentes">Pendentes: 0</div>
-      <div class="stat" id="aprovados">Aprovados: 0</div>
+
+      <div class="stat aprovados" id="aprovados" onclick="abrirAprovados()">
+        Aprovados: 0 →
+      </div>
     </div>
   </div>
 
@@ -181,20 +249,23 @@ body{
 <!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
-    <span class="close" onclick="fecharModal()">✕</span>
+    <div class="close" onclick="fecharModal()">✕ Fechar</div>
     <div id="detalhes"></div>
   </div>
 </div>
 
 <script>
 
+function abrirAprovados(){
+  window.location.href = "kyc-aprovados-root.html";
+}
+
 function carregar(){
 
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  let pendentes=0, aprovados=0;
-
+  let pend = 0, apr = 0;
   let dadosLista = [];
 
   for(let i=0;i<localStorage.length;i++){
@@ -203,19 +274,21 @@ function carregar(){
     if(key.startsWith("kyc_")){
       let dados = JSON.parse(localStorage.getItem(key));
       dados.key = key;
-      dadosLista.push(dados);
 
-      if(dados.status === "analise") pendentes++;
-      if(dados.status === "aprovado") aprovados++;
+      if(dados.status === "analise"){
+        dadosLista.push(dados);
+        pend++;
+      }
+
+      if(dados.status === "aprovado"){
+        apr++;
+      }
     }
   }
 
-  // 🔥 prioridade: análise primeiro
-  dadosLista.sort((a,b)=>{
-    if(a.status === "analise") return -1;
-    if(b.status === "analise") return 1;
-    return 0;
-  });
+  if(dadosLista.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum KYC pendente</div>`;
+  }
 
   dadosLista.forEach(dados=>{
 
@@ -230,56 +303,45 @@ function carregar(){
             <div class="email">${email}</div>
           </div>
 
-          <div class="status ${dados.status}">
-            ${dados.status}
-          </div>
+          <div class="status">análise</div>
         </div>
 
         <div class="actions">
           <button class="btn btn-view" onclick="ver('${dados.key}')">
-            <i class="ri-eye-line"></i> Detalhes
+            Ver
           </button>
 
-          ${dados.status !== "aprovado" ? `
           <button class="btn btn-aprovar" onclick="aprovar('${dados.key}')">
-            ✔ Aprovar
+            Aprovar
           </button>
-          ` : ""}
 
-          ${dados.status !== "reprovado" ? `
           <button class="btn btn-reprovar" onclick="reprovar('${dados.key}')">
-            ✖ Reprovar
+            Reprovar
           </button>
-          ` : ""}
-
         </div>
 
       </div>
     `;
   });
 
-  document.getElementById("pendentes").innerText = "Pendentes: " + pendentes;
-  document.getElementById("aprovados").innerText = "Aprovados: " + aprovados;
+  pendentes.innerText = "Pendentes: " + pend;
+  aprovados.innerText = "Aprovados: " + apr;
 }
 
 carregar();
 
-/* VER DETALHES */
+/* VER */
 function ver(key){
-
   let d = JSON.parse(localStorage.getItem(key));
 
-  document.getElementById("modal").style.display = "flex";
+  modal.style.display = "block";
 
-  document.getElementById("detalhes").innerHTML = `
+  detalhes.innerHTML = `
     <b>Nome:</b> ${d.nome}<br>
-    <b>CPF:</b> ${d.cpf}<br>
-    <b>Endereço:</b> ${d.rua}, ${d.numero} - ${d.cidade}<br><br>
+    <b>CPF:</b> ${d.cpf}<br><br>
 
-    <b>Documento frente</b>
+    <b>Documento</b>
     <img src="${d.frente}">
-
-    <b>Documento verso</b>
     <img src="${d.verso}">
 
     <b>Selfie</b>
@@ -288,7 +350,7 @@ function ver(key){
 }
 
 function fecharModal(){
-  document.getElementById("modal").style.display="none";
+  modal.style.display="none";
 }
 
 /* APROVAR */
@@ -302,7 +364,7 @@ function aprovar(key){
 /* REPROVAR */
 function reprovar(key){
   let d = JSON.parse(localStorage.getItem(key));
-  d.status = "reprovado";
+  d.status = "analise";
   localStorage.setItem(key, JSON.stringify(d));
   carregar();
 }

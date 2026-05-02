@@ -25,31 +25,15 @@ body{
 .title{font-size:24px;font-weight:600;}
 .sub{font-size:13px;color:#9ca3af;margin-bottom:15px;}
 
-.status{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:12px;
-  margin-bottom:15px;
-}
-
-.nao{background:#3f0000;color:#ef4444;}
-.analise{background:#3f2f00;color:#facc15;}
-.aprovado{background:#052e16;color:#22c55e;}
-
 .card{
   background:#0a0a0a;
   padding:16px;
   border-radius:14px;
   margin-top:15px;
   border:1px solid rgba(255,255,255,0.05);
-  transition:0.2s;
 }
 
-.card:hover{border-color:rgba(59,130,246,0.2);}
-
 .label{font-size:12px;color:#9ca3af;}
-.desc{font-size:11px;color:#777;margin-bottom:8px;}
 
 input{
   width:100%;
@@ -60,12 +44,6 @@ input{
   border:1px solid rgba(255,255,255,0.05);
   background:#050505;
   color:#fff;
-}
-
-input:focus{
-  outline:none;
-  border-color:#3b82f6;
-  box-shadow:0 0 8px rgba(59,130,246,0.2);
 }
 
 .row{display:flex;gap:10px;}
@@ -80,7 +58,6 @@ input:focus{
 
 .upload:hover{
   border-color:#3b82f6;
-  background:rgba(59,130,246,0.05);
 }
 
 .preview{
@@ -128,8 +105,6 @@ input:focus{
   <div class="title">Verificação de Conta</div>
   <div class="sub">Confirme sua identidade para liberar saques</div>
 
-  <div id="statusBox"></div>
-
   <div class="card">
     <div class="label">Dados pessoais</div>
     <input id="nome" placeholder="Nome completo">
@@ -153,36 +128,25 @@ input:focus{
     <input id="cep" placeholder="CEP">
   </div>
 
+  <!-- UPLOADS -->
   <div class="card">
     <div class="label">Documento (Frente)</div>
-
-    <div class="upload" onclick="docFront.click()">
-      Enviar frente
-    </div>
-
-    <input type="file" id="docFront" hidden onchange="preview(this,'frontPreview')">
+    <div class="upload" onclick="docFront.click()">Enviar frente</div>
+    <input type="file" id="docFront" accept="image/*" hidden onchange="preview(this,'frontPreview')">
     <img id="frontPreview" class="preview">
   </div>
 
   <div class="card">
     <div class="label">Documento (Verso)</div>
-
-    <div class="upload" onclick="docBack.click()">
-      Enviar verso
-    </div>
-
-    <input type="file" id="docBack" hidden onchange="preview(this,'backPreview')">
+    <div class="upload" onclick="docBack.click()">Enviar verso</div>
+    <input type="file" id="docBack" accept="image/*" hidden onchange="preview(this,'backPreview')">
     <img id="backPreview" class="preview">
   </div>
 
   <div class="card">
     <div class="label">Selfie</div>
-
-    <div class="upload" onclick="selfie.click()">
-      Enviar selfie
-    </div>
-
-    <input type="file" id="selfie" hidden onchange="preview(this,'selfiePreview')">
+    <div class="upload" onclick="selfie.click()">Enviar selfie</div>
+    <input type="file" id="selfie" accept="image/*" hidden onchange="preview(this,'selfiePreview')">
     <img id="selfiePreview" class="preview">
   </div>
 
@@ -196,13 +160,17 @@ input:focus{
 
 let usuario = localStorage.getItem("usuario") || "user";
 
+/* 🔥 preview universal (qualquer imagem) */
 function preview(input,id){
   let file = input.files[0];
+
   if(file){
     let reader = new FileReader();
-    reader.onload = e=>{
+
+    reader.onload = function(e){
       document.getElementById(id).src = e.target.result;
     };
+
     reader.readAsDataURL(file);
   }
 }
@@ -216,33 +184,42 @@ function toast(msg){
 
 function enviar(){
 
+  let frente = document.getElementById("frontPreview").src;
+  let verso = document.getElementById("backPreview").src;
+  let selfie = document.getElementById("selfiePreview").src;
+
+  if(!nome.value || !cpf.value){
+    toast("Preencha nome e CPF");
+    return;
+  }
+
   let dados = {
-    nome: document.getElementById("nome").value,
-    cpf: document.getElementById("cpf").value,
-    nascimento: document.getElementById("nascimento").value,
-    rua: document.getElementById("rua").value,
-    numero: document.getElementById("numero").value,
-    cidade: document.getElementById("cidade").value,
-    cep: document.getElementById("cep").value,
-    frente: document.getElementById("frontPreview").src,
-    verso: document.getElementById("backPreview").src,
-    selfie: document.getElementById("selfiePreview").src,
+    nome: nome.value,
+    cpf: cpf.value,
+    nascimento: nascimento.value,
+    rua: rua.value,
+    numero: numero.value,
+    cidade: cidade.value,
+    cep: cep.value,
+
+    // 🔥 GUARDA QUALQUER FORMATO
+    frente: frente || "",
+    verso: verso || "",
+    selfie: selfie || "",
+
     status: "analise"
   };
 
   localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
 
-  toast("Enviado para análise");
+  toast("Enviado com sucesso");
 
   setTimeout(()=>{
-
-    // 🔥 REDIRECIONAMENTO CORRETO
     if(window.parent && window.parent.document.getElementById("frame")){
       window.parent.document.getElementById("frame").src = "perfil-operador.html";
     }else{
       window.location.href = "perfil-operador.html";
     }
-
   },1500);
 }
 

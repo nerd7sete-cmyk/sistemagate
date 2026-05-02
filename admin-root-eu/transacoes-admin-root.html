@@ -9,44 +9,51 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html, body{
+  height:100%;
+  background:#0a0a0a;
+}
+
 body{
-  background:#000;
   color:white;
-  padding:25px;
+  padding:20px;
 }
 
 /* HEADER */
 .top{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  flex-direction:column;
+  gap:10px;
   margin-bottom:20px;
+}
+
+.top h2{
+  font-size:18px;
 }
 
 .stats{
   display:flex;
-  gap:15px;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .stat{
   background:#050505;
   border:1px solid rgba(255,255,255,0.06);
-  padding:12px 16px;
+  padding:10px 14px;
   border-radius:10px;
-  font-size:13px;
+  font-size:12px;
 }
 
-/* FILTROS */
+/* FILTRO */
 .filters{
-  display:flex;
-  gap:10px;
   margin-bottom:20px;
-  flex-wrap:wrap;
 }
 
 .input{
-  padding:10px;
-  border-radius:8px;
+  width:100%;
+  padding:12px;
+  border-radius:10px;
   border:1px solid #1a1a1a;
   background:#0a0a0a;
   color:white;
@@ -74,12 +81,10 @@ body{
   color:#777;
 }
 
-/* HOVER */
 .row:not(.header):hover{
   background:#0a0a0a;
 }
 
-/* TEXTOS */
 .small{
   font-size:11px;
   color:#777;
@@ -90,6 +95,25 @@ body{
   font-weight:bold;
 }
 
+/* STATUS */
+.status{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:20px;
+  display:inline-block;
+  margin-top:5px;
+}
+
+.pago{
+  background:rgba(34,197,94,0.15);
+  color:#22c55e;
+}
+
+.pendente{
+  background:rgba(234,179,8,0.15);
+  color:#eab308;
+}
+
 /* EMPTY */
 .empty{
   padding:30px;
@@ -97,7 +121,7 @@ body{
   color:#555;
 }
 
-/* RESPONSIVO */
+/* MOBILE */
 @media(max-width:900px){
   .row{
     grid-template-columns:1fr 1fr;
@@ -117,14 +141,14 @@ body{
   <h2>Transações do Sistema</h2>
 
   <div class="stats">
-    <div class="stat" id="total">Total: R$ 0,00</div>
+    <div class="stat" id="total">Total Pago: R$ 0,00</div>
     <div class="stat" id="lucroTotal">Lucro: R$ 0,00</div>
+    <div class="stat" id="pendenteTotal">Pendentes: R$ 0,00</div>
   </div>
 </div>
 
-<!-- FILTROS -->
 <div class="filters">
-  <input id="busca" class="input" placeholder="Buscar usuário..." onkeyup="render()">
+  <input id="busca" class="input" placeholder="Buscar tudo..." onkeyup="render()">
 </div>
 
 <div class="card" id="tabela"></div>
@@ -133,13 +157,14 @@ body{
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 
-const TAXA = 15; // 🔥 SUA TAXA
+const TAXA = 15;
 
 function formatarValor(v){
-  return "R$ " + v.toFixed(2).replace(".", ",");
+  return "R$ " + Number(v).toFixed(2).replace(".", ",");
 }
 
 function formatarData(d){
+  if(!d) return "-";
   return new Date(d).toLocaleString();
 }
 
@@ -148,21 +173,27 @@ function render(){
   let tabela = document.getElementById("tabela");
   let busca = document.getElementById("busca").value.toLowerCase();
 
-  let dados = transacoes.filter(t => t.status === "pago");
+  let dados = [...transacoes];
 
+  /* 🔥 BUSCA COMPLETA */
   if(busca){
     dados = dados.filter(t =>
-      (t.usuario || "").toLowerCase().includes(busca)
+      (t.usuario || "").toLowerCase().includes(busca) ||
+      (t.operador || "").toLowerCase().includes(busca) ||
+      (t.gerente || "").toLowerCase().includes(busca) ||
+      (t.admin || "").toLowerCase().includes(busca) ||
+      (t.gateway || "").toLowerCase().includes(busca)
     );
   }
 
-  let total = 0;
+  let totalPago = 0;
   let lucroTotal = 0;
+  let totalPendente = 0;
 
   tabela.innerHTML = `
     <div class="row header">
       <div>Valor</div>
-      <div>Lucro</div>
+      <div>Status</div>
       <div>Usuário</div>
       <div>Hierarquia</div>
       <div>Gateway</div>
@@ -177,22 +208,28 @@ function render(){
 
   dados.slice().reverse().forEach(t=>{
 
-    let valor = t.valor || 0;
-    let lucro = valor * (TAXA / 100);
+    let valor = Number(t.valor || 0);
 
-    total += valor;
-    lucroTotal += lucro;
+    if(t.status === "pago"){
+      totalPago += valor;
+      lucroTotal += valor * (TAXA / 100);
+    }
+
+    if(t.status === "pendente"){
+      totalPendente += valor;
+    }
 
     tabela.innerHTML += `
       <div class="row">
 
         <div>
           ${formatarValor(valor)}
-          <div class="small">ID: ${t.id || "-"}</div>
         </div>
 
-        <div class="lucro">
-          ${formatarValor(lucro)}
+        <div>
+          <span class="status ${t.status === "pago" ? "pago" : "pendente"}">
+            ${t.status || "-"}
+          </span>
         </div>
 
         <div>
@@ -214,10 +251,13 @@ function render(){
   });
 
   document.getElementById("total").innerText =
-    "Total: " + formatarValor(total);
+    "Total Pago: " + formatarValor(totalPago);
 
   document.getElementById("lucroTotal").innerText =
     "Lucro: " + formatarValor(lucroTotal);
+
+  document.getElementById("pendenteTotal").innerText =
+    "Pendentes: " + formatarValor(totalPendente);
 }
 
 render();

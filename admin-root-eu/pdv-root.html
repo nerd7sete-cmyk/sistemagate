@@ -6,18 +6,13 @@
 
 <title>Gerar Cobrança - PrimePay</title>
 
-<!-- 🔥 TEMA GLOBAL -->
 <script src="theme-global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Segoe UI";
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
   background:linear-gradient(180deg,#000,#050505);
@@ -26,66 +21,80 @@ body{
 }
 
 /* HEADER */
-.header{
-  text-align:center;
-  margin-bottom:25px;
-}
-
+.header{text-align:center;margin-bottom:25px;}
 .icon{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:#0a0a0a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:65px;height:65px;border-radius:50%;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  display:flex;align-items:center;justify-content:center;
   margin:0 auto 12px;
   border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 0 20px rgba(59,130,246,0.2);
 }
 
-.header h2{
-  font-size:20px;
-  font-weight:600;
-}
-
-.header span{
-  font-size:12px;
-  color:#999;
-}
+.header h2{font-size:20px;font-weight:600;}
+.header span{font-size:12px;color:#777;}
 
 /* CARD */
 .card{
-  max-width:420px;
-  margin:0 auto;
-  background:#0b0b0b;
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 0 30px rgba(255,255,255,0.02);
+  max-width:420px;margin:auto;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;padding:20px;
 }
 
-/* LABEL */
-.label{
-  font-size:11px;
-  color:#aaa;
+/* 🔥 BLOCO INPUT */
+.input-box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+  transition:.2s;
+}
+
+.input-box:hover{
+  border-color:rgba(59,130,246,0.4);
+}
+
+/* HEADER INPUT */
+.top{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
   margin-bottom:6px;
+}
+
+.top i{
+  color:#3b82f6;
+  font-size:16px;
+  margin-top:2px;
+}
+
+.label{
+  font-size:12px;
+  color:#ccc;
+}
+
+.desc{
+  font-size:10px;
+  color:#666;
+  margin-top:2px;
 }
 
 /* INPUT */
 .input{
   width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid #1a1a1a;
-  background:#050505;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #111;
+  background:#020202;
   color:#fff;
-  margin-bottom:14px;
   font-size:13px;
-  transition:0.2s;
 }
 
 .input:focus{
-  border:1px solid #444;
+  border:1px solid #3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.3);
   outline:none;
 }
 
@@ -96,46 +105,18 @@ body{
   text-align:center;
 }
 
+/* DESTAQUE */
+.destaque{
+  border:1px solid rgba(59,130,246,0.3);
+  box-shadow:0 0 12px rgba(59,130,246,0.1);
+}
+
 /* BOTÃO */
 .btn{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#fff;
-  color:#000;
-  font-weight:600;
-  cursor:pointer;
-  margin-top:10px;
-  transition:0.2s;
-}
-
-.btn:hover{
-  opacity:0.85;
-  transform:translateY(-1px);
-}
-
-/* QR RESULT */
-.qr-box{
-  margin-top:20px;
-  text-align:center;
-  display:none;
-}
-
-.qr{
-  width:180px;
-  height:180px;
-  margin:0 auto 10px;
-  background:#fff;
-  border-radius:10px;
-}
-
-/* COPY */
-.copy{
-  font-size:11px;
-  color:#aaa;
-  margin-top:5px;
-  word-break:break-all;
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;font-weight:600;cursor:pointer;
+  box-shadow:0 0 12px rgba(59,130,246,0.4);
 }
 
 /* LOADING */
@@ -146,6 +127,95 @@ body{
   color:#aaa;
   margin-top:10px;
 }
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal-box{
+  position:relative;
+  width:95%;
+  max-width:360px;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border-radius:18px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.05);
+  text-align:center;
+}
+
+/* FECHAR */
+.close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+.close:hover{
+  background:#1a1a1a;
+}
+
+/* QR */
+.qr{
+  padding:12px;
+  background:#fff;
+  border-radius:14px;
+  display:inline-block;
+  margin-bottom:10px;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:20px;
+  background:rgba(250,204,21,0.1);
+  color:#facc15;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:10px;
+}
+
+/* COPY */
+.copy-box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px;
+  padding:10px;
+}
+
+.copy{
+  font-size:11px;
+  color:#aaa;
+  word-break:break-all;
+}
+
+.copy-btn{
+  margin-top:8px;
+  background:#111;
+  border:1px solid rgba(59,130,246,0.4);
+  color:#3b82f6;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -153,38 +223,86 @@ body{
 
 <div class="header">
   <div class="icon">
-    <i class="ri-qr-code-line" style="font-size:22px;"></i>
+    <i class="ri-qr-code-line" style="font-size:24px;color:#3b82f6;"></i>
   </div>
-
   <h2>Gerar Cobrança</h2>
-  <span>Crie um QR Code PIX para pagamento instantâneo</span>
+  <span>Pagamento via PIX instantâneo</span>
 </div>
 
 <div class="card">
 
-  <div class="label">Nome (opcional)</div>
-  <input class="input" id="nome" placeholder="Ex: Cliente VIP">
-
-  <div class="label">CPF (opcional)</div>
-  <input class="input" id="cpf" placeholder="000.000.000-00">
-
-  <div class="label">Valor da cobrança</div>
-  <input class="input valor" id="valor" placeholder="R$ 0,00">
-
-  <button class="btn" onclick="gerar()">Gerar QR Code</button>
-
-  <div class="loading" id="loading">Gerando cobrança...</div>
-
-  <div class="qr-box" id="qrBox">
-    <div class="qr"></div>
-    <div class="copy" id="pixCode">PIX_CODE_EXEMPLO_123</div>
+  <!-- NOME -->
+  <div class="input-box">
+    <div class="top">
+      <i class="ri-user-line"></i>
+      <div>
+        <div class="label">Nome do pagador</div>
+        <div class="desc">Opcional • Apenas para identificação</div>
+      </div>
+    </div>
+    <input class="input" id="nome" placeholder="Ex: João Silva">
   </div>
+
+  <!-- CPF -->
+  <div class="input-box">
+    <div class="top">
+      <i class="ri-id-card-line"></i>
+      <div>
+        <div class="label">CPF</div>
+        <div class="desc">Opcional • Ajuda na validação</div>
+      </div>
+    </div>
+    <input class="input" id="cpf" placeholder="000.000.000-00">
+  </div>
+
+  <!-- VALOR -->
+  <div class="input-box destaque">
+    <div class="top">
+      <i class="ri-money-dollar-circle-line"></i>
+      <div>
+        <div class="label">Valor da cobrança</div>
+        <div class="desc">Defina o valor a ser pago</div>
+      </div>
+    </div>
+    <input class="input valor" id="valor" placeholder="R$ 0,00">
+  </div>
+
+  <button class="btn" onclick="gerar()">
+    <i class="ri-flashlight-line"></i> Gerar Cobrança
+  </button>
+
+  <div class="loading" id="loading">Gerando...</div>
 
 </div>
 
-<script>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
 
-/* FORMATA VALOR */
+    <div class="close" onclick="fechar()">
+      <i class="ri-close-line"></i>
+    </div>
+
+    <div class="qr">
+      <canvas id="qrCanvas"></canvas>
+    </div>
+
+    <div class="status">
+      <i class="ri-time-line"></i> Aguardando pagamento
+    </div>
+
+    <div class="copy-box">
+      <div class="copy" id="pixCode"></div>
+
+      <button class="copy-btn" id="btnCopy" onclick="copiar()">
+        <i class="ri-file-copy-line"></i> Copiar código PIX
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
 valor.addEventListener("input", (e)=>{
   let v = e.target.value.replace(/\D/g,"");
   v = (v/100).toFixed(2) + "";
@@ -193,9 +311,7 @@ valor.addEventListener("input", (e)=>{
   e.target.value = "R$ " + v;
 });
 
-/* GERAR */
 function gerar(){
-
   let v = valor.value.replace(/[^\d]/g,"");
 
   if(!v){
@@ -206,14 +322,33 @@ function gerar(){
   loading.style.display = "block";
 
   setTimeout(()=>{
+    let pixFake = "000201PIXPRIMEPAY" + Math.random().toString(36).substring(2);
+
+    pixCode.innerText = pixFake;
+
+    QRCode.toCanvas(document.getElementById("qrCanvas"), pixFake, {
+      width:200
+    });
 
     loading.style.display = "none";
-    qrBox.style.display = "block";
-
-    pixCode.innerText = "00020126580014BR.GOV.BCB.PIX...EXEMPLO";
-
+    modal.style.display = "flex";
   },1000);
+}
 
+function copiar(){
+  let texto = pixCode.innerText;
+  let btn = document.getElementById("btnCopy");
+
+  navigator.clipboard.writeText(texto).then(()=>{
+    btn.innerHTML = '<i class="ri-check-line"></i> Copiado!';
+    setTimeout(()=>{
+      btn.innerHTML = '<i class="ri-file-copy-line"></i> Copiar código PIX';
+    },1500);
+  });
+}
+
+function fechar(){
+  modal.style.display = "none";
 }
 </script>
 

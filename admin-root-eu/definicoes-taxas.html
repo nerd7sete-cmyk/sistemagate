@@ -4,19 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Painel Root - PrimePay</title>
+<title>Ajustes de Taxas - PrimePay</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
 
+html, body{
+  height:100%;
+  background:#0a0a0a;
+}
+
 body{
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
-    #0a0a0a;
   color:white;
-  padding:25px;
+  padding:16px;
 }
 
 .container{
@@ -24,73 +26,86 @@ body{
   margin:auto;
 }
 
-.header{margin-bottom:25px;}
-.header h1{font-size:22px;}
-.header p{color:#9ca3af;font-size:13px;}
+.header{
+  margin-bottom:20px;
+}
+
+.header h1{
+  font-size:20px;
+  font-weight:600;
+}
+
+.header p{
+  color:#9ca3af;
+  font-size:12px;
+}
 
 .card{
   background:#0f0f0f;
-  border:1px solid rgba(59,130,246,0.2);
-  border-radius:20px;
-  padding:25px;
-  margin-bottom:20px;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:16px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:15px;
+  gap:12px;
 }
 
 .label{
   font-size:12px;
   color:#9ca3af;
-  margin-bottom:5px;
+  margin-bottom:4px;
 }
 
 .input{
   width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid #1a1a1a;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
   background:#0a0a0a;
   color:white;
 }
 
-.full{grid-column:1/3;}
+.input:focus{
+  border-color:#3b82f6;
+  outline:none;
+}
 
 .btn{
-  margin-top:20px;
-  padding:16px;
-  border-radius:16px;
-  background:linear-gradient(135deg,#1f2937,#020617);
-  border:1px solid rgba(59,130,246,0.4);
+  margin-top:14px;
+  padding:14px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
   text-align:center;
   cursor:pointer;
+  font-weight:600;
 }
 
 .status{
-  margin-top:10px;
+  margin-top:8px;
   text-align:center;
-  font-size:13px;
+  font-size:12px;
   color:#22c55e;
 }
 
 .info{
-  margin-top:15px;
+  margin-top:12px;
   padding:12px;
   border-radius:12px;
   background:#0a0a0a;
-  border:1px solid rgba(59,130,246,0.2);
-  font-size:13px;
+  border:1px solid rgba(255,255,255,0.05);
+  font-size:12px;
   color:#9ca3af;
+  line-height:1.5;
 }
 
 .info strong{color:#fff;}
 
 @media(max-width:600px){
   .grid{grid-template-columns:1fr;}
-  .full{grid-column:1;}
 }
 </style>
 </head>
@@ -100,66 +115,61 @@ body{
 <div class="container">
 
   <div class="header">
-    <h1>Painel Root</h1>
-    <p>Controle global do sistema</p>
+    <h1>Ajustes de Taxas</h1>
+    <p>Definição de limites e regras financeiras do sistema</p>
   </div>
 
-  <!-- 🔥 PDV -->
+  <!-- PDV -->
   <div class="card">
 
-    <h2 style="margin-bottom:15px;">Configuração PDV</h2>
+    <h2 style="margin-bottom:12px;">Limites de Transação (PDV)</h2>
 
     <div class="grid">
 
       <div>
-        <div class="label">Valor mínimo</div>
+        <div class="label">Valor mínimo permitido</div>
         <input id="min" class="input">
       </div>
 
       <div>
-        <div class="label">Valor máximo</div>
+        <div class="label">Valor máximo permitido</div>
         <input id="max" class="input">
-      </div>
-
-      <div class="full">
-        <div class="label">Valor fixo</div>
-        <input id="fixo" class="input">
       </div>
 
     </div>
 
-    <div class="btn" onclick="salvarPDV()">Salvar PDV</div>
+    <div class="btn" onclick="salvarPDV()">Salvar Limites</div>
     <div id="msg1" class="status"></div>
 
     <div class="info" id="infoPDV"></div>
 
   </div>
 
-  <!-- 🔥 SAQUE -->
+  <!-- SAQUE -->
   <div class="card">
 
-    <h2 style="margin-bottom:15px;">Configuração de Saque</h2>
+    <h2 style="margin-bottom:12px;">Política de Saques</h2>
 
     <div class="grid">
 
       <div>
-        <div class="label">Mínimo saque</div>
+        <div class="label">Valor mínimo para saque</div>
         <input id="s_min" class="input">
       </div>
 
       <div>
-        <div class="label">Máximo saque</div>
+        <div class="label">Valor máximo por saque</div>
         <input id="s_max" class="input">
       </div>
 
-      <div class="full">
-        <div class="label">Taxa saque (R$)</div>
+      <div style="grid-column:1/3;">
+        <div class="label">Taxa por saque (R$)</div>
         <input id="s_taxa" class="input">
       </div>
 
     </div>
 
-    <div class="btn" onclick="salvarSaque()">Salvar Saque</div>
+    <div class="btn" onclick="salvarSaque()">Salvar Configurações</div>
     <div id="msg2" class="status"></div>
 
     <div class="info" id="infoSaque"></div>
@@ -170,44 +180,40 @@ body{
 
 <script>
 
-// 🔥 PDV
+/* PDV */
 let configPDV = JSON.parse(localStorage.getItem("config_pdv")) || {
   valor_min:10,
-  valor_max:1000,
-  valor_fixo:0
+  valor_max:1000
 };
 
 min.value = configPDV.valor_min;
 max.value = configPDV.valor_max;
-fixo.value = configPDV.valor_fixo || "";
 
 function salvarPDV(){
 
   configPDV = {
     valor_min: parseFloat(min.value),
-    valor_max: parseFloat(max.value),
-    valor_fixo: parseFloat(fixo.value) || 0
+    valor_max: parseFloat(max.value)
   };
 
   localStorage.setItem("config_pdv", JSON.stringify(configPDV));
 
-  msg1.innerText = "PDV atualizado";
+  msg1.innerText = "Limites atualizados";
 
   atualizarInfoPDV();
 }
 
 function atualizarInfoPDV(){
   infoPDV.innerHTML = `
-    <strong>Atual</strong><br>
-    Min: R$ ${configPDV.valor_min}<br>
-    Max: R$ ${configPDV.valor_max}<br>
-    Fixo: ${configPDV.valor_fixo || "Desativado"}
+    <strong>Configuração atual</strong><br>
+    Mínimo: R$ ${configPDV.valor_min}<br>
+    Máximo: R$ ${configPDV.valor_max}
   `;
 }
 
 atualizarInfoPDV();
 
-// 🔥 SAQUE
+/* SAQUE */
 let configSaque = JSON.parse(localStorage.getItem("config_saque")) || {
   min:119.90,
   max:1000,
@@ -228,16 +234,16 @@ function salvarSaque(){
 
   localStorage.setItem("config_saque", JSON.stringify(configSaque));
 
-  msg2.innerText = "Saque atualizado";
+  msg2.innerText = "Regras de saque atualizadas";
 
   atualizarInfoSaque();
 }
 
 function atualizarInfoSaque(){
   infoSaque.innerHTML = `
-    <strong>Atual</strong><br>
-    Min: R$ ${configSaque.min}<br>
-    Max: R$ ${configSaque.max}<br>
+    <strong>Configuração atual</strong><br>
+    Mínimo: R$ ${configSaque.min}<br>
+    Máximo: R$ ${configSaque.max}<br>
     Taxa: R$ ${configSaque.taxa}
   `;
 }

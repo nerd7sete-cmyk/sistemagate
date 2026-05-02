@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Operadores</title>
+
+<style>
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+/* 🔥 BASE */
+html, body{
+  height:100%;
+  background:#0a0a0a;
+  overflow:hidden;
+}
+
+/* APP */
+.app{
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+/* 🔥 TÍTULO PREMIUM */
+.title{
+  font-size:18px;
+  font-weight:700;
+  color:#ffffff;
+  letter-spacing:0.3px;
+}
+
+/* BOTÃO */
+.btn{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:13px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+  opacity:0.9;
+}
+
+/* LISTA */
+.content{
+  flex:1;
+  overflow:auto;
+  padding:15px;
+}
+
+/* CARD */
+.card{
+  background:#0f0f0f;
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.03);
+}
+
+/* ITEM */
+.item{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.item:last-child{
+  border-bottom:none;
+}
+
+.nome{
+  font-weight:600;
+  font-size:14px;
+  color:#fff;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:20px;
+  margin-top:6px;
+  display:inline-block;
+}
+
+.ativo{
+  color:#22c55e;
+  background:rgba(34,197,94,0.1);
+}
+
+.inativo{
+  color:#ef4444;
+  background:rgba(239,68,68,0.1);
+}
+
+/* EMPTY */
+.empty{
+  color:#777;
+  text-align:center;
+  padding:20px;
+  font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- TOPO -->
+  <div class="top">
+    <div class="title" id="nomeGerente">Operadores</div>
+    <div class="btn" onclick="voltar()">Voltar</div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="content">
+    <div class="card" id="lista"></div>
+  </div>
+
+</div>
+
+<script>
+
+/* DADOS */
+let gerente = JSON.parse(localStorage.getItem("gerenteSelecionado"));
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+/* TÍTULO */
+if(gerente){
+  document.getElementById("nomeGerente").innerText = "Operadores • " + gerente.nome;
+}
+
+/* FILTRAR */
+let filtrados = operadores.filter(o => o.gerente === gerente?.nome);
+
+let lista = document.getElementById("lista");
+
+/* RENDER */
+if(!filtrados.length){
+
+  lista.innerHTML = `
+    <div class="empty">
+      Nenhum operador encontrado
+    </div>
+  `;
+
+}else{
+
+  lista.innerHTML = filtrados.map(o=>`
+    <div class="item">
+      <div class="nome">${o.nome}</div>
+
+      <div class="status ${o.ativo ? 'ativo':'inativo'}">
+        ${o.ativo ? 'Ativo':'Inativo'}
+      </div>
+    </div>
+  `).join("");
+
+}
+
+/* VOLTAR */
+function voltar(){
+  window.history.back();
+}
+
+</script>
+
+</body>
+</html>

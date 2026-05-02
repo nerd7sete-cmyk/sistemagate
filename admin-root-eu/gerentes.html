@@ -2,26 +2,21 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+<title>Gerentes</title>
 
-html, body{
-  touch-action: manipulation;
-  -webkit-text-size-adjust: 100%;
-}
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
+  background:#0a0a0a;
   color:white;
   padding:25px;
 }
 
-/* TOPO */
 .top{
   display:flex;
   justify-content:space-between;
@@ -29,32 +24,40 @@ body{
   margin-bottom:25px;
 }
 
-h2{font-weight:600;}
-
-.btn-add{
-  background:#fff;
-  color:#000;
+.btn{
+  background:#3b82f6;
+  color:#fff;
   padding:10px 16px;
   border-radius:10px;
   cursor:pointer;
   font-weight:600;
 }
 
-/* CARD */
-.card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
-  overflow:hidden;
+.input{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#0a0a0a;
+  color:white;
+  width:100%;
+  margin-bottom:20px;
 }
 
-/* ITEM */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+
 .item{
   padding:18px;
-  border-bottom:1px solid #111;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  cursor:pointer; /* 🔥 deixa clicável */
 }
 
-.item:hover{background:#0a0a0a;}
+.item:hover{background:#0f0f0f;}
 
 .row{
   display:flex;
@@ -62,26 +65,21 @@ h2{font-weight:600;}
   align-items:center;
 }
 
-/* INFO */
 .nome{font-weight:600;}
 
-.info small{
-  color:#777;
-  font-size:12px;
-}
-
-/* BADGES */
 .badges{
   display:flex;
   gap:8px;
   margin-top:6px;
+  flex-wrap:wrap;
 }
 
 .badge{
   font-size:11px;
   padding:4px 10px;
   border-radius:20px;
-  background:#0f0f0f;
+  background:#111;
+  color:#ccc;
 }
 
 .status{
@@ -90,17 +88,9 @@ h2{font-weight:600;}
   border-radius:20px;
 }
 
-.ativo{
-  color:#22c55e;
-  background:rgba(34,197,94,0.1);
-}
+.ativo{color:#22c55e;background:rgba(34,197,94,0.1);}
+.inativo{color:#ef4444;background:rgba(239,68,68,0.1);}
 
-.inativo{
-  color:#ef4444;
-  background:rgba(239,68,68,0.1);
-}
-
-/* ACTIONS */
 .actions{
   display:flex;
   gap:8px;
@@ -117,63 +107,70 @@ h2{font-weight:600;}
   cursor:pointer;
 }
 
-.btn-action:hover{
-  background:#111;
+/* CONFIG BOX */
+.config-box{
+  padding:20px;
 }
 
-/* MODAL */
-.modal-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  padding:25px;
-  border-radius:16px;
-  width:100%;
-  max-width:420px;
-}
-
-.input{
-  width:100%;
+.save-global{
   margin-top:10px;
-  padding:13px;
-  border-radius:10px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
-  color:white;
-}
-
-/* BOTÕES */
-.actions-modal{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.btn{
-  flex:1;
+  background:#3b82f6;
   padding:12px;
   border-radius:10px;
   text-align:center;
   cursor:pointer;
 }
 
+/* MODAIS */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  padding:25px;
+  border-radius:18px;
+  width:100%;
+  max-width:420px;
+}
+
+.input-modal{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#0a0a0a;
+  color:white;
+}
+
+.actions-modal{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
 .save{
-  background:#fff;
-  color:#000;
-  font-weight:600;
+  flex:1;
+  background:#3b82f6;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
 }
 
 .cancel{
-  border:1px solid #1a1a1a;
-  color:#aaa;
+  flex:1;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -181,70 +178,126 @@ h2{font-weight:600;}
 <body>
 
 <div class="top">
-  <h2>Gerentes</h2>
-  <div class="btn-add" onclick="abrirModal()">+ Criar Gerente</div>
+  <h2>Gerentes (ROOT)</h2>
+  <div class="btn" onclick="abrirModal()">+ Criar Gerente</div>
 </div>
+
+<div class="card">
+  <div class="config-box">
+    <h3>Taxa Global dos Gerentes</h3>
+
+    <input id="taxaGlobal" class="input" placeholder="Ex: 20">
+
+    <div class="save-global" onclick="salvarGlobal()">Salvar Configuração</div>
+
+    <div style="margin-top:10px;font-size:12px;color:#9ca3af;">
+      Atual: <span id="atualGlobal"></span>
+    </div>
+  </div>
+</div>
+
+<input id="busca" class="input" placeholder="Buscar gerente..." onkeyup="render()">
 
 <div class="card" id="lista"></div>
 
 <!-- MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-
     <h3>Novo Gerente</h3>
 
-    <input id="nome" class="input" placeholder="Nome">
-    <input id="email" class="input" placeholder="Email">
-    <input id="senha" class="input" type="password" placeholder="Senha">
-    <input id="whatsapp" class="input" placeholder="WhatsApp">
+    <input id="nome" class="input-modal" placeholder="Nome">
+    <input id="email" class="input-modal" placeholder="Email">
+    <input id="senha" class="input-modal" placeholder="Senha">
 
     <div class="actions-modal">
-      <div class="btn cancel" onclick="fecharModal()">Cancelar</div>
-      <div class="btn save" onclick="criar()">Criar</div>
+      <div class="cancel" onclick="fecharModal()">Cancelar</div>
+      <div class="save" onclick="criar()">Criar</div>
     </div>
+  </div>
+</div>
 
+<!-- MODAL TAXA -->
+<div class="modal-bg" id="modalTaxa">
+  <div class="modal">
+    <h3>Taxa do Gerente (%)</h3>
+
+    <input id="valorTaxa" class="input-modal">
+
+    <div class="actions-modal">
+      <div class="cancel" onclick="fecharTaxa()">Cancelar</div>
+      <div class="save" onclick="salvarTaxa()">Salvar</div>
+    </div>
   </div>
 </div>
 
 <script>
 
-// 🔥 REFERÊNCIAS CORRETAS
-const nomeInput = document.getElementById("nome");
-const emailInput = document.getElementById("email");
-const senhaInput = document.getElementById("senha");
-const whatsappInput = document.getElementById("whatsapp");
-
 let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let usuario = localStorage.getItem("usuario");
 
-// SALVAR
+let indexAtual = null;
+
+function getConfig(){
+  return JSON.parse(localStorage.getItem("config_gerente")) || { taxa: 20 };
+}
+
+function salvarConfig(valor){
+  localStorage.setItem("config_gerente", JSON.stringify({ taxa: valor }));
+}
+
 function salvar(){
   localStorage.setItem("gerentes", JSON.stringify(gerentes));
 }
 
-// RENDER
+function atualizarUI(){
+  let config = getConfig();
+  document.getElementById("atualGlobal").innerText = config.taxa + "%";
+  document.getElementById("taxaGlobal").value = config.taxa;
+}
+
+function salvarGlobal(){
+  let valor = parseFloat(document.getElementById("taxaGlobal").value) || 0;
+  salvarConfig(valor);
+  atualizarUI();
+  render();
+}
+
+function abrirOperadores(i){
+  localStorage.setItem("gerenteSelecionado", JSON.stringify(gerentes[i]));
+  window.location.href = "operadores-gerente.html";
+}
+
 function render(){
 
+  let config = getConfig();
   let lista = document.getElementById("lista");
-  lista.innerHTML="";
+  let busca = document.getElementById("busca").value.toLowerCase();
 
-  if(gerentes.length === 0){
-    lista.innerHTML = `<div style="padding:20px;color:#666;">Nenhum gerente cadastrado</div>`;
+  lista.innerHTML = "";
+
+  let dados = gerentes.filter(g => g.nome.toLowerCase().includes(busca));
+
+  if(dados.length === 0){
+    lista.innerHTML = `<div style="padding:20px;color:#777;">Nenhum gerente</div>`;
     return;
   }
 
-  gerentes.forEach((g,i)=>{
+  dados.forEach((g,i)=>{
+
+    let taxa = g.taxa ?? config.taxa;
+    let origem = g.taxa != null ? "" : " (global)";
 
     lista.innerHTML += `
-    <div class="item">
-
+    <div class="item" onclick="abrirOperadores(${i})">
       <div class="row">
 
-        <div class="info">
+        <div>
           <div class="nome">${g.nome}</div>
-          <small>${g.email} • ${g.whatsapp || "-"}</small>
+          <small>${g.email}</small>
 
           <div class="badges">
-            <div class="badge">Gerente</div>
+            <div class="badge">Taxa: ${taxa}%${origem}</div>
+            <div class="badge">Root: ${g.root}</div>
             <div class="status ${g.ativo?'ativo':'inativo'}">
               ${g.ativo?'Ativo':'Inativo'}
             </div>
@@ -253,30 +306,32 @@ function render(){
 
         <div class="actions">
 
-          <div class="btn-action" onclick="toggle(${i})">
+          <!-- 🔥 impede clique no card -->
+          <div class="btn-action" onclick="event.stopPropagation(); abrirTaxa(${i})">
+            <i class="ri-percent-line"></i>
+          </div>
+
+          <div class="btn-action" onclick="event.stopPropagation(); toggle(${i})">
             <i class="ri-toggle-line"></i>
           </div>
 
-          <div class="btn-action" onclick="remover(${i})">
+          <div class="btn-action" onclick="event.stopPropagation(); remover(${i})">
             <i class="ri-delete-bin-line"></i>
           </div>
 
         </div>
 
       </div>
-
-    </div>
-    `;
+    </div>`;
   });
+
+  atualizarUI();
 }
 
-// CRIAR
 function criar(){
-
-  let nome = nomeInput.value.trim();
-  let email = emailInput.value.trim();
-  let senha = senhaInput.value.trim();
-  let whatsapp = whatsappInput.value.trim();
+  let nome = document.getElementById("nome").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let senha = document.getElementById("senha").value.trim();
 
   if(!nome || !email || !senha){
     alert("Preencha todos os campos");
@@ -287,7 +342,8 @@ function criar(){
     nome,
     email,
     senha,
-    whatsapp,
+    root: usuario,
+    taxa: null,
     ativo:true
   });
 
@@ -295,20 +351,17 @@ function criar(){
   render();
   fecharModal();
 
-  nomeInput.value="";
-  emailInput.value="";
-  senhaInput.value="";
-  whatsappInput.value="";
+  document.getElementById("nome").value="";
+  document.getElementById("email").value="";
+  document.getElementById("senha").value="";
 }
 
-// TOGGLE
 function toggle(i){
   gerentes[i].ativo = !gerentes[i].ativo;
   salvar();
   render();
 }
 
-// REMOVER
 function remover(i){
   if(confirm("Excluir gerente?")){
     gerentes.splice(i,1);
@@ -317,13 +370,30 @@ function remover(i){
   }
 }
 
-// MODAL
+function abrirTaxa(i){
+  indexAtual = i;
+  let config = getConfig();
+  document.getElementById("valorTaxa").value = gerentes[i].taxa ?? config.taxa;
+  document.getElementById("modalTaxa").style.display = "flex";
+}
+
+function fecharTaxa(){
+  document.getElementById("modalTaxa").style.display = "none";
+}
+
+function salvarTaxa(){
+  gerentes[indexAtual].taxa = parseFloat(document.getElementById("valorTaxa").value) || 0;
+  salvar();
+  render();
+  fecharTaxa();
+}
+
 function abrirModal(){
-  modal.style.display="flex";
+  document.getElementById("modal").style.display="flex";
 }
 
 function fecharModal(){
-  modal.style.display="none";
+  document.getElementById("modal").style.display="none";
 }
 
 render();
