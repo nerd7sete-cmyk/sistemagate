@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard ROOT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#0a0a0a;
+  color:white;
+  padding:20px;
+}
+
+/* HEADER */
+.top{
+  margin-bottom:15px;
+}
+
+.top h2{
+  color:#3b82f6;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  padding:15px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.title{
+  font-size:11px;
+  color:#9ca3af;
+}
+
+.value{
+  font-size:20px;
+  font-weight:600;
+  margin-top:5px;
+}
+
+.green{color:#22c55e;}
+.red{color:#ef4444;}
+
+/* CHART */
+.chart{
+  background:#0f0f0f;
+  padding:15px;
+  border-radius:16px;
+  margin-bottom:15px;
+  height:250px;
+}
+
+/* LISTAS */
+.box{
+  background:#0f0f0f;
+  border-radius:16px;
+  padding:15px;
+}
+
+.box h3{
+  font-size:13px;
+  color:#3b82f6;
+  margin-bottom:10px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+/* TABELA */
+.table{
+  background:#0f0f0f;
+  padding:15px;
+  border-radius:16px;
+  margin-top:15px;
+}
+
+.table h3{
+  font-size:13px;
+  color:#3b82f6;
+  margin-bottom:10px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  padding:8px 0;
+  border-bottom:1px solid #1a1a1a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <h2>Dashboard ROOT</h2>
+</div>
+
+<!-- CARDS -->
+<div class="grid">
+
+  <div class="card">
+    <div class="title">Faturamento Total</div>
+    <div class="value" id="fat">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Lucro do Sistema</div>
+    <div class="value green" id="lucro">R$ 0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Transações</div>
+    <div class="value" id="transacoes">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Saques</div>
+    <div class="value red" id="saques">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Admins</div>
+    <div class="value" id="admins">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Gerentes</div>
+    <div class="value" id="gerentes">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Operadores</div>
+    <div class="value" id="operadores">0</div>
+  </div>
+
+</div>
+
+<!-- GRÁFICO -->
+<div class="chart">
+  <canvas id="grafico"></canvas>
+</div>
+
+<!-- RANKINGS -->
+<div class="grid">
+
+  <div class="box">
+    <h3>Top Admins</h3>
+    <div id="topAdmins"></div>
+  </div>
+
+  <div class="box">
+    <h3>Top Gerentes</h3>
+    <div id="topGerentes"></div>
+  </div>
+
+  <div class="box">
+    <h3>Top Operadores</h3>
+    <div id="topOperadores"></div>
+  </div>
+
+</div>
+
+<!-- TRANSAÇÕES -->
+<div class="table">
+  <h3>Últimas Transações</h3>
+  <div id="lista"></div>
+</div>
+
+<script>
+
+// FORMATAR
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function render(){
+
+  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  let admins = JSON.parse(localStorage.getItem("admins")) || [];
+  let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+  let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+  let total = 0;
+  let lucro = 0;
+
+  let porDia = {};
+  let admMap = {};
+  let gerMap = {};
+  let opMap = {};
+
+  transacoes.forEach(t=>{
+    let v = Number(t.valor || 0);
+
+    total += v;
+    lucro += v * 0.15; // taxa padrão root
+
+    let dia = new Date(t.data).toLocaleDateString("pt-BR");
+    porDia[dia] = (porDia[dia]||0)+v;
+
+    admMap[t.admin] = (admMap[t.admin]||0)+v;
+    gerMap[t.gerente] = (gerMap[t.gerente]||0)+v;
+    opMap[t.operador] = (opMap[t.operador]||0)+v;
+  });
+
+  // CARDS
+  fat.innerText = f(total);
+  lucroEl = document.getElementById("lucro");
+  lucroEl.innerText = f(lucro);
+  document.getElementById("transacoes").innerText = transacoes.length;
+  document.getElementById("admins").innerText = admins.length;
+  document.getElementById("gerentes").innerText = gerentes.length;
+  document.getElementById("operadores").innerText = operadores.length;
+
+  // TOP
+  function renderTop(map,el){
+    let top = Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+    document.getElementById(el).innerHTML = top.map(i=>`
+      <div class="item">
+        <span>${i[0]}</span>
+        <span>${f(i[1])}</span>
+      </div>
+    `).join("");
+  }
+
+  renderTop(admMap,"topAdmins");
+  renderTop(gerMap,"topGerentes");
+  renderTop(opMap,"topOperadores");
+
+  // TRANSAÇÕES
+  lista.innerHTML = transacoes.slice(0,10).map(t=>`
+    <div class="row">
+      <span>${t.operador || "-"}</span>
+      <span>${f(t.valor)}</span>
+    </div>
+  `).join("");
+
+  // GRÁFICO
+  let ctx = document.getElementById("grafico");
+
+  if(window.chart) window.chart.destroy();
+
+  window.chart = new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:Object.keys(porDia),
+      datasets:[{
+        data:Object.values(porDia),
+        borderColor:"#3b82f6",
+        tension:0.4,
+        fill:true
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{display:false}}
+    }
+  });
+}
+
+render();
+
+</script>
+
+</body>
+</html>

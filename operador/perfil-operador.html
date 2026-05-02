@@ -3,148 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minha Conta - PrimePay</title>
+
+<title>Perfil & Segurança</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
-
 body{
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
-    #0a0a0a;
-
-  color:white;
-  padding:25px;
+  margin:0;
+  font-family:"Segoe UI";
+  background:#050505;
+  color:#fff;
 }
 
 .container{
-  max-width:1200px;
+  max-width:700px;
   margin:auto;
+  padding:25px;
 }
 
-.header{
-  margin-bottom:30px;
-}
-
-.header h1{
-  font-size:22px;
-  font-weight:600;
-}
-
-.header span{
-  color:#9ca3af;
-  font-size:12px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:15px;
-}
+.title{font-size:24px;font-weight:600;}
+.sub{font-size:13px;color:#9ca3af;margin-bottom:20px;}
 
 .card{
-  background:#0f0f0f;
-  border:1px solid rgba(59,130,246,0.2);
-  border-radius:18px;
-  padding:20px;
-
-  box-shadow:
-    0 10px 40px rgba(0,0,0,0.9),
-    inset 0 0 15px rgba(59,130,246,0.04);
-
-  transition:0.25s;
-  position:relative;
-  overflow:hidden;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  padding:18px;
+  border-radius:16px;
+  margin-bottom:15px;
+  border:1px solid rgba(255,255,255,0.05);
 }
 
-.card:hover{
-  transform:translateY(-3px);
-  border-color:#3b82f6;
-}
-
-.card::after{
-  content:"";
-  position:absolute;
-  top:-40px;
-  right:-40px;
-  width:100px;
-  height:100px;
-  background:radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%);
-  filter:blur(35px);
-}
-
-.title{
-  font-size:12px;
-  color:#9ca3af;
-  margin-bottom:8px;
-}
-
-.value{
-  font-size:22px;
-  font-weight:700;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
+.user{display:flex;align-items:center;gap:12px;}
 
 .avatar{
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  background:#0a0a0a;
-  border:1px solid rgba(59,130,246,0.3);
+  width:45px;height:45px;border-radius:50%;
+  background:#111;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:20px;
 }
 
+.name{font-size:15px;font-weight:600;}
+.email{font-size:12px;color:#9ca3af;}
+
 .status{
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:999px;
-  background:rgba(34,197,94,0.1);
-  color:#22c55e;
+  margin-top:12px;
   display:inline-block;
-  margin-top:6px;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
 }
 
-.list{
+.nao{background:#3f0000;color:#ef4444;}
+.analise{background:#3f2f00;color:#facc15;}
+.aprovado{background:#052e16;color:#22c55e;}
+
+.info-box{
+  margin-top:10px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:11px;
+  background:rgba(59,130,246,0.15);
+  color:#3b82f6;
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+.kyc-title{
+  font-size:14px;
+  margin-bottom:6px;
   display:flex;
-  flex-direction:column;
+  align-items:center;
   gap:6px;
-  font-size:13px;
-  color:#cbd5f5;
 }
 
-.nominal{
-  background:linear-gradient(135deg,#0f172a,#020617);
-  border:1px solid rgba(59,130,246,0.5);
+.kyc-desc{
+  font-size:12px;
+  color:#9ca3af;
 }
 
-.nominal::before{
-  content:"PREMIUM";
-  position:absolute;
-  top:-8px;
-  right:10px;
-  font-size:9px;
-  padding:3px 7px;
-  border-radius:6px;
-  background:#3b82f6;
+.kyc-btn{
+  width:100%;
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
   color:#fff;
-  font-weight:700;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
 }
 
-.badge-off{color:#ef4444;font-size:12px;}
-.badge-on{color:#22c55e;font-size:12px;}
+.kyc-done{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#052e16,#064e3b);
+  color:#22c55e;
+  text-align:center;
+}
 
-@media(max-width:700px){
-  .grid{grid-template-columns:1fr;}
+.kyc-pending{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  background:#3f2f00;
+  color:#facc15;
+  text-align:center;
 }
 </style>
 </head>
@@ -153,81 +126,36 @@ body{
 
 <div class="container">
 
-  <div class="header">
-    <h1>Minha Conta</h1>
-    <span>Dados do operador</span>
+  <div class="title">Perfil & Segurança</div>
+  <div class="sub">Gerencie seus dados e verificação da conta</div>
+
+  <div class="card">
+    <div class="user">
+      <div class="avatar">
+        <i class="ri-user-3-line"></i>
+      </div>
+      <div>
+        <div class="name" id="nomeUser">Usuário</div>
+        <div class="email" id="emailUser"></div>
+      </div>
+    </div>
+
+    <div id="statusBox"></div>
+    <div id="dadosKyc" class="info-box"></div>
   </div>
 
-  <div class="grid">
+  <div class="card">
 
-    <!-- PERFIL -->
-    <div class="card">
-      <div class="user-box">
-        <div class="avatar">
-          <i class="ri-user-3-line"></i>
-        </div>
-        <div>
-          <strong id="nome">Operador</strong><br>
-          <small style="color:#6b7280;">ID: 847291</small><br>
-          <div class="status">Ativo</div>
-        </div>
-      </div>
+    <div class="kyc-title">
+      <i class="ri-shield-check-line"></i>
+      Verificação de identidade
     </div>
 
-    <!-- SALDO -->
-    <div class="card">
-      <div class="title">Saldo Atual</div>
-      <div class="value" id="saldo">R$ 0,00</div>
+    <div class="kyc-desc" id="descKyc">
+      Para liberar saques e aumentar a segurança da sua conta, é necessário concluir a verificação.
     </div>
 
-    <!-- MOVIMENTAÇÃO -->
-    <div class="card">
-      <div class="title">Total Movimentado</div>
-      <div class="value" id="volume">R$ 0,00</div>
-    </div>
-
-    <!-- TAXA -->
-    <div class="card">
-      <div class="title">Sua Taxa</div>
-      <div class="value" id="taxa">0%</div>
-    </div>
-
-    <!-- SAQUE -->
-    <div class="card">
-      <div class="title">Dados de Saque</div>
-      <div class="list" id="saqueInfo">
-        <span>Carregando...</span>
-      </div>
-    </div>
-
-    <!-- SEGURANÇA -->
-    <div class="card">
-      <div class="title">Segurança</div>
-      <div class="list">
-        <span>Senha protegida</span>
-        <span>Último acesso: Hoje</span>
-      </div>
-    </div>
-
-    <!-- NOMINAL -->
-    <div class="card nominal">
-      <div class="title">Nominal Específica</div>
-
-      <div class="list">
-        <span>Infraestrutura dedicada</span>
-        <span>Comprovante com sua marca</span>
-        <span>CNPJ exclusivo</span>
-      </div>
-
-      <br>
-      <div class="badge-off">Não ativado</div>
-    </div>
-
-    <!-- ATIVIDADE -->
-    <div class="card">
-      <div class="title">Últimas Atividades</div>
-      <div class="list" id="atividades"></div>
-    </div>
+    <div id="areaKyc"></div>
 
   </div>
 
@@ -235,60 +163,84 @@ body{
 
 <script>
 
-// FORMATAR
-function formatar(valor){
-  return valor.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+// 🔥 GARANTE USUÁRIO FIXO
+let usuario = localStorage.getItem("usuario");
+
+if(!usuario){
+  usuario = "usuario@email.com";
+  localStorage.setItem("usuario", usuario);
 }
 
-// USUARIO
-let usuario = localStorage.getItem("usuario") || "Operador";
-document.getElementById("nome").innerText = usuario;
+document.getElementById("emailUser").innerText = usuario;
 
-// DADOS
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-
-// FILTRAR
-let minhas = transacoes.filter(t => t.operador === usuario);
-
-// ORDENAR
-minhas.sort((a,b)=> new Date(b.data) - new Date(a.data));
-
-// CALCULO
-let total = 0;
-minhas.forEach(t => total += Number(t.valor) || 0);
-
-let operador = operadores.find(o => o.email === usuario);
-let taxa = operador?.taxa || 10;
-
-let saldo = total * (taxa/100);
-
-// SETAR
-document.getElementById("saldo").innerText = formatar(saldo);
-document.getElementById("volume").innerText = formatar(total);
-document.getElementById("taxa").innerText = taxa + "%";
-
-// PIX
-let pix = JSON.parse(localStorage.getItem("pix_"+usuario));
-
-if(pix){
-  document.getElementById("saqueInfo").innerHTML = `
-    <span>${pix.tipo.toUpperCase()} • ${pix.chave}</span>
-    <span>${pix.nome || ""}</span>
-  `;
-}else{
-  document.getElementById("saqueInfo").innerHTML = `<span>Nenhuma chave cadastrada</span>`;
+// CPF MASK
+function mascararCPF(cpf){
+  if(!cpf) return "";
+  return cpf.replace(/(\d{3})\d{3}(\d{3})\d{2}/, "$1***$2**");
 }
 
-// ATIVIDADES
-let atividades = document.getElementById("atividades");
-atividades.innerHTML = "";
+// 🔥 ABRIR KYC
+function abrirKYC(){
+  try{
+    if(window.parent && window.parent !== window){
+      let frame = window.parent.document.getElementById("frame");
+      if(frame){
+        frame.src = "kyc-operador.html";
+        return;
+      }
+    }
+  }catch(e){}
 
-minhas.slice(0,3).forEach(t=>{
-  atividades.innerHTML += `
-    <span>PIX recebido - ${formatar(Number(t.valor))}</span>
-  `;
-});
+  window.location.href = "kyc-operador.html";
+}
+
+// 🔥 FUNÇÃO PRINCIPAL
+function carregarStatus(){
+
+  let dados = JSON.parse(localStorage.getItem("kyc_"+usuario));
+  let box = document.getElementById("statusBox");
+  let dadosBox = document.getElementById("dadosKyc");
+  let area = document.getElementById("areaKyc");
+  let desc = document.getElementById("descKyc");
+
+  // 🔴 NÃO TEM KYC → MOSTRA BOTÃO SEMPRE
+  if(!dados){
+    box.innerHTML = `<div class="status nao">Conta não verificada</div>`;
+
+    area.innerHTML = `
+      <button class="kyc-btn" onclick="abrirKYC()">
+        Enviar documentos
+      </button>
+    `;
+
+    return;
+  }
+
+  // 🟡 ANALISE
+  if(dados.status === "analise"){
+    box.innerHTML = `<div class="status analise">Em análise</div>`;
+    area.innerHTML = `<div class="kyc-pending">Em análise</div>`;
+    return;
+  }
+
+  // 🟢 APROVADO
+  if(dados.status === "aprovado"){
+    box.innerHTML = `<div class="status aprovado">Conta verificada</div>`;
+
+    document.getElementById("nomeUser").innerText = dados.nome || "Usuário";
+
+    dadosBox.innerHTML = `
+      <div class="badge">Verificado</div><br><br>
+      CPF: ${mascararCPF(dados.cpf)}<br>
+      Endereço: ${dados.rua || ""}, ${dados.numero || ""} - ${dados.cidade || ""}
+    `;
+
+    area.innerHTML = `<div class="kyc-done">Verificação concluída</div>`;
+  }
+}
+
+// 🔥 GARANTE QUE RODA NO TEMPO CERTO
+window.onload = carregarStatus;
 
 </script>
 

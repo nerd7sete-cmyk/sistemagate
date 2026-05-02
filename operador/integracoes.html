@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Integrações</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  background:#0b0b0b;
+  color:#fff;
+  font-family:"Segoe UI";
+  padding:20px;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+}
+
+.title{font-size:20px;font-weight:600;}
+.sub{font-size:12px;color:#9ca3af;}
+
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  margin-top:6px;
+  background:#052e16;
+  color:#22c55e;
+}
+
+/* BOTÃO DOC */
+.doc-btn{
+  margin-top:12px;
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  color:#e5e7eb;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:0.25s;
+}
+
+.doc-btn:hover{
+  border-color:#3b82f6;
+  color:#fff;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:16px;
+  padding:16px;
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.label{font-size:12px;color:#9ca3af;}
+
+.value{
+  margin-top:6px;
+  font-size:13px;
+  background:#050505;
+  padding:10px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.btn{
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:12px;
+  cursor:pointer;
+  border:none;
+  transition:0.2s;
+}
+
+.btn-copy{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.1);
+  color:#fff;
+}
+
+.btn-copy:hover{
+  border-color:#3b82f6;
+}
+
+.btn-save{
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  color:#fff;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#050505;
+  color:#fff;
+  margin-top:8px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+}
+
+.event{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  margin-top:6px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+
+.green{background:#22c55e;}
+.yellow{background:#eab308;}
+.red{background:#ef4444;}
+
+#toast{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#0f0f0f;
+  padding:12px 16px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.3s;
+}
+
+#toast.show{opacity:1;}
+
+.small{
+  font-size:11px;
+  color:#777;
+  margin-top:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="title">Integrações</div>
+  <div class="sub">Gerencie suas chaves e webhook da API</div>
+  <div class="badge">Produção</div>
+
+  <!-- BOTÃO DOCUMENTAÇÃO -->
+  <button class="doc-btn" onclick="abrirDoc()">
+    <i class="ri-book-open-line"></i>
+    Documentação da API
+  </button>
+
+  <!-- PUBLIC KEY -->
+  <div class="card">
+    <div class="label">Chave pública</div>
+
+    <div class="value">
+      <span id="pubKey">pk_live_123456</span>
+      <button class="btn btn-copy" onclick="copiar('pubKey')">
+        <i class="ri-file-copy-line"></i>
+      </button>
+    </div>
+
+    <div class="small">Use no frontend</div>
+  </div>
+
+  <!-- SECRET KEY -->
+  <div class="card">
+    <div class="label">Chave secreta</div>
+
+    <div class="value">
+      <span id="secKey">••••••••••••</span>
+      <div>
+        <button class="btn btn-copy" onclick="toggleKey()">
+          <i class="ri-eye-line"></i>
+        </button>
+        <button class="btn btn-copy" onclick="copiarReal()">
+          <i class="ri-file-copy-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="small">Nunca compartilhe essa chave</div>
+  </div>
+
+  <!-- WEBHOOK -->
+  <div class="card">
+    <div class="label">Webhook</div>
+
+    <input id="webhook" placeholder="https://seusite.com/webhook">
+
+    <div class="row">
+      <span style="font-size:12px;color:#22c55e;">Ativo</span>
+      <button class="btn btn-save" onclick="salvar()">Salvar</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+let chaveReal = "sk_live_987654";
+let visivel = false;
+
+function copiar(id){
+  let texto = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(texto);
+  toast("Copiado");
+}
+
+function copiarReal(){
+  navigator.clipboard.writeText(chaveReal);
+  toast("Chave copiada");
+}
+
+function toggleKey(){
+  visivel = !visivel;
+  document.getElementById("secKey").innerText =
+    visivel ? chaveReal : "••••••••••••";
+}
+
+function salvar(){
+  let webhook = document.getElementById("webhook").value;
+  localStorage.setItem("webhook", webhook);
+  toast("Salvo");
+}
+
+/* 🔥 CORREÇÃO REAL */
+function abrirDoc(){
+  try{
+    let frame = window.top.document.getElementById("frame");
+
+    if(frame){
+      frame.src = "documentacao-integracao.html"; // ⚠️ CONFERE O NOME DO ARQUIVO
+      return;
+    }
+  }catch(e){}
+
+  window.location.href = "documentacao-integracao.html";
+}
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+</script>
+
+</body>
+</html>

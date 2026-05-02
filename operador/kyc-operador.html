@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Verificação de Conta</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI";
+  background:#050505;
+  color:#fff;
+}
+
+.container{
+  max-width:720px;
+  margin:auto;
+  padding:25px;
+}
+
+.title{font-size:24px;font-weight:600;}
+.sub{font-size:13px;color:#9ca3af;margin-bottom:15px;}
+
+.status{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  margin-bottom:15px;
+}
+
+.nao{background:#3f0000;color:#ef4444;}
+.analise{background:#3f2f00;color:#facc15;}
+.aprovado{background:#052e16;color:#22c55e;}
+
+.card{
+  background:#0a0a0a;
+  padding:16px;
+  border-radius:14px;
+  margin-top:15px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.2s;
+}
+
+.card:hover{border-color:rgba(59,130,246,0.2);}
+
+.label{font-size:12px;color:#9ca3af;}
+.desc{font-size:11px;color:#777;margin-bottom:8px;}
+
+input{
+  width:100%;
+  padding:11px;
+  margin-top:6px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#050505;
+  color:#fff;
+}
+
+input:focus{
+  outline:none;
+  border-color:#3b82f6;
+  box-shadow:0 0 8px rgba(59,130,246,0.2);
+}
+
+.row{display:flex;gap:10px;}
+
+.upload{
+  border:1px dashed rgba(255,255,255,0.1);
+  padding:15px;
+  text-align:center;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+.upload:hover{
+  border-color:#3b82f6;
+  background:rgba(59,130,246,0.05);
+}
+
+.preview{
+  width:100%;
+  margin-top:10px;
+  border-radius:10px;
+}
+
+.btn{
+  width:100%;
+  padding:15px;
+  margin-top:20px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+}
+
+#toast{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#0f0f0f;
+  padding:14px 18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.3s;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="title">Verificação de Conta</div>
+  <div class="sub">Confirme sua identidade para liberar saques</div>
+
+  <div id="statusBox"></div>
+
+  <div class="card">
+    <div class="label">Dados pessoais</div>
+    <input id="nome" placeholder="Nome completo">
+
+    <div class="row">
+      <input id="cpf" placeholder="CPF">
+      <input id="nascimento" type="date">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">Endereço</div>
+
+    <input id="rua" placeholder="Rua">
+
+    <div class="row">
+      <input id="numero" placeholder="Número">
+      <input id="cidade" placeholder="Cidade">
+    </div>
+
+    <input id="cep" placeholder="CEP">
+  </div>
+
+  <div class="card">
+    <div class="label">Documento (Frente)</div>
+
+    <div class="upload" onclick="docFront.click()">
+      Enviar frente
+    </div>
+
+    <input type="file" id="docFront" hidden onchange="preview(this,'frontPreview')">
+    <img id="frontPreview" class="preview">
+  </div>
+
+  <div class="card">
+    <div class="label">Documento (Verso)</div>
+
+    <div class="upload" onclick="docBack.click()">
+      Enviar verso
+    </div>
+
+    <input type="file" id="docBack" hidden onchange="preview(this,'backPreview')">
+    <img id="backPreview" class="preview">
+  </div>
+
+  <div class="card">
+    <div class="label">Selfie</div>
+
+    <div class="upload" onclick="selfie.click()">
+      Enviar selfie
+    </div>
+
+    <input type="file" id="selfie" hidden onchange="preview(this,'selfiePreview')">
+    <img id="selfiePreview" class="preview">
+  </div>
+
+  <button class="btn" onclick="enviar()">Enviar para análise</button>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario") || "user";
+
+function preview(input,id){
+  let file = input.files[0];
+  if(file){
+    let reader = new FileReader();
+    reader.onload = e=>{
+      document.getElementById(id).src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+function enviar(){
+
+  let dados = {
+    nome: document.getElementById("nome").value,
+    cpf: document.getElementById("cpf").value,
+    nascimento: document.getElementById("nascimento").value,
+    rua: document.getElementById("rua").value,
+    numero: document.getElementById("numero").value,
+    cidade: document.getElementById("cidade").value,
+    cep: document.getElementById("cep").value,
+    frente: document.getElementById("frontPreview").src,
+    verso: document.getElementById("backPreview").src,
+    selfie: document.getElementById("selfiePreview").src,
+    status: "analise"
+  };
+
+  localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
+
+  toast("Enviado para análise");
+
+  setTimeout(()=>{
+
+    // 🔥 REDIRECIONAMENTO CORRETO
+    if(window.parent && window.parent.document.getElementById("frame")){
+      window.parent.document.getElementById("frame").src = "perfil-operador.html";
+    }else{
+      window.location.href = "perfil-operador.html";
+    }
+
+  },1500);
+}
+
+</script>
+
+</body>
+</html>

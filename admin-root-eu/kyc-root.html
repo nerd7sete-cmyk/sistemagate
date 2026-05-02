@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel ROOT - Verificação</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:#050505;
+  color:#fff;
+  font-family:"Segoe UI";
+}
+
+/* CONTAINER */
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:25px;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+.stats{
+  display:flex;
+  gap:10px;
+}
+
+.stat{
+  background:#0a0a0a;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.2s;
+}
+
+.card:hover{
+  border-color:#3b82f6;
+}
+
+/* USER */
+.user{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.name{
+  font-size:14px;
+  font-weight:600;
+}
+
+.email{
+  font-size:12px;
+  color:#9ca3af;
+}
+
+/* STATUS */
+.status{
+  font-size:11px;
+  padding:5px 12px;
+  border-radius:999px;
+}
+
+.analise{background:#3f2f00;color:#facc15;}
+.aprovado{background:#052e16;color:#22c55e;}
+.reprovado{background:#3f0000;color:#ef4444;}
+
+/* ACTIONS */
+.actions{
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+}
+
+/* BUTTON */
+.btn{
+  padding:8px 12px;
+  border-radius:8px;
+  border:none;
+  font-size:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn-view{
+  background:#111;
+  color:#fff;
+}
+
+.btn-view:hover{
+  border:1px solid #3b82f6;
+}
+
+.btn-aprovar{
+  background:#16a34a;
+  color:#fff;
+}
+
+.btn-reprovar{
+  background:#ef4444;
+  color:#fff;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-box{
+  background:#0a0a0a;
+  padding:20px;
+  border-radius:16px;
+  width:90%;
+  max-width:550px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.modal img{
+  width:100%;
+  margin-top:10px;
+  border-radius:10px;
+}
+
+/* CLOSE */
+.close{
+  float:right;
+  cursor:pointer;
+  font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title">Verificação de Contas</div>
+
+    <div class="stats">
+      <div class="stat" id="pendentes">Pendentes: 0</div>
+      <div class="stat" id="aprovados">Aprovados: 0</div>
+    </div>
+  </div>
+
+  <div id="lista"></div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <span class="close" onclick="fecharModal()">✕</span>
+    <div id="detalhes"></div>
+  </div>
+</div>
+
+<script>
+
+function carregar(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let pendentes=0, aprovados=0;
+
+  let dadosLista = [];
+
+  for(let i=0;i<localStorage.length;i++){
+    let key = localStorage.key(i);
+
+    if(key.startsWith("kyc_")){
+      let dados = JSON.parse(localStorage.getItem(key));
+      dados.key = key;
+      dadosLista.push(dados);
+
+      if(dados.status === "analise") pendentes++;
+      if(dados.status === "aprovado") aprovados++;
+    }
+  }
+
+  // 🔥 prioridade: análise primeiro
+  dadosLista.sort((a,b)=>{
+    if(a.status === "analise") return -1;
+    if(b.status === "analise") return 1;
+    return 0;
+  });
+
+  dadosLista.forEach(dados=>{
+
+    let email = dados.key.replace("kyc_","");
+
+    lista.innerHTML += `
+      <div class="card">
+
+        <div class="user">
+          <div>
+            <div class="name">${dados.nome || "Sem nome"}</div>
+            <div class="email">${email}</div>
+          </div>
+
+          <div class="status ${dados.status}">
+            ${dados.status}
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-view" onclick="ver('${dados.key}')">
+            <i class="ri-eye-line"></i> Detalhes
+          </button>
+
+          ${dados.status !== "aprovado" ? `
+          <button class="btn btn-aprovar" onclick="aprovar('${dados.key}')">
+            ✔ Aprovar
+          </button>
+          ` : ""}
+
+          ${dados.status !== "reprovado" ? `
+          <button class="btn btn-reprovar" onclick="reprovar('${dados.key}')">
+            ✖ Reprovar
+          </button>
+          ` : ""}
+
+        </div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById("pendentes").innerText = "Pendentes: " + pendentes;
+  document.getElementById("aprovados").innerText = "Aprovados: " + aprovados;
+}
+
+carregar();
+
+/* VER DETALHES */
+function ver(key){
+
+  let d = JSON.parse(localStorage.getItem(key));
+
+  document.getElementById("modal").style.display = "flex";
+
+  document.getElementById("detalhes").innerHTML = `
+    <b>Nome:</b> ${d.nome}<br>
+    <b>CPF:</b> ${d.cpf}<br>
+    <b>Endereço:</b> ${d.rua}, ${d.numero} - ${d.cidade}<br><br>
+
+    <b>Documento frente</b>
+    <img src="${d.frente}">
+
+    <b>Documento verso</b>
+    <img src="${d.verso}">
+
+    <b>Selfie</b>
+    <img src="${d.selfie}">
+  `;
+}
+
+function fecharModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+/* APROVAR */
+function aprovar(key){
+  let d = JSON.parse(localStorage.getItem(key));
+  d.status = "aprovado";
+  localStorage.setItem(key, JSON.stringify(d));
+  carregar();
+}
+
+/* REPROVAR */
+function reprovar(key){
+  let d = JSON.parse(localStorage.getItem(key));
+  d.status = "reprovado";
+  localStorage.setItem(key, JSON.stringify(d));
+  carregar();
+}
+
+</script>
+
+</body>
+</html>

@@ -95,7 +95,6 @@ button{
 
 button:disabled{
   opacity:0.4;
-  cursor:not-allowed;
 }
 
 .status{
@@ -105,7 +104,6 @@ button:disabled{
   color:#9ca3af;
 }
 
-/* MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -195,6 +193,16 @@ button:disabled{
 
 let valor = 0;
 
+// ELEMENTOS
+const valorInput = document.getElementById("valorInput");
+const valorErro = document.getElementById("valorErro");
+const btnGerar = document.getElementById("btnGerar");
+const nomeCliente = document.getElementById("nomeCliente");
+const cpf = document.getElementById("cpf");
+const modalQR = document.getElementById("modalQR");
+const pixCode = document.getElementById("pixCode");
+const status = document.getElementById("status");
+
 let config = JSON.parse(localStorage.getItem("config_pdv")) || {
   valor_min: 10,
   valor_max: 1000,
@@ -206,103 +214,94 @@ function formatarBRL(v){
 }
 
 configBox.innerHTML = `
-  <strong>Parâmetros de operação</strong>
-  ${
-    config.valor_fixo > 0
-    ? `<div>Valor fixo: <b>${formatarBRL(config.valor_fixo)}</b></div>`
-    : `<div>De <b>${formatarBRL(config.valor_min)}</b> até <b>${formatarBRL(config.valor_max)}</b></div>`
-  }
+<strong>Parâmetros</strong>
+${
+config.valor_fixo > 0
+? `Valor fixo: <b>${formatarBRL(config.valor_fixo)}</b>`
+: `De <b>${formatarBRL(config.valor_min)}</b> até <b>${formatarBRL(config.valor_max)}</b>`
+}
 `;
 
 valorInput.addEventListener("input", function(){
   let numeros = this.value.replace(/\D/g,"");
   valor = parseInt(numeros || 0) / 100;
   this.value = valor ? formatarBRL(valor) : "";
-
   validarValor();
 });
 
 function validarValor(){
-  const erro = document.getElementById("valorErro");
-  const btn = document.getElementById("btnGerar");
 
   let invalido = false;
 
+  if(valor <= 0) invalido = true;
+
   if(config.valor_fixo > 0){
     if(valor !== config.valor_fixo){
-      erro.innerText = "Valor obrigatório: " + formatarBRL(config.valor_fixo);
+      valorErro.innerText = "Valor obrigatório: " + formatarBRL(config.valor_fixo);
       invalido = true;
     }
   }else{
     if(valor < config.valor_min){
-      erro.innerText = "Valor mínimo: " + formatarBRL(config.valor_min);
+      valorErro.innerText = "Valor mínimo: " + formatarBRL(config.valor_min);
       invalido = true;
     }
     if(valor > config.valor_max){
-      erro.innerText = "Valor máximo: " + formatarBRL(config.valor_max);
+      valorErro.innerText = "Valor máximo: " + formatarBRL(config.valor_max);
       invalido = true;
     }
   }
 
-  if(invalido){
-    erro.style.display = "block";
-    btn.disabled = true;
-  }else{
-    erro.style.display = "none";
-    btn.disabled = false;
-  }
+  valorErro.style.display = invalido ? "block" : "none";
+  btnGerar.disabled = invalido;
 }
 
-function gerarPix(){
+async function gerarPix(){
 
-  if(document.getElementById("btnGerar").disabled) return;
+  if(btnGerar.disabled) return;
 
   let usuario = localStorage.getItem("usuario") || "operador";
 
-  let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-  let operador = operadores.find(o => o.email === usuario);
-
-  let taxa = operador?.taxa || 10;
-
-  let taxaValor = valor * (taxa / 100);
-  let valorLiquido = valor - taxaValor;
-
   let codigoPix = "000201PRIMEPAY" + valor.toFixed(2);
 
-  let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+  try {
+    let res = await fetch("http://localhost:3000/pix", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        cliente: nomeCliente.value || "Cliente",
+        cpf: cpf.value || "",
+        valor: valor,
+        operador: usuario
+      })
+    });
 
-  transacoes.unshift({
-    id: Date.now(),
-    operador: usuario,
-    valor_bruto: valor,
-    valor: valorLiquido,
-    taxa: taxa,
-    taxa_valor: taxaValor,
-    cliente: nomeCliente.value || "Cliente",
-    cpf: cpf.value || "",
-    status: "aprovado",
-    data: new Date().toISOString()
-  });
+    let data = await res.json();
 
-  localStorage.setItem("transacoes", JSON.stringify(transacoes));
+    if(data.pix){
+      codigoPix = data.pix;
+    }
+
+  } catch(e){
+    console.log("API offline");
+  }
 
   pixCode.innerText = codigoPix;
 
   QRCode.toCanvas(document.getElementById("qr"), codigoPix);
 
-  document.getElementById("modalQR").classList.add("show");
+  modalQR.classList.add("show");
 
-  status.innerText = `Recebido: ${formatarBRL(valorLiquido)} (taxa ${taxa}%)`;
+  status.innerText = "Aguardando pagamento...";
 }
 
 function fecharModal(){
-  document.getElementById("modalQR").classList.remove("show");
+  modalQR.classList.remove("show");
 }
 
 function copiarPix(){
   navigator.clipboard.writeText(pixCode.innerText);
-  copyBtn.innerText = "Copiado!";
-  setTimeout(()=> copyBtn.innerText="Copiar código PIX",1500);
+  copyBtn.innerText="Copiado!";
+  setTimeout(()=>copyBtn.innerText="Copiar código PIX",1500);
 }
 
 </script>

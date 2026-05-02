@@ -4,227 +4,248 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>ROOT - Saques</title>
+
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
 body{
-  background:#000;
-  color:white;
-  padding:25px;
-}
-
-/* HEADER */
-.top{
-  margin-bottom:20px;
-}
-
-/* CARD */
-.card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
-  overflow:hidden;
-}
-
-/* ROW */
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
-  padding:14px;
-  border-bottom:1px solid #111;
-  font-size:12px;
-}
-
-.header{
   background:#0a0a0a;
-  color:#777;
+  color:white;
+  padding:15px;
 }
 
-/* STATUS */
-.status{
-  padding:4px 8px;
-  border-radius:20px;
-  font-size:10px;
+.title{
+  font-size:18px;
+  color:#3b82f6;
+  margin-bottom:15px;
 }
 
-.pendente{
-  color:#aaa;
-  background:rgba(255,255,255,0.05);
+.card{
+  background:#0f0f0f;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:10px;
+  border:1px solid rgba(255,255,255,0.04);
 }
 
-.pago{
-  color:#22c55e;
-  background:rgba(34,197,94,0.1);
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.recusado{
-  color:#ef4444;
-  background:rgba(239,68,68,0.1);
+.valor{
+  font-weight:600;
 }
 
-/* ACTIONS */
-.actions{
+.small{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
+/* MENU */
+.menu-btn{
+  cursor:pointer;
+  font-size:18px;
+  color:#888;
+}
+
+.menu-box{
+  position:absolute;
+  right:20px;
+  background:#111;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.08);
+  display:none;
+  flex-direction:column;
+  min-width:150px;
+  z-index:999;
+}
+
+.menu-box button{
+  background:none;
+  border:none;
+  color:white;
+  padding:10px;
+  text-align:left;
+  cursor:pointer;
   display:flex;
   gap:6px;
 }
 
-.btn{
-  width:28px;
-  height:28px;
-  border-radius:6px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid rgba(255,255,255,0.08);
-  cursor:pointer;
+.menu-box button:hover{
+  background:#1a1a1a;
 }
 
-.btn:hover{background:#111;}
-
-.aprovar i{color:#22c55e;}
-.recusar i{color:#ef4444;}
-.delete i{color:#aaa;}
+.aprovar{color:#22c55e;}
+.reembolsar{color:#facc15;}
+.excluir{color:#ef4444;}
 
 .empty{
-  padding:30px;
   text-align:center;
-  color:#555;
+  margin-top:40px;
+  color:#666;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <h2>Saques do Sistema</h2>
-</div>
+<div class="title">Saques</div>
 
-<div class="card" id="tabela"></div>
+<div id="lista"></div>
 
 <script>
 
-let saques = JSON.parse(localStorage.getItem("saques")) || [];
-
-// SALVAR
-function salvar(){
-  localStorage.setItem("saques", JSON.stringify(saques));
+/* FORMAT */
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-// FORMATAR
-function formatarValor(v){
-  return "R$ " + v.toFixed(2).replace(".", ",");
+/* PEGAR TODOS SAQUES */
+function getSaques(){
+
+  let tudo=[];
+
+  for(let i=0;i<localStorage.length;i++){
+    let key = localStorage.key(i);
+
+    if(key.includes("saque")){
+      let lista = JSON.parse(localStorage.getItem(key)) || [];
+
+      if(Array.isArray(lista)){
+        lista.forEach((item,index)=>{
+          item._origem = key;
+          item._index = index;
+          tudo.push(item);
+        });
+      }
+    }
+  }
+
+  return tudo;
 }
 
-// 🔥 PEGAR SALDO DO USUÁRIO
-function getSaldo(usuario){
-  return parseFloat(localStorage.getItem("saldo_"+usuario)) || 0;
+/* HISTÓRICO */
+function salvarHistorico(item,status){
+
+  let hist = JSON.parse(localStorage.getItem("historico_saques")) || [];
+
+  item.status = status;
+  item.finalizado_em = new Date().toISOString();
+
+  hist.unshift(item);
+
+  localStorage.setItem("historico_saques", JSON.stringify(hist));
 }
 
-// 🔥 ATUALIZAR SALDO
-function setSaldo(usuario, valor){
-  localStorage.setItem("saldo_"+usuario, valor);
+/* AÇÕES */
+function aprovar(origem,index){
+
+  let lista = JSON.parse(localStorage.getItem(origem)) || [];
+  let item = lista[index];
+
+  if(!item) return;
+
+  salvarHistorico(item,"aprovado");
+
+  lista.splice(index,1);
+  localStorage.setItem(origem, JSON.stringify(lista));
+
+  render();
 }
 
-// RENDER
+function reembolsar(origem,index){
+
+  let lista = JSON.parse(localStorage.getItem(origem)) || [];
+  let item = lista[index];
+
+  if(!item) return;
+
+  salvarHistorico(item,"reembolsado");
+
+  lista.splice(index,1);
+  localStorage.setItem(origem, JSON.stringify(lista));
+
+  render();
+}
+
+function excluir(origem,index){
+
+  let lista = JSON.parse(localStorage.getItem(origem)) || [];
+
+  lista.splice(index,1);
+  localStorage.setItem(origem, JSON.stringify(lista));
+
+  render();
+}
+
+/* MENU */
+function abrirMenu(e,id){
+  e.stopPropagation();
+
+  document.querySelectorAll(".menu-box")
+    .forEach(m=>m.style.display="none");
+
+  document.getElementById(id).style.display="flex";
+}
+
+document.addEventListener("click",()=>{
+  document.querySelectorAll(".menu-box")
+    .forEach(m=>m.style.display="none");
+});
+
+/* RENDER */
 function render(){
 
-  let tabela = document.getElementById("tabela");
+  let lista = getSaques();
+  let div = document.getElementById("lista");
 
-  tabela.innerHTML = `
-    <div class="row header">
-      <div>Valor</div>
-      <div>Usuário</div>
-      <div>Gateway</div>
-      <div>Status</div>
-      <div>Data</div>
-      <div>Ações</div>
-    </div>
-  `;
+  div.innerHTML="";
 
-  if(saques.length === 0){
-    tabela.innerHTML += `<div class="empty">Nenhum saque</div>`;
+  if(lista.length === 0){
+    div.innerHTML = `<div class="empty">Nenhum saque pendente</div>`;
     return;
   }
 
-  saques.slice().reverse().forEach((s, i)=>{
+  lista.forEach((s,i)=>{
 
-    tabela.innerHTML += `
+    div.innerHTML += `
+    <div class="card">
+
       <div class="row">
+        <div class="valor">${f(s.valor)}</div>
 
-        <div>${formatarValor(s.valor)}</div>
-
-        <div>${s.usuario}</div>
-
-        <div>${s.gateway || "-"}</div>
-
-        <div>
-          <span class="status ${s.status}">
-            ${s.status}
-          </span>
+        <div class="menu-btn" onclick="abrirMenu(event,'menu_${i}')">
+          <i class="ri-more-2-fill"></i>
         </div>
 
-        <div>${s.data}</div>
+        <div class="menu-box" id="menu_${i}">
+          <button class="aprovar" onclick="aprovar('${s._origem}',${s._index})">
+            <i class="ri-check-line"></i> Aprovar
+          </button>
 
-        <div class="actions">
+          <button class="reembolsar" onclick="reembolsar('${s._origem}',${s._index})">
+            <i class="ri-arrow-go-back-line"></i> Reembolsar
+          </button>
 
-          ${s.status === "pendente" ? `
-            <div class="btn aprovar" onclick="aprovar(${i})">
-              <i class="ri-check-line"></i>
-            </div>
-
-            <div class="btn recusar" onclick="recusar(${i})">
-              <i class="ri-close-line"></i>
-            </div>
-          ` : ""}
-
-          <div class="btn delete" onclick="remover(${i})">
-            <i class="ri-delete-bin-line"></i>
-          </div>
-
+          <button class="excluir" onclick="excluir('${s._origem}',${s._index})">
+            <i class="ri-delete-bin-line"></i> Excluir
+          </button>
         </div>
 
       </div>
+
+      <div class="small">Usuário: ${s.usuario || "-"}</div>
+      <div class="small">Tipo: ${s.tipo || "-"}</div>
+
+    </div>
     `;
   });
-}
-
-// ✅ APROVAR
-function aprovar(i){
-
-  saques[i].status = "pago";
-
-  salvar();
-  render();
-}
-
-// ❌ RECUSAR (DEVOLVE SALDO)
-function recusar(i){
-
-  let saque = saques[i];
-
-  if(saque.status !== "pendente") return;
-
-  let saldoAtual = getSaldo(saque.usuario);
-
-  // 🔥 DEVOLVE O DINHEIRO
-  setSaldo(saque.usuario, saldoAtual + saque.valor);
-
-  saque.status = "recusado";
-
-  salvar();
-  render();
-}
-
-// 🗑 EXCLUIR (NÃO DEVOLVE SALDO)
-function remover(i){
-
-  if(confirm("Excluir saque? (não devolve saldo)")){
-    saques.splice(i,1);
-    salvar();
-    render();
-  }
 }
 
 render();

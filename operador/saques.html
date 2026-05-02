@@ -21,7 +21,6 @@ body{
   max-width:500px;
 }
 
-/* CARD */
 .card{
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   border:1px solid rgba(255,255,255,0.05);
@@ -32,17 +31,9 @@ body{
     inset 0 0 12px rgba(255,255,255,0.02);
 }
 
-/* HEADER */
-h2{
-  font-size:18px;
-  font-weight:600;
-}
+h2{font-size:18px;font-weight:600;}
+small{color:#9ca3af;}
 
-small{
-  color:#9ca3af;
-}
-
-/* SALDO */
 .saldo{
   font-size:34px;
   margin-top:6px;
@@ -51,7 +42,6 @@ small{
   text-shadow:0 0 12px rgba(34,197,94,0.4);
 }
 
-/* TOPO */
 .top-bar{
   display:flex;
   justify-content:space-between;
@@ -63,14 +53,8 @@ small{
   font-size:13px;
   color:#3b82f6;
   cursor:pointer;
-  transition:0.2s;
 }
 
-.historico-btn:hover{
-  color:#60a5fa;
-}
-
-/* REGRAS */
 .regras{
   margin-top:18px;
   padding:16px;
@@ -88,12 +72,8 @@ small{
   color:#9ca3af;
 }
 
-.regra-item i{
-  color:#3b82f6;
-  font-size:16px;
-}
+.regra-item i{color:#3b82f6;}
 
-/* INPUT */
 .input{
   width:100%;
   padding:14px;
@@ -102,17 +82,8 @@ small{
   border:1px solid #1a1a1a;
   background:#0a0a0a;
   color:white;
-  font-size:14px;
-  transition:0.2s;
 }
 
-.input:focus{
-  outline:none;
-  border-color:#3b82f6;
-  box-shadow:0 0 8px rgba(59,130,246,0.3);
-}
-
-/* BOTÃO */
 .btn{
   margin-top:20px;
   padding:16px;
@@ -123,34 +94,32 @@ small{
   border:1px solid rgba(255,255,255,0.08);
   color:#e5e7eb;
   font-weight:600;
-
-  box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.03),
-    0 4px 15px rgba(0,0,0,0.6);
-
-  transition:all 0.25s ease;
 }
 
-.btn:hover{
-  color:#fff;
-  border-color:#3b82f6;
-  box-shadow:
-    0 0 12px rgba(59,130,246,0.4),
-    inset 0 0 10px rgba(59,130,246,0.1);
+/* 🔥 BLOQUEADO */
+.btn.disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  border-color:#444;
+  box-shadow:none;
 }
 
-.btn:active{
-  transform:scale(0.97);
+/* AVISO */
+.alerta{
+  margin-top:15px;
+  padding:12px;
+  border-radius:12px;
+  background:#3f2f00;
+  color:#facc15;
+  font-size:12px;
+  border:1px solid rgba(250,204,21,0.2);
 }
 
-/* MSG */
 #msg{
   margin-top:12px;
   font-size:13px;
-  font-weight:500;
 }
 
-/* feedback */
 .msg-erro{color:#ef4444;}
 .msg-sucesso{color:#22c55e;}
 
@@ -160,23 +129,22 @@ small{
 <body>
 
 <div class="container">
-
 <div class="card">
 
 <div class="top-bar">
   <h2>Solicitar saque</h2>
-  <div class="historico-btn" onclick="irHistorico()">
-    Ver histórico →
-  </div>
+  <div class="historico-btn" onclick="irHistorico()">Ver histórico →</div>
 </div>
 
 <small>Saldo disponível</small>
 <div class="saldo" id="saldo"></div>
 
+<!-- 🔥 AVISO KYC -->
+<div id="alertaKyc"></div>
+
 <div class="regras" id="regrasBox"></div>
 
 <input id="valor" class="input" placeholder="Digite o valor (R$)">
-
 <select id="tipo" class="input">
   <option value="cpf">CPF</option>
   <option value="email">Email</option>
@@ -186,34 +154,37 @@ small{
 
 <input id="chave" class="input" placeholder="Digite sua chave PIX">
 
-<div class="btn" onclick="sacar()">Solicitar saque</div>
+<div class="btn" id="btnSaque" onclick="sacar()">Solicitar saque</div>
 
 <div id="msg"></div>
 
 </div>
-
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("usuario");
 
+/* CONFIG */
 let config = JSON.parse(localStorage.getItem("config_saque")) || {
   min:119.90,
   max:1000,
   taxa:9.90
 };
 
+/* FORMAT */
 function f(v){
   return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
+/* REGRAS */
 regrasBox.innerHTML = `
   <div class="regra-item"><i class="ri-arrow-down-line"></i> Mínimo: <b>${f(config.min)}</b></div>
   <div class="regra-item"><i class="ri-arrow-up-line"></i> Máximo: <b>${f(config.max)}</b></div>
   <div class="regra-item"><i class="ri-money-dollar-circle-line"></i> Taxa: <b>${f(config.taxa)}</b></div>
 `;
 
+/* SALDO */
 function calcularSaldo(){
   let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
   let saques = JSON.parse(localStorage.getItem("saques_operador_"+usuario)) || [];
@@ -236,6 +207,29 @@ function calcularSaldo(){
   return recebido - sacado;
 }
 
+/* 🔥 VERIFICAR KYC */
+function verificarKYC(){
+  let dados = JSON.parse(localStorage.getItem("kyc_"+usuario));
+  let btn = document.getElementById("btnSaque");
+  let alerta = document.getElementById("alertaKyc");
+
+  if(!dados || dados.status !== "aprovado"){
+    
+    btn.classList.add("disabled");
+
+    alerta.innerHTML = `
+      <div class="alerta">
+        É necessário concluir a verificação de identidade para solicitar saques.
+      </div>
+    `;
+
+    return false;
+  }
+
+  return true;
+}
+
+/* RENDER */
 function render(){
   document.getElementById("saldo").innerText = f(calcularSaldo());
 }
@@ -244,7 +238,14 @@ function irHistorico(){
   window.location.href = "historico-saques.html";
 }
 
+/* SACAR */
 function sacar(){
+
+  if(!verificarKYC()){
+    document.getElementById("msg").innerText = "Conta não verificada";
+    document.getElementById("msg").className = "msg-erro";
+    return;
+  }
 
   let valor = parseFloat(document.getElementById("valor").value);
   let chave = document.getElementById("chave").value;
@@ -253,30 +254,29 @@ function sacar(){
 
   let saldo = calcularSaldo();
 
-  msg.className = "";
   msg.innerText = "";
 
   if(!valor || valor < config.min){
     msg.innerText = "Valor mínimo: " + f(config.min);
-    msg.classList.add("msg-erro");
+    msg.className = "msg-erro";
     return;
   }
 
   if(valor > config.max){
     msg.innerText = "Valor máximo: " + f(config.max);
-    msg.classList.add("msg-erro");
+    msg.className = "msg-erro";
     return;
   }
 
   if(valor > saldo){
     msg.innerText = "Saldo insuficiente";
-    msg.classList.add("msg-erro");
+    msg.className = "msg-erro";
     return;
   }
 
   if(!chave){
     msg.innerText = "Informe a chave PIX";
-    msg.classList.add("msg-erro");
+    msg.className = "msg-erro";
     return;
   }
 
@@ -284,7 +284,7 @@ function sacar(){
 
   if(liquido <= 0){
     msg.innerText = "Valor não cobre a taxa";
-    msg.classList.add("msg-erro");
+    msg.className = "msg-erro";
     return;
   }
 
@@ -303,14 +303,16 @@ function sacar(){
   localStorage.setItem("saques_operador_"+usuario, JSON.stringify(historico));
 
   msg.innerText = "Saque solicitado com sucesso";
-  msg.classList.add("msg-sucesso");
+  msg.className = "msg-sucesso";
 
   document.getElementById("valor").value = "";
 
   render();
 }
 
+/* INIT */
 render();
+verificarKYC();
 
 </script>
 

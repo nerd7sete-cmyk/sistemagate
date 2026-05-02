@@ -4,267 +4,180 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Suporte</title>
+<title>Suporte Administrativo</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
-
-html,body{
-  height:100%;
-  background:#0a0a0a;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
+  background:#000;
+  color:#fff;
+  font-family:"Segoe UI", Arial;
   display:flex;
-  flex-direction:column;
-  color:white;
-}
-
-/* HEADER */
-.top{
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  display:flex;
+  justify-content:center;
   align-items:center;
-  gap:10px;
+  height:100vh;
 }
 
-.top i{
-  font-size:20px;
-  color:#3b82f6;
-}
-
-.top h2{
-  font-size:16px;
-}
-
-/* CHAT */
-.chat{
-  flex:1;
-  overflow-y:auto;
-  padding:15px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.msg{
-  max-width:75%;
-  padding:12px;
-  border-radius:14px;
-  font-size:13px;
-}
-
-.texto{margin-bottom:5px;}
-
-.msg img{
-  width:100%;
-  border-radius:10px;
-  margin-top:6px;
-}
-
-.me{
-  align-self:flex-end;
-  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
-}
-
-.support{
-  align-self:flex-start;
-  background:#0f0f0f;
-  border:1px solid rgba(255,255,255,0.05);
-}
-
-.time{
-  font-size:10px;
-  opacity:0.6;
-  margin-top:5px;
-  display:block;
-  text-align:right;
-}
-
-.input-area{
-  padding:12px;
-  border-top:1px solid rgba(255,255,255,0.05);
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.input{
-  flex:1;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid #1a1a1a;
+/* CARD */
+.card{
+  width:95%;
+  max-width:420px;
   background:#0a0a0a;
-  color:white;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 20px 80px rgba(0,0,0,0.9);
 }
 
-.btn{
-  padding:12px;
-  border-radius:12px;
-  background:#0f0f0f;
-  cursor:pointer;
+/* ICON */
+.icon{
+  width:70px;
+  height:70px;
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  border:1px solid rgba(255,255,255,0.05);
+  margin:0 auto 18px;
+  font-size:28px;
 }
 
-.btn-send{
-  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+/* TITLE */
+h1{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:6px;
 }
 
-.chat::-webkit-scrollbar{width:4px;}
-.chat::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
+p{
+  font-size:13px;
+  color:#9ca3af;
+  margin-bottom:20px;
+}
+
+/* STATUS */
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#0f172a;
+  color:#60a5fa;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  margin-bottom:18px;
+}
+
+/* DOT */
+.dot{
+  width:8px;
+  height:8px;
+  background:#3b82f6;
+  border-radius:50%;
+  box-shadow:0 0 8px #3b82f6;
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.04);
+  padding:12px;
+  border-radius:12px;
+  font-size:12px;
+  color:#ccc;
+  text-align:left;
+  margin-bottom:18px;
+  line-height:1.5;
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(135deg,#2563eb,#1e3a8a);
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  transition:0.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:500;
+}
+
+.btn:hover{
+  transform:scale(1.03);
+}
+
+.btn:active{
+  transform:scale(0.97);
+}
+
+/* INFO */
+.info{
+  margin-top:16px;
+  font-size:12px;
+  color:#666;
+}
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <i class="ri-customer-service-2-line"></i>
-  <h2>Suporte</h2>
-</div>
+<div class="card">
 
-<div class="chat" id="chat"></div>
-
-<div class="input-area">
-
-  <div class="btn" onclick="file.click()">
-    <i class="ri-image-line"></i>
+  <div class="icon">
+    <i class="ri-shield-star-line"></i>
   </div>
 
-  <input type="file" id="file" hidden accept="image/*" onchange="enviarImagem(event)">
+  <h1>Suporte Administrativo</h1>
+  <p>Atendimento direto para gestão, suporte técnico e controle do sistema</p>
 
-  <input id="mensagem" class="input" placeholder="Digite sua mensagem...">
+  <div class="status" id="statusText">
+    <div class="dot"></div>
+    Acesso administrativo ativo
+  </div>
 
-  <div class="btn btn-send" onclick="enviar()">
-    <i class="ri-send-plane-fill"></i>
+  <div class="box">
+    Utilize este suporte para tratativas críticas, ajustes administrativos e acompanhamento técnico da operação.
+  </div>
+
+  <button class="btn" onclick="abrirTelegram()">
+    <i class="ri-telegram-line"></i>
+    Acessar suporte
+  </button>
+
+  <div class="info">
+    Atendimento via Telegram • Canal administrativo
   </div>
 
 </div>
 
 <script>
 
-let usuario = localStorage.getItem("usuario") || "admin";
-
-/* HORA */
-function hora(){
-  return new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+function abrirTelegram(){
+  window.open("https://t.me/suportefinancas", "_blank");
 }
 
-/* 🔥 BUSCAR TODAS CONVERSAS */
-function getConversas(){
-  return JSON.parse(localStorage.getItem("suporte_root")) || [];
-}
+const status = document.getElementById("statusText");
 
-function salvarConversas(lista){
-  localStorage.setItem("suporte_root", JSON.stringify(lista));
-}
+const textos = [
+  "Acesso administrativo ativo",
+  "Sistema sob controle",
+  "Ambiente administrativo ativo"
+];
 
-/* 🔥 GARANTIR CONVERSA */
-function getOuCriarConversa(){
-
-  let conversas = getConversas();
-
-  let conv = conversas.find(c => c.admin === usuario);
-
-  if(!conv){
-    conv = { admin:usuario, mensagens:[] };
-    conversas.push(conv);
-    salvarConversas(conversas);
-  }
-
-  return conv;
-}
-
-/* RENDER */
-function render(){
-
-  let chat = document.getElementById("chat");
-  chat.innerHTML = "";
-
-  let conv = getOuCriarConversa();
-
-  conv.mensagens.forEach(m=>{
-    chat.innerHTML += `
-      <div class="msg ${m.tipo}">
-        ${m.texto ? `<div class="texto">${m.texto}</div>` : ""}
-        ${m.img ? `<img src="${m.img}">` : ""}
-        <span class="time">${m.hora}</span>
-      </div>
-    `;
-  });
-
-  chat.scrollTop = chat.scrollHeight;
-}
-
-/* SALVAR MSG */
-function salvarMensagem(msg){
-
-  let conversas = getConversas();
-
-  let index = conversas.findIndex(c => c.admin === usuario);
-
-  if(index === -1){
-    conversas.push({
-      admin:usuario,
-      mensagens:[{...msg, hora:hora()}]
-    });
-  }else{
-    conversas[index].mensagens.push({
-      ...msg,
-      hora:hora()
-    });
-  }
-
-  salvarConversas(conversas);
-  render();
-}
-
-/* ENVIAR TEXTO */
-function enviar(){
-
-  let texto = mensagem.value.trim();
-  if(!texto) return;
-
-  salvarMensagem({
-    texto:texto,
-    tipo:"me"
-  });
-
-  mensagem.value="";
-}
-
-/* ENVIAR IMAGEM */
-function enviarImagem(e){
-
-  let file = e.target.files[0];
-  if(!file) return;
-
-  let reader = new FileReader();
-
-  reader.onload = function(ev){
-
-    salvarMensagem({
-      img:ev.target.result,
-      tipo:"me"
-    });
-
-  };
-
-  reader.readAsDataURL(file);
-}
-
-/* ENTER */
-mensagem.addEventListener("keypress", e=>{
-  if(e.key === "Enter") enviar();
-});
-
-/* INIT */
-render();
+setInterval(() => {
+  const i = Math.floor(Math.random() * textos.length);
+  status.innerHTML = `<div class="dot"></div> ${textos[i]}`;
+}, 6000);
 
 </script>
 

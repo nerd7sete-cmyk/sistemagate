@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Documentação API</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI", Arial;
+  background:#050505;
+  color:#fff;
+}
+
+.container{
+  max-width:820px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+/* 🔥 BOTÃO VOLTAR */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:20px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#e5e7eb;
+  font-size:12px;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+.back-btn:hover{
+  border-color:#3b82f6;
+  color:#fff;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:35px;
+}
+
+.header h1{
+  font-size:26px;
+  margin-bottom:6px;
+}
+
+.header p{
+  color:#9ca3af;
+  font-size:14px;
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:12px;
+  background:#052e16;
+  color:#22c55e;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+/* SECTIONS */
+.section{
+  margin-bottom:30px;
+}
+
+.title{
+  font-size:15px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#e5e7eb;
+}
+
+/* CARD */
+.card{
+  background:#0a0a0a;
+  border-radius:14px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* CODE */
+.code{
+  background:#020617;
+  border-radius:12px;
+  padding:14px;
+  font-size:12px;
+  position:relative;
+  margin-top:10px;
+  overflow:auto;
+}
+
+/* COPY */
+.copy{
+  position:absolute;
+  top:10px;
+  right:10px;
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+  background:#0a0a0a;
+  color:#fff;
+}
+
+/* STATUS TAG */
+.tag{
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:11px;
+  margin-right:6px;
+}
+.green{background:#052e16;color:#22c55e;}
+.yellow{background:#3f2f00;color:#facc15;}
+.red{background:#3f0000;color:#ef4444;}
+
+/* LIST */
+.list{
+  color:#9ca3af;
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#111;
+  padding:10px 15px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.3s;
+}
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- 🔥 BOTÃO VOLTAR -->
+<div class="back-btn" onclick="voltar()">
+  <i class="ri-arrow-left-line"></i>
+  Voltar para Integrações
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Documentação da API</h1>
+  <p>Integre seu sistema para gerar cobranças via PIX e automatizar pagamentos em tempo real</p>
+
+  <div class="status">● API operacional</div>
+</div>
+
+<!-- AUTENTICAÇÃO -->
+<div class="section">
+  <div class="title">
+    <i class="ri-shield-keyhole-line"></i> Autenticação
+  </div>
+
+  <div class="card">
+    Utilize sua chave API no header das requisições:
+
+    <div class="code">
+      <button class="copy" onclick="copy(this)">Copiar</button>
+<pre>x-api-key: SUA_CHAVE_API</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CRIAR COBRANÇA -->
+<div class="section">
+  <div class="title">
+    <i class="ri-qr-code-line"></i> Criar cobrança
+  </div>
+
+  <div class="card">
+    Endpoint para gerar pagamentos via PIX.
+
+    <div class="code">
+      <button class="copy" onclick="copy(this)">Copiar</button>
+<pre>POST /v1/transactions
+
+{
+  "amount": 10000,
+  "description": "Pedido #123"
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- RESPOSTA -->
+<div class="section">
+  <div class="title">
+    <i class="ri-exchange-line"></i> Resposta
+  </div>
+
+  <div class="card">
+    Retorno da API após criação da cobrança:
+
+    <div class="code">
+      <button class="copy" onclick="copy(this)">Copiar</button>
+<pre>{
+  "transactionId": "abc123",
+  "pix_code": "000201...",
+  "status": "PENDING"
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div class="section">
+  <div class="title">
+    <i class="ri-loader-line"></i> Status do pagamento
+  </div>
+
+  <div class="card">
+    <span class="tag yellow">PENDING</span>
+    <span class="tag green">PAID</span>
+    <span class="tag red">FAILED</span>
+  </div>
+</div>
+
+<!-- WEBHOOK -->
+<div class="section">
+  <div class="title">
+    <i class="ri-refresh-line"></i> Webhook
+  </div>
+
+  <div class="card">
+    Receba notificações automáticas quando o pagamento for confirmado.
+
+    <div class="code">
+      <button class="copy" onclick="copy(this)">Copiar</button>
+<pre>{
+  "event": "payment_paid",
+  "transactionId": "abc123",
+  "status": "PAID"
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- REGRAS -->
+<div class="section">
+  <div class="title">
+    <i class="ri-bank-card-line"></i> Regras financeiras
+  </div>
+
+  <div class="card list">
+    • Taxa por saque: R$ 9,90<br>
+    • Saque mínimo: R$ 119,90<br>
+    • Limite por saque: R$ 1.000,00<br>
+    • Saques ilimitados disponíveis
+  </div>
+</div>
+
+<!-- FLUXO -->
+<div class="section">
+  <div class="title">
+    <i class="ri-flow-chart"></i> Fluxo do sistema
+  </div>
+
+  <div class="card list">
+    1. Operador gera cobrança<br>
+    2. Cliente realiza pagamento PIX<br>
+    3. Status inicia como PENDING<br>
+    4. Webhook atualiza para PAID<br>
+    5. Saldo é liberado automaticamente<br>
+    6. Operador pode solicitar saque
+  </div>
+</div>
+
+</div>
+
+<div id="toast" class="toast">Copiado</div>
+
+<script>
+function copy(btn){
+  let text = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(text);
+
+  let t=document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+/* 🔥 VOLTAR */
+function voltar(){
+  window.location.href = "integracoes.html";
+}
+</script>
+
+</body>
+</html>

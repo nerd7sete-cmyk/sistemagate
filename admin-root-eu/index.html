@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>PrimePay</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html, body{
+  height:100%;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body{
+  display:flex;
+  background:#000;
+  color:white;
+  font-family:"Segoe UI", Arial;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;
+  height:100dvh;
+  background:#000;
+  border-right:1px solid rgba(255,255,255,0.05);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow-y:auto;
+}
+
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
+
+.sidebar-content{flex:1;}
+
+.logo{
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:25px;
+}
+
+.user{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+/* MENU */
+.menu-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  color:#aaa;
+  transition:0.2s;
+}
+
+.menu-item:hover{
+  background:#0a0a0a;
+  color:#fff;
+}
+
+.menu-left{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.active{
+  background:#0a0a0a;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* 🔥 DESTAQUE SAQUES */
+.destaque-saques{
+  border:1px solid rgba(250,204,21,0.25);
+  color:#facc15;
+  background:linear-gradient(145deg,#0a0a0a,#1a1200);
+  box-shadow:0 0 10px rgba(250,204,21,0.15);
+}
+
+.destaque-saques:hover{
+  color:#fff;
+  box-shadow:0 0 15px rgba(250,204,21,0.4);
+}
+
+/* 🔥 SUPORTE PREMIUM */
+.suporte{
+  border:1px solid rgba(59,130,246,0.25);
+  background:linear-gradient(145deg,#0a0a0a,#020617);
+  color:#3b82f6;
+  box-shadow:0 0 15px rgba(59,130,246,0.15);
+}
+
+.suporte:hover{
+  color:#fff;
+  box-shadow:0 0 20px rgba(59,130,246,0.4);
+}
+
+/* SUBMENU */
+.submenu{
+  display:none;
+  padding-left:10px;
+  margin-bottom:10px;
+}
+
+.submenu .menu-item{
+  font-size:13px;
+  padding:10px;
+}
+
+.submenu.open{
+  display:block;
+}
+
+/* LOGOUT */
+.logout{
+  margin-top:20px;
+  padding:12px;
+  border-radius:12px;
+  background:#0a0a0a;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  height:100dvh;
+}
+
+iframe{
+  flex:1;
+  width:100%;
+  border:none;
+}
+
+/* MOBILE */
+.topbar{
+  display:none;
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  z-index:1000;
+}
+
+@media(max-width:900px){
+  .sidebar{
+    position:fixed;
+    transform:translateX(-100%);
+    z-index:1001;
+    transition:0.3s;
+  }
+
+  .sidebar.active{transform:translateX(0);}
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+
+<div class="sidebar" id="sidebar">
+
+<div class="sidebar-content">
+
+<div class="logo">PrimePay</div>
+
+<div class="user" id="userBox"></div>
+
+<!-- DASHBOARD -->
+<div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
+  <div class="menu-left">
+    <i class="ri-home-5-line"></i> Dashboard
+  </div>
+</div>
+
+<!-- USUÁRIOS -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-team-line"></i> Usuários
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
+
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('criar-admins.html', this)">Administradores</div>
+  <div class="menu-item" onclick="abrir('gerentes.html', this)">Gerentes</div>
+  <div class="menu-item" onclick="abrir('operadores-admin.html', this)">Operadores</div>
+  <div class="menu-item" onclick="abrir('central-usuarios.html', this)">Central de Usuários</div>
+</div>
+
+<!-- FINANCEIRO -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-wallet-3-line"></i> Financeiro
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
+
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('transacoes-admin-root.html', this)">Transações</div>
+
+  <div class="menu-item destaque-saques" onclick="abrir('saques-admin.html', this)">
+    Saques
+  </div>
+
+  <div class="menu-item" onclick="abrir('definicoes-taxas.html', this)">Taxas</div>
+</div>
+
+<!-- SISTEMA -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-settings-3-line"></i> Sistema
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
+
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('configuracoes-root.html', this)">Configurações</div>
+  <div class="menu-item" onclick="abrir('auditoria-root.html', this)">Auditoria</div>
+  <div class="menu-item" onclick="abrir('orquestracao-pagamentos.html', this)">Pagamentos</div>
+</div>
+
+<!-- COBRANÇA -->
+<div class="menu-item" onclick="abrir('pdv-root.html', this)">
+  <div class="menu-left">
+    <i class="ri-qr-code-line"></i> Cobrança PIX
+  </div>
+</div>
+
+<!-- SUPORTE -->
+<div class="menu-item suporte" onclick="abrir('suporte-root.html', this)">
+  <div class="menu-left">
+    <i class="ri-customer-service-2-line"></i> Suporte
+  </div>
+</div>
+
+</div>
+
+<div class="logout" onclick="logout()">
+  <i class="ri-logout-box-r-line"></i> Sair
+</div>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+  <i class="ri-menu-line" onclick="abrirMenu()"></i>
+  <strong>PrimePay</strong>
+</div>
+
+<iframe id="frame" src="dashboardcompleto.html"></iframe>
+
+</div>
+
+<script>
+
+let logado = localStorage.getItem("logado");
+let tipo = localStorage.getItem("tipo");
+
+if(!logado || tipo !== "root"){
+  window.location.href = "login.html";
+}
+
+let usuario = localStorage.getItem("usuario") || "ROOT";
+
+userBox.innerHTML = `
+<strong>${usuario}</strong>
+<small>ROOT</small>
+`;
+
+function abrir(pagina, el){
+  frame.src = pagina;
+
+  document.querySelectorAll(".menu-item")
+    .forEach(i=>i.classList.remove("active"));
+
+  el.classList.add("active");
+  fecharMenu();
+}
+
+function toggleMenu(el){
+  let submenu = el.nextElementSibling;
+  submenu.classList.toggle("open");
+}
+
+function abrirMenu(){
+  sidebar.classList.add("active");
+  overlay.style.display = "block";
+}
+
+function fecharMenu(){
+  sidebar.classList.remove("active");
+  overlay.style.display = "none";
+}
+
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

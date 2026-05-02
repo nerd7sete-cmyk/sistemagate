@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Termos de Uso</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+body{
+  background:#050505;
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.container{
+  width:100%;
+  max-width:600px;
+  padding:20px 16px 40px;
+}
+
+@media (min-height:700px){
+  body{
+    align-items:center;
+  }
+}
+
+.title{
+  font-size:22px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:13px;
+  color:#9ca3af;
+  margin-bottom:18px;
+}
+
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:18px;
+}
+
+.preview{
+  font-size:13px;
+  color:#9ca3af;
+  line-height:1.6;
+}
+
+.link{
+  margin-top:10px;
+  color:#3b82f6;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.check{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-size:13px;
+}
+
+.check input{
+  width:18px;
+  height:18px;
+}
+
+.btn{
+  width:100%;
+  margin-top:18px;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.btn:disabled{
+  opacity:0.4;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:500px;
+  background:#0a0a0a;
+  border-radius:16px;
+  padding:20px;
+  max-height:80vh;
+  overflow:auto;
+}
+
+.full{
+  font-size:13px;
+  color:#d1d5db;
+  line-height:1.7;
+}
+
+.fechar{
+  margin-top:15px;
+  text-align:center;
+  color:#3b82f6;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Termos de Uso</div>
+<div class="sub">Confirme para continuar</div>
+
+<div class="card">
+
+  <div class="preview">
+    Ao utilizar esta plataforma, você concorda com nossas condições de uso,
+    incluindo verificação de identidade, regras de saque e políticas de segurança.
+  </div>
+
+  <div class="link" onclick="abrirModal()">
+    Ler termos completos →
+  </div>
+
+  <div class="check">
+    <input type="checkbox" id="check">
+    Li e aceito os termos de uso
+  </div>
+
+  <button class="btn" id="btn" disabled onclick="aceitar()">
+    Concordar e continuar
+  </button>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+
+    <div class="full">
+
+<b>1. ACEITAÇÃO DOS TERMOS</b><br>
+Ao acessar e utilizar esta plataforma, o usuário declara estar ciente, de acordo e vinculado a todos os termos e condições aqui estabelecidos. O uso contínuo caracteriza aceitação integral.<br><br>
+
+<b>2. FINALIDADE DA PLATAFORMA</b><br>
+A plataforma constitui um sistema digital de intermediação tecnológica destinado à gestão de operações e transações. Não se trata de instituição financeira regulamentada.<br><br>
+
+<b>3. RESPONSABILIDADE DO USUÁRIO</b><br>
+O usuário é responsável por todas as ações realizadas em sua conta, bem como pela veracidade das informações fornecidas e segurança de suas credenciais.<br><br>
+
+<b>4. VERIFICAÇÃO DE IDENTIDADE (KYC)</b><br>
+A plataforma poderá solicitar documentos e validações a qualquer momento para garantir segurança e conformidade.<br><br>
+
+<b>5. TRANSAÇÕES</b><br>
+Todas as operações poderão passar por análises internas e validações de segurança, podendo ser retidas ou canceladas.<br><br>
+
+<b>6. SAQUES</b><br>
+Os saques seguem regras operacionais, podendo incluir taxas, limites e prazos de processamento.<br><br>
+
+<b>7. SEGURANÇA</b><br>
+O usuário deve proteger seus dados. A plataforma não se responsabiliza por acessos indevidos decorrentes de negligência.<br><br>
+
+<b>8. PROIBIÇÕES</b><br>
+É proibido utilizar a plataforma para atividades ilegais, fraudulentas ou abusivas.<br><br>
+
+<b>9. ALTERAÇÕES</b><br>
+Os termos poderão ser atualizados a qualquer momento, sendo responsabilidade do usuário revisá-los.<br><br>
+
+<b>10. DISPOSIÇÕES FINAIS</b><br>
+O uso da plataforma implica aceitação integral das condições descritas.
+
+    </div>
+
+    <div class="fechar" onclick="fecharModal()">Fechar</div>
+
+  </div>
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario") || "user";
+let tipo = localStorage.getItem("tipo"); // 🔥 pega tipo do usuário
+
+document.getElementById("check").addEventListener("change", e=>{
+  document.getElementById("btn").disabled = !e.target.checked;
+});
+
+function abrirModal(){
+  document.getElementById("modal").classList.add("show");
+}
+
+function fecharModal(){
+  document.getElementById("modal").classList.remove("show");
+}
+
+function aceitar(){
+
+  localStorage.setItem("termos_"+usuario, JSON.stringify({
+    aceito:true,
+    data:new Date().toISOString()
+  }));
+
+  // 🔥 REDIRECIONAMENTO CORRETO (SEM ERRO)
+  if(tipo === "root"){
+    window.location.href = "admin-root-eu/admin-root.html";
+  }
+  else if(tipo === "admin"){
+    window.location.href = "admins-sub/admin.html";
+  }
+  else if(tipo === "gerente"){
+    window.location.href = "gerencia/gerente.html";
+  }
+  else if(tipo === "operador"){
+    window.location.href = "operador/index.html";
+  }
+  else{
+    window.location.href = "login.html";
+  }
+
+}
+
+</script>
+
+</body>
+</html>

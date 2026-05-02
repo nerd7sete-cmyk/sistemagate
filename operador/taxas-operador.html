@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Taxas</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+body{
+  background:#0a0a0a;
+  color:#fff;
+  font-family:"Segoe UI", Arial;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  max-width:520px;
+  margin:auto;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border-radius:20px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.7),
+    inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+/* HEADER */
+h1{
+  font-size:18px;
+  margin-bottom:5px;
+}
+
+.sub{
+  font-size:12px;
+  color:#9ca3af;
+  margin-bottom:20px;
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:14px;
+  transition:0.2s;
+}
+
+.box:hover{
+  border-color:rgba(59,130,246,0.25);
+}
+
+/* LABEL */
+.label{
+  font-size:12px;
+  color:#9ca3af;
+}
+
+/* VALOR */
+.valor{
+  font-size:22px;
+  margin-top:6px;
+  font-weight:600;
+}
+
+.blue{
+  color:#3b82f6;
+  text-shadow:0 0 10px rgba(59,130,246,0.3);
+}
+
+.white{
+  color:#fff;
+  text-shadow:0 0 8px rgba(255,255,255,0.2);
+}
+
+/* INPUT */
+.simulacao input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:#0a0a0a;
+  color:#fff;
+  margin-top:10px;
+  transition:0.2s;
+}
+
+.simulacao input:focus{
+  outline:none;
+  border-color:#3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.2);
+}
+
+/* RESULT */
+.result{
+  margin-top:10px;
+  font-size:13px;
+  color:#ccc;
+  line-height:1.6;
+  background:#0a0a0a;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+}
+
+/* ALERT */
+.alert{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.05);
+  padding:12px;
+  border-radius:12px;
+  font-size:12px;
+  color:#aaa;
+  margin-top:10px;
+}
+
+/* GREEN */
+.green{
+  color:#22c55e;
+  font-weight:600;
+  text-shadow:0 0 8px rgba(34,197,94,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Taxas da sua conta</h1>
+  <div class="sub">Transparência total sobre valores e descontos aplicados</div>
+
+  <div class="box">
+    <div class="label">Taxa por venda</div>
+    <div class="valor blue" id="taxaVenda">0%</div>
+  </div>
+
+  <div class="box">
+    <div class="label">Taxa por saque</div>
+    <div class="valor white">R$ 9,90</div>
+  </div>
+
+  <div class="box">
+    <div class="label">Valor mínimo para saque</div>
+    <div class="valor white">R$ 119,90</div>
+  </div>
+
+  <div class="box">
+    <div class="label">Limite por saque</div>
+    <div class="valor white">Até R$ 1.000,00</div>
+  </div>
+
+  <div class="box simulacao">
+    <div class="label">Simular venda</div>
+    <input id="valorVenda" placeholder="Digite um valor (ex: 100)">
+    <div class="result" id="resultadoVenda">
+      Informe um valor para calcular
+    </div>
+  </div>
+
+  <div class="box simulacao">
+    <div class="label">Simular saque</div>
+    <input id="valorSaque" placeholder="Digite o valor do saque">
+    <div class="result" id="resultadoSaque">
+      Informe um valor para calcular
+    </div>
+  </div>
+
+  <!-- 🔥 AJUSTE AQUI -->
+  <div class="alert">
+    ✔ Taxas aplicadas automaticamente<br>
+    ✔ Saques ilimitados (respeitando o limite por saque)<br>
+    ✔ Cada saque pode ser de R$ 119,90 até R$ 1.000,00<br>
+  </div>
+
+</div>
+
+<script>
+
+let usuario = localStorage.getItem("usuario");
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+let operador = operadores.find(o=>o.email===usuario);
+
+let taxaVenda = operador?.taxa || 10;
+document.getElementById("taxaVenda").innerText = taxaVenda + "%";
+
+const vendaInput = document.getElementById("valorVenda");
+const vendaResult = document.getElementById("resultadoVenda");
+
+vendaInput.oninput = () => {
+  let valor = Number(vendaInput.value.replace(",", "."));
+
+  if(!valor){
+    vendaResult.innerHTML = "Informe um valor para calcular";
+    return;
+  }
+
+  let taxa = valor * (taxaVenda/100);
+  let liquido = valor - taxa;
+
+  vendaResult.innerHTML = `
+    Valor da venda: R$ ${valor.toFixed(2)}<br>
+    Taxa: R$ ${taxa.toFixed(2)}<br>
+    Você recebe: <span class="green">R$ ${liquido.toFixed(2)}</span>
+  `;
+};
+
+const saqueInput = document.getElementById("valorSaque");
+const saqueResult = document.getElementById("resultadoSaque");
+
+saqueInput.oninput = () => {
+  let valor = Number(saqueInput.value.replace(",", "."));
+
+  if(!valor){
+    saqueResult.innerHTML = "Informe um valor para calcular";
+    return;
+  }
+
+  if(valor < 119.90){
+    saqueResult.innerHTML = "Valor mínimo para saque é R$ 119,90";
+    return;
+  }
+
+  if(valor > 1000){
+    saqueResult.innerHTML = "Limite por saque é de R$ 1.000,00";
+    return;
+  }
+
+  let liquido = valor - 9.90;
+
+  saqueResult.innerHTML = `
+    Valor solicitado: R$ ${valor.toFixed(2)}<br>
+    Taxa de saque: R$ 9,90<br>
+    Você recebe: <span class="green">R$ ${liquido.toFixed(2)}</span>
+  `;
+};
+
+</script>
+
+</body>
+</html>
