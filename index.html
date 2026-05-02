@@ -128,6 +128,9 @@ function toggleSenha(){
   s.type = s.type === "password" ? "text" : "password";
 }
 
+// 🔥 DETECTA AMBIENTE (PROFISSIONAL)
+const BASE = location.protocol === "file:" ? "" : "/";
+
 // 🔥 SEED
 function seed(){
   localStorage.setItem("root", JSON.stringify({
@@ -220,9 +223,9 @@ function login(){
 
     setTimeout(()=>{
       if(!termos || !termos.aceito){
-        window.location.href = "termos.html";
+        window.location.href = BASE + "termos.html";
       }else{
-        window.location.href = redirect;
+        window.location.href = BASE + redirect;
       }
     },300);
 
