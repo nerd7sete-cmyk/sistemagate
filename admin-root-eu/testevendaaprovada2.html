@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Terminal de Cobrança - PrimePay</title>
+
+<script src="/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background:#0a0a0a;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(20px + env(safe-area-inset-bottom));
+}
+
+.card{
+  width:100%;
+  max-width:420px;
+  padding:22px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.8),
+    inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+h2{font-size:18px;margin-bottom:4px;}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:16px;}
+
+.config-box{
+  background:#0a0a0a;
+  border:1px solid rgba(59,130,246,0.3);
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:14px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.valor-input{
+  font-size:34px;
+  font-weight:700;
+  text-align:center;
+  width:100%;
+  border:none;
+  background:transparent;
+  color:#fff;
+}
+
+.valor-erro{
+  font-size:12px;
+  color:#ef4444;
+  text-align:center;
+  margin-top:5px;
+  display:none;
+}
+
+input{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+button{
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  border:none;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button:disabled{opacity:0.4;}
+
+.status{
+  margin-top:10px;
+  text-align:center;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.show{display:flex;}
+
+.modal-box{
+  width:90%;
+  max-width:320px;
+  background:#0f0f0f;
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+}
+
+.qr-box{
+  background:white;
+  padding:12px;
+  border-radius:14px;
+  display:inline-block;
+}
+
+.copy{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  background:#111;
+  cursor:pointer;
+}
+
+.fechar{
+  margin-top:12px;
+  color:#3b82f6;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>Terminal de Cobrança</h2>
+  <div class="sub">Emissão de cobrança PIX</div>
+
+  <div class="config-box" id="configBox"></div>
+
+  <input type="text" id="valorInput" class="valor-input" placeholder="R$ 0,00">
+  <div id="valorErro" class="valor-erro"></div>
+
+  <input type="text" id="nomeCliente" placeholder="Nome do cliente">
+  <input type="text" id="cpf" placeholder="CPF do cliente">
+
+  <button id="btnGerar" onclick="gerarPix()" disabled>
+    Gerar Cobrança
+  </button>
+
+  <div id="status" class="status"></div>
+
+</div>
+
+<div class="modal" id="modalQR">
+  <div class="modal-box">
+    <div class="qr-box">
+      <canvas id="qr"></canvas>
+    </div>
+
+    <div id="pixCode"></div>
+
+    <div class="copy" onclick="copiarPix()" id="copyBtn">
+      Copiar código PIX
+    </div>
+
+    <div class="fechar" onclick="fecharModal()">Fechar</div>
+  </div>
+</div>
+
+<script>
+
+let valor = 0;
+
+const valorInput = document.getElementById("valorInput");
+const valorErro = document.getElementById("valorErro");
+const btnGerar = document.getElementById("btnGerar");
+const nomeCliente = document.getElementById("nomeCliente");
+const modalQR = document.getElementById("modalQR");
+const pixCode = document.getElementById("pixCode");
+
+function formatarBRL(v){
+  return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+valorInput.addEventListener("input", function(){
+  let numeros = this.value.replace(/\D/g,"");
+  valor = parseInt(numeros || 0) / 100;
+  this.value = valor ? formatarBRL(valor) : "";
+  btnGerar.disabled = valor <= 0;
+});
+
+/* 🔥 TELEGRAM */
+function enviarNotificacao(msg){
+
+  const TOKEN = "8512466572:AAGKnae07MPKuModAKlrZxnkHg2LLWLLfOQ";
+  const CHAT_ID = "7847311143";
+
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: msg
+    })
+  });
+
+}
+
+async function gerarPix(){
+
+  if(btnGerar.disabled) return;
+
+  let usuario = localStorage.getItem("usuario") || "operador";
+
+  let codigoPix = "PIX-" + valor;
+
+  pixCode.innerText = codigoPix;
+
+  QRCode.toCanvas(document.getElementById("qr"), codigoPix);
+
+  modalQR.classList.add("show");
+
+  /* 🔥 NOTIFICAÇÃO */
+  let mensagem = `
+💰 NOVO PIX GERADO
+
+👤 Cliente: ${nomeCliente.value || "Cliente"}
+👨‍💻 Operador: ${usuario}
+
+💳 Valor: ${formatarBRL(valor)}
+
+⏰ ${new Date().toLocaleString()}
+
+🚀 PrimePay
+  `;
+
+  enviarNotificacao(mensagem);
+
+}
+
+function fecharModal(){
+  modalQR.classList.remove("show");
+}
+
+function copiarPix(){
+  navigator.clipboard.writeText(pixCode.innerText);
+  copyBtn.innerText="Copiado!";
+  setTimeout(()=>copyBtn.innerText="Copiar código PIX",1500);
+}
+
+</script>
+
+</body>
+</html>

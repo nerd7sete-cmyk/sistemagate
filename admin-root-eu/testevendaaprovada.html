@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Teste Notificação</title>
+</head>
+<body>
+
+<h2>Sistema de Vendas</h2>
+
+<button onclick="vendaAprovada()">Aprovar Venda</button>
+
+<script>
+function vendaAprovada() {
+  fetch("https://api.telegram.org/bot8512466572:AAGKnae07MPKuModAKlrZxnkHg2LLWLLfOQ/sendMessage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: "7847311143",
+      text: "💰 PAGAMENTO RECEBIDO!\n\n👤 Cliente: Teste\n💳 Valor: R$197,90\n📦 Produto: Sala VIP"
+    })
+  });
+}
+</script>
+
+</body>
+</html>
