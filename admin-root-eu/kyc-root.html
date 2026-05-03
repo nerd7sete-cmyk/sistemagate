@@ -49,7 +49,7 @@ body{
   margin-top:15px;
 }
 
-/* 🔥 PENDENTES (neutro premium) */
+/* BOTÃO PADRÃO */
 .stat{
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   border:1px solid rgba(255,255,255,0.08);
@@ -66,16 +66,17 @@ body{
   transform:translateY(-1px);
 }
 
-/* 🔥 APROVADOS (DESTAQUE AZUL) */
+/* 🔵 BOTÃO APROVADOS */
 .stat.aprovados{
-  border:1px solid rgba(59,130,246,0.7);
-  color:#3b82f6;
-  box-shadow:0 0 10px rgba(59,130,246,0.15);
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;
+  border:none;
+  box-shadow:0 4px 14px rgba(59,130,246,0.25);
 }
 
 .stat.aprovados:hover{
-  background:rgba(59,130,246,0.08);
-  box-shadow:0 0 14px rgba(59,130,246,0.35);
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(59,130,246,0.35);
 }
 
 /* CARD */
@@ -126,22 +127,22 @@ body{
   margin-top:12px;
 }
 
-/* BASE BUTTON */
+/* BOTÕES BASE */
 .btn{
   flex:1;
   padding:10px;
   border-radius:10px;
   font-size:12px;
-  cursor:pointer;
   font-weight:600;
+  cursor:pointer;
   transition:.25s;
 }
 
 /* VER */
 .btn-view{
-  background:#111;
-  border:1px solid rgba(255,255,255,0.05);
-  color:#aaa;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#ccc;
 }
 
 .btn-view:hover{
@@ -149,39 +150,30 @@ body{
   color:#fff;
 }
 
-/* 🔥 APROVAR (PREMIUM REAL) */
+/* 🟢 APROVAR */
 .btn-aprovar{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
+  background:linear-gradient(135deg,#16a34a,#15803d);
+  color:white;
   border:none;
-  color:#fff;
-  box-shadow:
-    0 6px 18px rgba(34,197,94,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.1);
+  box-shadow:0 4px 12px rgba(34,197,94,0.25);
 }
 
 .btn-aprovar:hover{
-  transform:translateY(-2px) scale(1.02);
-  box-shadow:
-    0 10px 25px rgba(34,197,94,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.15);
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(34,197,94,0.35);
 }
 
-.btn-aprovar:active{
-  transform:scale(0.97);
-  box-shadow:
-    inset 0 3px 8px rgba(0,0,0,0.4);
-}
-
-/* 🔥 REPROVAR (DISCRETO) */
+/* 🔴 REPROVAR (AGORA IGUAL AO VERDE, SÓ VERMELHO) */
 .btn-reprovar{
-  background:#111;
-  border:1px solid rgba(239,68,68,0.6);
-  color:#ef4444;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:white;
+  border:none;
+  box-shadow:0 4px 12px rgba(239,68,68,0.25);
 }
 
 .btn-reprovar:hover{
-  background:rgba(239,68,68,0.08);
-  box-shadow:0 0 8px rgba(239,68,68,0.25);
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(239,68,68,0.35);
 }
 
 /* MODAL */
@@ -330,7 +322,6 @@ function carregar(){
 
 carregar();
 
-/* VER */
 function ver(key){
   let d = JSON.parse(localStorage.getItem(key));
 
@@ -353,7 +344,6 @@ function fecharModal(){
   modal.style.display="none";
 }
 
-/* APROVAR */
 function aprovar(key){
   let d = JSON.parse(localStorage.getItem(key));
   d.status = "aprovado";
@@ -361,7 +351,6 @@ function aprovar(key){
   carregar();
 }
 
-/* REPROVAR */
 function reprovar(key){
   let d = JSON.parse(localStorage.getItem(key));
   d.status = "analise";

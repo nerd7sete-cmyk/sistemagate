@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Histórico de Saques</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html, body{
+  height:100%;
+  min-height:100dvh;
+  background:#0a0a0a;
+}
+
+body{
+  color:white;
+  padding:16px;
+}
+
+.container{
+  max-width:750px;
+  margin:auto;
+}
+
+.top{
+  margin-bottom:20px;
+}
+
+.title{
+  font-size:20px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
+/* STATS */
+.stats{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.stat{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:11px;
+}
+
+/* 🔥 FILTROS */
+.filtros{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.filtro{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  border:1px solid rgba(255,255,255,0.1);
+  color:#9ca3af;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.filtro.active{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+  border:none;
+}
+
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+  margin:15px 0;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.valor{
+  font-size:18px;
+  font-weight:700;
+}
+
+.status{
+  font-size:10px;
+  padding:5px 10px;
+  border-radius:999px;
+}
+
+.aprovado{
+  background:rgba(34,197,94,0.15);
+  color:#22c55e;
+}
+
+.recusado{
+  background:rgba(239,68,68,0.15);
+  color:#ef4444;
+}
+
+.pendente{
+  background:rgba(234,179,8,0.15);
+  color:#eab308;
+}
+
+.info{
+  margin-top:10px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.empty{
+  text-align:center;
+  margin-top:60px;
+  color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top">
+  <div class="title">Histórico de Saques</div>
+  <div class="sub">Acompanhe todas as movimentações</div>
+
+  <div class="stats">
+    <div class="stat" id="total">Total: 0</div>
+    <div class="stat" id="aprovados">Aprovados: 0</div>
+    <div class="stat" id="recusados">Recusados: 0</div>
+    <div class="stat" id="pendentes">Pendentes: 0</div>
+  </div>
+
+  <!-- 🔥 FILTROS -->
+  <div class="filtros">
+    <div class="filtro active" onclick="setFiltro('todos',this)">Todos</div>
+    <div class="filtro" onclick="setFiltro('aprovado',this)">Aprovado</div>
+    <div class="filtro" onclick="setFiltro('recusado',this)">Recusado</div>
+    <div class="filtro" onclick="setFiltro('pendente',this)">Pendente</div>
+  </div>
+
+</div>
+
+<input id="busca" class="input" placeholder="Buscar por usuário..." onkeyup="render()">
+
+<div id="lista"></div>
+
+</div>
+
+<script>
+
+let filtroAtual = "todos";
+
+/* FILTRO */
+function setFiltro(tipo, el){
+  filtroAtual = tipo;
+
+  document.querySelectorAll(".filtro").forEach(f=>{
+    f.classList.remove("active");
+  });
+
+  el.classList.add("active");
+
+  render();
+}
+
+/* FORMAT */
+function f(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function formatarData(d){
+  if(!d) return "-";
+  return new Date(d).toLocaleString();
+}
+
+/* PEGAR DADOS */
+function getTudo(){
+
+  let historico = JSON.parse(localStorage.getItem("historico_saques")) || [];
+  let pendentes = [];
+
+  for(let i=0;i<localStorage.length;i++){
+    let key = localStorage.key(i);
+
+    if(key.includes("saque")){
+      let lista = JSON.parse(localStorage.getItem(key)) || [];
+      if(Array.isArray(lista)){
+        lista.forEach(item=>{
+          item.status = "pendente";
+          pendentes.push(item);
+        });
+      }
+    }
+  }
+
+  return [...pendentes, ...historico];
+}
+
+/* RENDER */
+function render(){
+
+  let dados = getTudo();
+  let busca = document.getElementById("busca").value.toLowerCase();
+  let div = document.getElementById("lista");
+
+  let total=0, ap=0, rec=0, pen=0;
+
+  div.innerHTML="";
+
+  if(busca){
+    dados = dados.filter(d =>
+      (d.usuario || "").toLowerCase().includes(busca)
+    );
+  }
+
+  if(filtroAtual !== "todos"){
+    dados = dados.filter(d => d.status === filtroAtual);
+  }
+
+  if(dados.length === 0){
+    div.innerHTML = `<div class="empty">Nenhum registro encontrado</div>`;
+    return;
+  }
+
+  dados.slice().reverse().forEach(s=>{
+
+    total++;
+
+    if(s.status === "aprovado") ap++;
+    if(s.status === "recusado") rec++;
+    if(s.status === "pendente") pen++;
+
+    div.innerHTML += `
+    <div class="card">
+
+      <div class="row">
+        <div class="valor">${f(s.valor)}</div>
+        <div class="status ${s.status}">
+          ${s.status}
+        </div>
+      </div>
+
+      <div class="info">👤 Usuário: ${s.usuario || "-"}</div>
+      <div class="info">💳 Tipo: ${s.tipo || "-"}</div>
+      <div class="info">📅 ${formatarData(s.finalizado_em || s.data)}</div>
+
+    </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = "Total: " + total;
+  document.getElementById("aprovados").innerText = "Aprovados: " + ap;
+  document.getElementById("recusados").innerText = "Recusados: " + rec;
+  document.getElementById("pendentes").innerText = "Pendentes: " + pen;
+}
+
+setInterval(render, 3000);
+render();
+
+</script>
+
+</body>
+</html>

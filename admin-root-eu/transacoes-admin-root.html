@@ -31,6 +31,39 @@ body{
   font-size:18px;
 }
 
+/* 🔥 BOTÃO AZUL PREMIUM (PEQUENO) */
+.btn-control{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  width:fit-content;
+  padding:8px 14px;
+
+  border-radius:10px;
+  font-size:12px;
+  font-weight:600;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+
+  cursor:pointer;
+  transition:.25s ease;
+
+  box-shadow:0 0 12px rgba(59,130,246,0.25);
+}
+
+.btn-control i{
+  font-size:13px;
+}
+
+/* hover premium */
+.btn-control:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 18px rgba(59,130,246,0.35);
+}
+
+/* STATS */
 .stats{
   display:flex;
   gap:10px;
@@ -81,18 +114,9 @@ body{
   color:#777;
 }
 
-.row:not(.header):hover{
-  background:#0a0a0a;
-}
-
 .small{
   font-size:11px;
   color:#777;
-}
-
-.lucro{
-  color:#22c55e;
-  font-weight:bold;
 }
 
 /* STATUS */
@@ -138,13 +162,21 @@ body{
 <body>
 
 <div class="top">
+
   <h2>Transações do Sistema</h2>
+
+  <!-- 🔥 BOTÃO FINAL -->
+  <div class="btn-control" onclick="irControle()">
+    <i class="ri-settings-3-line"></i>
+    Controle Aprovação
+  </div>
 
   <div class="stats">
     <div class="stat" id="total">Total Pago: R$ 0,00</div>
     <div class="stat" id="lucroTotal">Lucro: R$ 0,00</div>
     <div class="stat" id="pendenteTotal">Pendentes: R$ 0,00</div>
   </div>
+
 </div>
 
 <div class="filters">
@@ -155,9 +187,13 @@ body{
 
 <script>
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-
-const TAXA = 15;
+function getTransacoes(){
+  try{
+    return JSON.parse(localStorage.getItem("transacoes_sistema")) || [];
+  }catch{
+    return [];
+  }
+}
 
 function formatarValor(v){
   return "R$ " + Number(v).toFixed(2).replace(".", ",");
@@ -168,14 +204,17 @@ function formatarData(d){
   return new Date(d).toLocaleString();
 }
 
+function irControle(){
+  window.location.href = "controle-transacoes.html";
+}
+
 function render(){
 
   let tabela = document.getElementById("tabela");
   let busca = document.getElementById("busca").value.toLowerCase();
 
-  let dados = [...transacoes];
+  let dados = getTransacoes();
 
-  /* 🔥 BUSCA COMPLETA */
   if(busca){
     dados = dados.filter(t =>
       (t.usuario || "").toLowerCase().includes(busca) ||
@@ -209,10 +248,11 @@ function render(){
   dados.slice().reverse().forEach(t=>{
 
     let valor = Number(t.valor || 0);
+    let taxa = Number(t.taxa || 15);
 
     if(t.status === "pago"){
       totalPago += valor;
-      lucroTotal += valor * (TAXA / 100);
+      lucroTotal += valor * (taxa / 100);
     }
 
     if(t.status === "pendente"){
@@ -221,10 +261,7 @@ function render(){
 
     tabela.innerHTML += `
       <div class="row">
-
-        <div>
-          ${formatarValor(valor)}
-        </div>
+        <div>${formatarValor(valor)}</div>
 
         <div>
           <span class="status ${t.status === "pago" ? "pago" : "pendente"}">
@@ -232,20 +269,18 @@ function render(){
           </span>
         </div>
 
-        <div>
-          ${t.usuario || "-"}
-        </div>
+        <div>${t.usuario || "-"}</div>
 
         <div class="small">
           OP: ${t.operador || "-"}<br>
           GER: ${t.gerente || "-"}<br>
-          ADM: ${t.admin || "-"}
+          ADM: ${t.admin || "-"}<br>
+          TAXA: ${taxa}%
         </div>
 
         <div>${t.gateway || "-"}</div>
 
         <div class="small">${formatarData(t.data)}</div>
-
       </div>
     `;
   });
@@ -260,6 +295,7 @@ function render(){
     "Pendentes: " + formatarValor(totalPendente);
 }
 
+setInterval(render, 3000);
 render();
 
 </script>

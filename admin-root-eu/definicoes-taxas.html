@@ -74,14 +74,38 @@ body{
   outline:none;
 }
 
+/* 🔥 BOTÃO PREMIUM AJUSTADO */
 .btn{
   margin-top:14px;
-  padding:14px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  text-align:center;
-  cursor:pointer;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:10px 18px;
+
+  border-radius:10px;
+  font-size:13px;
   font-weight:600;
+
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:white;
+
+  cursor:pointer;
+  transition:.25s ease;
+
+  box-shadow:0 4px 12px rgba(59,130,246,0.25);
+}
+
+/* centraliza botão */
+.btn{
+  margin:14px auto 0;
+}
+
+/* hover */
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(59,130,246,0.35);
 }
 
 .status{

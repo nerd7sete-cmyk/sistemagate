@@ -2,111 +2,217 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>ROOT - Saques</title>
+<title>Aprovações de Saques</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-body{
+html, body{
+  height:100%;
+  min-height:100dvh;
   background:#0a0a0a;
+}
+
+body{
   color:white;
-  padding:15px;
+  padding:16px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:700px;
+  margin:auto;
+}
+
+/* HEADER */
+.top{
+  margin-bottom:20px;
+}
+
+.header-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .title{
-  font-size:18px;
-  color:#3b82f6;
-  margin-bottom:15px;
+  font-size:20px;
+  font-weight:600;
 }
 
+.sub{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
+/* BOTÃO HISTÓRICO */
+.btn-historico{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:600;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+  cursor:pointer;
+
+  box-shadow:0 0 10px rgba(59,130,246,0.2);
+  transition:.2s;
+}
+
+.btn-historico:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 14px rgba(59,130,246,0.35);
+}
+
+/* CARD */
 .card{
-  background:#0f0f0f;
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:10px;
-  border:1px solid rgba(255,255,255,0.04);
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:.25s;
 }
 
+.card:hover{
+  border-color:rgba(59,130,246,0.25);
+}
+
+/* TOP */
 .row{
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
 
+/* VALOR */
 .valor{
-  font-weight:600;
+  font-size:20px;
+  font-weight:700;
 }
 
-.small{
-  font-size:11px;
-  color:#9ca3af;
-  margin-top:4px;
+/* STATUS */
+.status{
+  font-size:10px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(234,179,8,0.15);
+  color:#eab308;
 }
 
-/* MENU */
-.menu-btn{
-  cursor:pointer;
-  font-size:18px;
-  color:#888;
-}
-
-.menu-box{
-  position:absolute;
-  right:20px;
+/* DIVISOR */
+.divider{
+  height:1px;
   background:#111;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.08);
-  display:none;
-  flex-direction:column;
-  min-width:150px;
-  z-index:999;
+  margin:12px 0;
 }
 
-.menu-box button{
-  background:none;
-  border:none;
-  color:white;
-  padding:10px;
-  text-align:left;
+/* INFO */
+.info{
+  font-size:12px;
+  color:#9ca3af;
+  margin-bottom:3px;
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+/* BOTÕES */
+.btn{
+  flex:1;
+  padding:11px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:600;
+  text-align:center;
   cursor:pointer;
   display:flex;
+  align-items:center;
+  justify-content:center;
   gap:6px;
+  transition:.25s;
 }
 
-.menu-box button:hover{
-  background:#1a1a1a;
+/* APROVAR */
+.btn.aprovar{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
 }
 
-.aprovar{color:#22c55e;}
-.reembolsar{color:#facc15;}
-.excluir{color:#ef4444;}
+.btn.aprovar:hover{
+  box-shadow:0 0 14px rgba(34,197,94,0.3);
+}
 
+/* RECUSAR */
+.btn.recusar{
+  background:#0a0a0a;
+  border:1px solid rgba(239,68,68,0.35);
+  color:#ef4444;
+}
+
+.btn.recusar:hover{
+  background:rgba(239,68,68,0.08);
+}
+
+/* EMPTY */
 .empty{
   text-align:center;
-  margin-top:40px;
+  margin-top:80px;
   color:#666;
+  font-size:13px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="title">Saques</div>
+<div class="container">
+
+<div class="top">
+
+  <div class="header-row">
+    <div>
+      <div class="title">Aprovações de Saques</div>
+      <div class="sub">Gerencie solicitações do sistema</div>
+    </div>
+
+    <div class="btn-historico" onclick="irHistorico()">
+      <i class="ri-time-line"></i>
+      Histórico
+    </div>
+  </div>
+
+</div>
 
 <div id="lista"></div>
 
+</div>
+
 <script>
+
+function irHistorico(){
+  window.location.href = "historico-saques.html";
+}
 
 /* FORMAT */
 function f(v){
   return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-/* PEGAR TODOS SAQUES */
+/* PEGAR SAQUES */
 function getSaques(){
 
   let tudo=[];
@@ -143,7 +249,18 @@ function salvarHistorico(item,status){
   localStorage.setItem("historico_saques", JSON.stringify(hist));
 }
 
-/* AÇÕES */
+/* DEVOLVER SALDO */
+function devolverSaldo(item){
+
+  let key = "saldo_" + item.usuario;
+  let saldo = Number(localStorage.getItem(key) || 0);
+
+  saldo += Number(item.valor || 0);
+
+  localStorage.setItem(key, saldo);
+}
+
+/* APROVAR */
 function aprovar(origem,index){
 
   let lista = JSON.parse(localStorage.getItem(origem)) || [];
@@ -159,45 +276,22 @@ function aprovar(origem,index){
   render();
 }
 
-function reembolsar(origem,index){
+/* RECUSAR */
+function recusar(origem,index){
 
   let lista = JSON.parse(localStorage.getItem(origem)) || [];
   let item = lista[index];
 
   if(!item) return;
 
-  salvarHistorico(item,"reembolsado");
+  devolverSaldo(item);
+  salvarHistorico(item,"recusado");
 
   lista.splice(index,1);
   localStorage.setItem(origem, JSON.stringify(lista));
 
   render();
 }
-
-function excluir(origem,index){
-
-  let lista = JSON.parse(localStorage.getItem(origem)) || [];
-
-  lista.splice(index,1);
-  localStorage.setItem(origem, JSON.stringify(lista));
-
-  render();
-}
-
-/* MENU */
-function abrirMenu(e,id){
-  e.stopPropagation();
-
-  document.querySelectorAll(".menu-box")
-    .forEach(m=>m.style.display="none");
-
-  document.getElementById(id).style.display="flex";
-}
-
-document.addEventListener("click",()=>{
-  document.querySelectorAll(".menu-box")
-    .forEach(m=>m.style.display="none");
-});
 
 /* RENDER */
 function render(){
@@ -212,36 +306,30 @@ function render(){
     return;
   }
 
-  lista.forEach((s,i)=>{
+  lista.forEach((s)=>{
 
     div.innerHTML += `
     <div class="card">
 
       <div class="row">
         <div class="valor">${f(s.valor)}</div>
-
-        <div class="menu-btn" onclick="abrirMenu(event,'menu_${i}')">
-          <i class="ri-more-2-fill"></i>
-        </div>
-
-        <div class="menu-box" id="menu_${i}">
-          <button class="aprovar" onclick="aprovar('${s._origem}',${s._index})">
-            <i class="ri-check-line"></i> Aprovar
-          </button>
-
-          <button class="reembolsar" onclick="reembolsar('${s._origem}',${s._index})">
-            <i class="ri-arrow-go-back-line"></i> Reembolsar
-          </button>
-
-          <button class="excluir" onclick="excluir('${s._origem}',${s._index})">
-            <i class="ri-delete-bin-line"></i> Excluir
-          </button>
-        </div>
-
+        <div class="status">Pendente</div>
       </div>
 
-      <div class="small">Usuário: ${s.usuario || "-"}</div>
-      <div class="small">Tipo: ${s.tipo || "-"}</div>
+      <div class="divider"></div>
+
+      <div class="info">👤 Usuário: ${s.usuario || "-"}</div>
+      <div class="info">💳 Tipo: ${s.tipo || "-"}</div>
+
+      <div class="actions">
+        <div class="btn aprovar" onclick="aprovar('${s._origem}',${s._index})">
+          <i class="ri-check-line"></i> Aprovar
+        </div>
+
+        <div class="btn recusar" onclick="recusar('${s._origem}',${s._index})">
+          <i class="ri-close-line"></i> Recusar
+        </div>
+      </div>
 
     </div>
     `;
