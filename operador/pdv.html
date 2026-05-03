@@ -12,39 +12,61 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
 
-body{
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
-    #0a0a0a;
-  color:white;
-  padding:20px;
+/* 🔥 CORREÇÃO IPHONE */
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
 }
 
+body{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+
+  background:#0a0a0a; /* 🔥 REMOVIDO efeito azul */
+
+  color:white;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(20px + env(safe-area-inset-bottom));
+}
+
+/* CARD */
 .card{
+  width:100%;
   max-width:420px;
-  margin:auto;
-  padding:20px;
+  padding:22px;
   border-radius:18px;
+
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   border:1px solid rgba(255,255,255,0.05);
+
   box-shadow:
     0 10px 30px rgba(0,0,0,0.8),
     inset 0 0 10px rgba(255,255,255,0.02);
 }
 
+/* TITULO */
 h2{font-size:18px;margin-bottom:4px;}
 .sub{color:#9ca3af;font-size:12px;margin-bottom:16px;}
 
+/* CONFIG */
 .config-box{
   background:#0a0a0a;
-  border:1px solid rgba(59,130,246,0.2);
-  padding:12px;
-  border-radius:12px;
+  border:1px solid rgba(59,130,246,0.3);
+  padding:14px;
+  border-radius:14px;
   margin-bottom:14px;
   font-size:12px;
   color:#9ca3af;
+
+  box-shadow:0 0 10px rgba(59,130,246,0.08);
 }
 
+/* VALOR */
 .valor-input{
   font-size:34px;
   font-weight:700;
@@ -63,6 +85,7 @@ h2{font-size:18px;margin-bottom:4px;}
   display:none;
 }
 
+/* INPUTS */
 input{
   width:100%;
   margin-top:10px;
@@ -73,6 +96,13 @@ input{
   color:white;
 }
 
+input:focus{
+  border:1px solid #3b82f6;
+  box-shadow:0 0 8px rgba(59,130,246,0.2);
+  outline:none;
+}
+
+/* ALERT */
 .alert{
   margin-top:12px;
   padding:10px;
@@ -82,21 +112,29 @@ input{
   border:1px solid rgba(59,130,246,0.15);
 }
 
+/* BOTÃO */
 button{
   width:100%;
   margin-top:16px;
   padding:14px;
   border-radius:14px;
-  background:linear-gradient(145deg,#111,#0a0a0a);
-  border:1px solid rgba(255,255,255,0.08);
-  color:#e5e7eb;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  border:none;
+
+  color:white;
+  font-weight:600;
+
   cursor:pointer;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
 }
 
 button:disabled{
   opacity:0.4;
+  box-shadow:none;
 }
 
+/* STATUS */
 .status{
   margin-top:10px;
   text-align:center;
@@ -104,10 +142,12 @@ button:disabled{
   color:#9ca3af;
 }
 
+/* MODAL */
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.8);
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
   display:none;
   align-items:center;
   justify-content:center;
@@ -118,35 +158,54 @@ button:disabled{
 .modal-box{
   width:90%;
   max-width:320px;
-  background:#0a0a0a;
+
+  background:linear-gradient(145deg,#0f0f0f,#050505);
   border-radius:18px;
   padding:20px;
   text-align:center;
+
+  border:1px solid rgba(255,255,255,0.05);
 }
 
+/* QR */
 .qr-box{
   background:white;
-  padding:10px;
-  border-radius:12px;
+  padding:12px;
+  border-radius:14px;
+  display:inline-block;
 }
 
+/* STATUS PIX */
+.pix-status{
+  margin-top:10px;
+  font-size:11px;
+  color:#facc15;
+}
+
+/* CÓDIGO */
 .pix-code{
-  margin-top:12px;
+  margin-top:10px;
   font-size:11px;
   color:#9ca3af;
+  word-break:break-all;
 }
 
+/* COPY */
 .copy{
   margin-top:10px;
   padding:10px;
   border-radius:10px;
-  background:#0f0f0f;
-  border:1px solid rgba(59,130,246,0.2);
+  background:#111;
+  border:1px solid rgba(59,130,246,0.4);
   cursor:pointer;
+  font-size:12px;
+  color:#3b82f6;
 }
 
+/* FECHAR */
 .fechar{
   margin-top:12px;
+  font-size:12px;
   color:#3b82f6;
   cursor:pointer;
 }
@@ -172,20 +231,36 @@ button:disabled{
     A transação será registrada automaticamente no extrato.
   </div>
 
-  <button id="btnGerar" onclick="gerarPix()" disabled>Gerar Cobrança</button>
+  <button id="btnGerar" onclick="gerarPix()" disabled>
+    Gerar Cobrança
+  </button>
 
   <div id="status" class="status"></div>
 
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="modalQR">
   <div class="modal-box">
+
     <div class="qr-box">
       <canvas id="qr"></canvas>
     </div>
+
+    <div class="pix-status">
+      ⏳ Aguardando pagamento
+    </div>
+
     <div class="pix-code" id="pixCode"></div>
-    <div class="copy" onclick="copiarPix()" id="copyBtn">Copiar código PIX</div>
-    <div class="fechar" onclick="fecharModal()">Fechar</div>
+
+    <div class="copy" onclick="copiarPix()" id="copyBtn">
+      Copiar código PIX
+    </div>
+
+    <div class="fechar" onclick="fecharModal()">
+      Fechar
+    </div>
+
   </div>
 </div>
 
@@ -193,7 +268,7 @@ button:disabled{
 
 let valor = 0;
 
-// ELEMENTOS
+const configBox = document.getElementById("configBox");
 const valorInput = document.getElementById("valorInput");
 const valorErro = document.getElementById("valorErro");
 const btnGerar = document.getElementById("btnGerar");
@@ -214,7 +289,7 @@ function formatarBRL(v){
 }
 
 configBox.innerHTML = `
-<strong>Parâmetros</strong>
+<strong>Parâmetros</strong><br>
 ${
 config.valor_fixo > 0
 ? `Valor fixo: <b>${formatarBRL(config.valor_fixo)}</b>`

@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chave PIX CPF Específico</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  min-height:100%;
+  background:linear-gradient(180deg,#000,#050505);
+  color:#fff;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+/* WRAP */
+.wrap{
+  width:100%;
+  max-width:420px;
+  position:relative;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.icon{
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 12px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 0 20px rgba(59,130,246,0.15);
+}
+
+.header h2{
+  font-size:20px;
+  font-weight:600;
+}
+
+.header span{
+  font-size:12px;
+  color:#777;
+  line-height:1.4;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border-radius:16px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* BOX */
+.box{
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+  transition:.2s;
+}
+
+.box:hover{
+  border-color:rgba(59,130,246,0.2);
+}
+
+/* TOP */
+.top{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.top i{
+  color:#3b82f6;
+  font-size:14px;
+}
+
+/* TEXT */
+.label{
+  font-size:12px;
+  color:#ccc;
+}
+
+.desc{
+  font-size:10px;
+  color:#666;
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:11px;
+  background:#000;
+  border:1px solid #111;
+  border-radius:8px;
+  color:#fff;
+  margin-top:6px;
+  transition:.2s;
+}
+
+input:focus{
+  outline:none;
+  border-color:#3b82f6;
+  box-shadow:0 0 8px rgba(59,130,246,0.25);
+}
+
+/* TIPO */
+.tipo{
+  display:flex;
+  gap:10px;
+}
+
+.option{
+  flex:1;
+  padding:11px;
+  border-radius:10px;
+  border:1px solid #111;
+  background:#050505;
+  text-align:center;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.option.active{
+  border:1px solid rgba(59,130,246,0.6);
+  color:#3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.15);
+}
+
+.option:hover{
+  border-color:#3b82f6;
+}
+
+/* BOTÃO */
+.btn{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:10px;
+  transition:.2s;
+  box-shadow:0 0 10px rgba(59,130,246,0.3);
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 18px rgba(59,130,246,0.5);
+}
+
+/* 🔥 OVERLAY PADRÃO PRO */
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(3px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:16px;
+
+  /* permite mexer no fundo */
+  pointer-events:none;
+}
+
+/* glow leve */
+.overlay::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, rgba(59,130,246,0.06), transparent 70%);
+}
+
+/* BOX OVERLAY */
+.overlay-box{
+  pointer-events:auto;
+  text-align:center;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  padding:20px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 0 20px rgba(59,130,246,0.2);
+  max-width:260px;
+}
+
+.overlay-box i{
+  font-size:22px;
+  color:#3b82f6;
+  margin-bottom:10px;
+}
+
+.overlay-title{
+  font-size:14px;
+  font-weight:600;
+}
+
+.overlay-desc{
+  font-size:11px;
+  color:#777;
+  margin-top:6px;
+  line-height:1.4;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:25px;
+  right:20px;
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:12px 14px;
+  border-radius:10px;
+  font-size:12px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="header">
+  <div class="icon">
+    <i class="ri-bank-card-line" style="color:#3b82f6;"></i>
+  </div>
+
+  <h2>Chave PIX CPF Específico</h2>
+
+  <span>
+    Geração avançada vinculada ao CPF<br>
+    Disponível em breve
+  </span>
+</div>
+
+<div class="card">
+
+  <div class="box">
+    <div class="top">
+      <i class="ri-user-line"></i>
+      <div>
+        <div class="label">Nome completo</div>
+        <div class="desc">Titular da chave PIX</div>
+      </div>
+    </div>
+    <input placeholder="Ex: João da Silva">
+  </div>
+
+  <div class="box">
+    <div class="top">
+      <i class="ri-id-card-line"></i>
+      <div>
+        <div class="label">CPF</div>
+        <div class="desc">Documento usado como chave</div>
+      </div>
+    </div>
+    <input placeholder="000.000.000-00">
+  </div>
+
+  <div class="box">
+    <div class="label" style="margin-bottom:8px;">Tipo de chave</div>
+
+    <div class="tipo">
+      <div class="option active">CPF</div>
+      <div class="option">Aleatória</div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="avisar()">
+    Gerar chave PIX
+  </button>
+
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay">
+  <div class="overlay-box">
+    <i class="ri-settings-3-line"></i>
+
+    <div class="overlay-title">
+      Últimos ajustes do sistema
+    </div>
+
+    <div class="overlay-desc">
+      Estamos finalizando a integração bancária<br>
+      para liberar esta funcionalidade.
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+function avisar(){
+  let t = document.getElementById("toast");
+
+  t.innerText = "Funcionalidade será liberada em breve";
+  t.classList.add("show");
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  },2000);
+}
+</script>
+
+</body>
+</html>

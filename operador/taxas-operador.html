@@ -16,7 +16,6 @@ body{
   padding:20px;
 }
 
-/* CARD */
 .card{
   max-width:520px;
   margin:auto;
@@ -29,56 +28,28 @@ body{
     inset 0 0 10px rgba(255,255,255,0.02);
 }
 
-/* HEADER */
-h1{
-  font-size:18px;
-  margin-bottom:5px;
-}
+h1{font-size:18px;margin-bottom:5px;}
+.sub{font-size:12px;color:#9ca3af;margin-bottom:20px;}
 
-.sub{
-  font-size:12px;
-  color:#9ca3af;
-  margin-bottom:20px;
-}
-
-/* BOX */
 .box{
   background:#050505;
   border:1px solid rgba(255,255,255,0.04);
   border-radius:14px;
   padding:15px;
   margin-bottom:14px;
-  transition:0.2s;
 }
 
-.box:hover{
-  border-color:rgba(59,130,246,0.25);
-}
+.label{font-size:12px;color:#9ca3af;}
 
-/* LABEL */
-.label{
-  font-size:12px;
-  color:#9ca3af;
-}
-
-/* VALOR */
 .valor{
   font-size:22px;
   margin-top:6px;
   font-weight:600;
 }
 
-.blue{
-  color:#3b82f6;
-  text-shadow:0 0 10px rgba(59,130,246,0.3);
-}
+.blue{color:#3b82f6;}
+.white{color:#fff;}
 
-.white{
-  color:#fff;
-  text-shadow:0 0 8px rgba(255,255,255,0.2);
-}
-
-/* INPUT */
 .simulacao input{
   width:100%;
   padding:12px;
@@ -87,16 +58,8 @@ h1{
   background:#0a0a0a;
   color:#fff;
   margin-top:10px;
-  transition:0.2s;
 }
 
-.simulacao input:focus{
-  outline:none;
-  border-color:#3b82f6;
-  box-shadow:0 0 10px rgba(59,130,246,0.2);
-}
-
-/* RESULT */
 .result{
   margin-top:10px;
   font-size:13px;
@@ -105,10 +68,8 @@ h1{
   background:#0a0a0a;
   padding:12px;
   border-radius:10px;
-  border:1px solid rgba(255,255,255,0.04);
 }
 
-/* ALERT */
 .alert{
   background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.05);
@@ -119,12 +80,7 @@ h1{
   margin-top:10px;
 }
 
-/* GREEN */
-.green{
-  color:#22c55e;
-  font-weight:600;
-  text-shadow:0 0 8px rgba(34,197,94,0.3);
-}
+.green{color:#22c55e;font-weight:600;}
 </style>
 </head>
 
@@ -142,17 +98,17 @@ h1{
 
   <div class="box">
     <div class="label">Taxa por saque</div>
-    <div class="valor white">R$ 9,90</div>
+    <div class="valor white" id="taxaSaque"></div>
   </div>
 
   <div class="box">
     <div class="label">Valor mínimo para saque</div>
-    <div class="valor white">R$ 119,90</div>
+    <div class="valor white" id="minSaque"></div>
   </div>
 
   <div class="box">
     <div class="label">Limite por saque</div>
-    <div class="valor white">Até R$ 1.000,00</div>
+    <div class="valor white" id="maxSaque"></div>
   </div>
 
   <div class="box simulacao">
@@ -171,73 +127,88 @@ h1{
     </div>
   </div>
 
-  <!-- 🔥 AJUSTE AQUI -->
-  <div class="alert">
-    ✔ Taxas aplicadas automaticamente<br>
-    ✔ Saques ilimitados (respeitando o limite por saque)<br>
-    ✔ Cada saque pode ser de R$ 119,90 até R$ 1.000,00<br>
-  </div>
+  <div class="alert" id="alertText"></div>
 
 </div>
 
 <script>
 
+// 🔥 CONFIG DINÂMICA
+let configSaque = JSON.parse(localStorage.getItem("config_saque")) || {
+  min:119.90,
+  max:1000,
+  taxa:9.90
+};
+
 let usuario = localStorage.getItem("usuario");
 let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-
 let operador = operadores.find(o=>o.email===usuario);
 
+// 🔥 TAXA VENDA
 let taxaVenda = operador?.taxa || 10;
+
+// FORMAT
+function f(v){
+  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+// 🔥 SET UI
 document.getElementById("taxaVenda").innerText = taxaVenda + "%";
+document.getElementById("taxaSaque").innerText = f(configSaque.taxa);
+document.getElementById("minSaque").innerText = f(configSaque.min);
+document.getElementById("maxSaque").innerText = "Até " + f(configSaque.max);
 
-const vendaInput = document.getElementById("valorVenda");
-const vendaResult = document.getElementById("resultadoVenda");
+// 🔥 ALERT DINÂMICO
+document.getElementById("alertText").innerHTML = `
+✔ Taxas aplicadas automaticamente<br>
+✔ Saques ilimitados (respeitando o limite)<br>
+✔ Cada saque: ${f(configSaque.min)} até ${f(configSaque.max)}
+`;
 
-vendaInput.oninput = () => {
-  let valor = Number(vendaInput.value.replace(",", "."));
+// 🔥 SIMULAÇÃO VENDA
+valorVenda.oninput = () => {
+  let valor = Number(valorVenda.value.replace(",", "."));
 
   if(!valor){
-    vendaResult.innerHTML = "Informe um valor para calcular";
+    resultadoVenda.innerHTML = "Informe um valor para calcular";
     return;
   }
 
   let taxa = valor * (taxaVenda/100);
   let liquido = valor - taxa;
 
-  vendaResult.innerHTML = `
-    Valor da venda: R$ ${valor.toFixed(2)}<br>
-    Taxa: R$ ${taxa.toFixed(2)}<br>
-    Você recebe: <span class="green">R$ ${liquido.toFixed(2)}</span>
+  resultadoVenda.innerHTML = `
+    Valor da venda: ${f(valor)}<br>
+    Taxa: ${f(taxa)}<br>
+    Você recebe: <span class="green">${f(liquido)}</span>
   `;
 };
 
-const saqueInput = document.getElementById("valorSaque");
-const saqueResult = document.getElementById("resultadoSaque");
-
-saqueInput.oninput = () => {
-  let valor = Number(saqueInput.value.replace(",", "."));
+// 🔥 SIMULAÇÃO SAQUE
+valorSaque.oninput = () => {
+  let valor = Number(valorSaque.value.replace(",", "."));
 
   if(!valor){
-    saqueResult.innerHTML = "Informe um valor para calcular";
+    resultadoSaque.innerHTML = "Informe um valor para calcular";
     return;
   }
 
-  if(valor < 119.90){
-    saqueResult.innerHTML = "Valor mínimo para saque é R$ 119,90";
+  if(valor < configSaque.min){
+    resultadoSaque.innerHTML = "Valor mínimo: " + f(configSaque.min);
     return;
   }
 
-  if(valor > 1000){
-    saqueResult.innerHTML = "Limite por saque é de R$ 1.000,00";
+  if(valor > configSaque.max){
+    resultadoSaque.innerHTML = "Limite máximo: " + f(configSaque.max);
     return;
   }
 
-  let liquido = valor - 9.90;
+  let liquido = valor - configSaque.taxa;
 
-  saqueResult.innerHTML = `
-    Valor solicitado: R$ ${valor.toFixed(2)}<br>
-    Taxa de saque: R$ 9,90<br>
-    Você recebe: <span class="green">R$ ${liquido.toFixed(2)}</span>
+  resultadoSaque.innerHTML = `
+    Valor solicitado: ${f(valor)}<br>
+    Taxa: ${f(configSaque.taxa)}<br>
+    Você recebe: <span class="green">${f(liquido)}</span>
   `;
 };
 

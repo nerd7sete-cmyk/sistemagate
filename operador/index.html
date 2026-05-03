@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>PrimePay Operador</title>
@@ -38,8 +37,8 @@ body{
 
 /* USER */
 .user{
-  background:#0a0a0a;
-  border:1px solid rgba(59,130,246,0.2);
+  background:linear-gradient(145deg,#0a0a0a,#050505);
+  border:1px solid rgba(59,130,246,0.25);
   padding:14px;
   border-radius:12px;
   margin-bottom:25px;
@@ -48,8 +47,6 @@ body{
 .user strong{
   display:block;
   font-size:14px;
-
-  /* 🔥 evita estourar layout */
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -71,21 +68,38 @@ body{
   margin-bottom:10px;
   cursor:pointer;
   color:#9ca3af;
-  transition:0.2s;
+  transition:all .2s ease;
 }
 
+/* ÍCONE */
+.menu-item i{
+  transition:.2s;
+}
+
+/* HOVER */
 .menu-item:hover{
   background:#0a0a0a;
   color:#fff;
+  transform:translateX(2px);
 }
 
+.menu-item:hover i{
+  color:#3b82f6;
+}
+
+/* ATIVO */
 .active{
-  background:#0a0a0a;
+  background:linear-gradient(145deg,#0a0a0a,#050505);
   color:#fff;
   border:1px solid rgba(59,130,246,0.4);
+  box-shadow:0 0 12px rgba(59,130,246,0.15);
 }
 
-/* LOGOUT */
+.active i{
+  color:#3b82f6;
+}
+
+/* 🔥 LOGOUT VERMELHO */
 .logout{
   padding:12px;
   border-radius:12px;
@@ -93,6 +107,20 @@ body{
   cursor:pointer;
   display:flex;
   gap:10px;
+  transition:.2s;
+  color:#f87171;
+  border:1px solid rgba(248,113,113,0.2);
+}
+
+.logout i{
+  color:#f87171;
+}
+
+.logout:hover{
+  background:rgba(248,113,113,0.08);
+  border:1px solid rgba(248,113,113,0.4);
+  box-shadow:0 0 10px rgba(248,113,113,0.15);
+  transform:translateX(2px);
 }
 
 /* MAIN */
@@ -180,17 +208,21 @@ iframe{
       <i class="ri-wallet-3-line"></i> Retiradas
     </div>
 
+    <div class="menu-item" onclick="abrir('pix-cpf-especifico.html', this)">
+      <i class="ri-bank-card-line"></i> Chave PIX CPF
+    </div>
+
     <div class="menu-item" onclick="abrir('perfil-operador.html', this)">
-  <i class="ri-shield-user-line"></i> Perfil & Segurança
-</div>
+      <i class="ri-shield-user-line"></i> Perfil & Segurança
+    </div>
 
     <div class="menu-item" onclick="abrir('taxas-operador.html', this)">
-  <i class="ri-percent-line"></i> Suas Taxas
-</div>
+      <i class="ri-percent-line"></i> Suas Taxas
+    </div>
 
     <div class="menu-item" onclick="abrir('integracoes.html', this)">
-  <i class="ri-links-line"></i> Integrações e API
-</div>
+      <i class="ri-links-line"></i> Integrações e API
+    </div>
 
     <div class="menu-item" onclick="abrir('suporte-operador.html', this)">
       <i class="ri-customer-service-2-line"></i> Suporte
@@ -217,15 +249,13 @@ iframe{
 
 <script>
 
-// 🔥 PEGA USUÁRIO
+// USUÁRIO
 let usuario = localStorage.getItem("usuario") || "Operador";
 
-// 🔥 TRATA NOME (FUNCIONA COM EMAIL OU NOME)
 let primeiroNome = usuario.includes("@")
   ? usuario.split("@")[0]
   : usuario.split(" ")[0];
 
-// UI LIMPA
 document.getElementById("userBox").innerHTML = `
   <div class="painel">Painel do Operador</div>
   <strong>${primeiroNome}</strong>

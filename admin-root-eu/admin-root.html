@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>PrimePay</title>
 
@@ -14,8 +14,6 @@
 
 html, body{
   height:100%;
-  touch-action: manipulation;
-  -webkit-text-size-adjust: 100%;
 }
 
 body{
@@ -36,8 +34,10 @@ body{
   flex-direction:column;
   justify-content:space-between;
   overflow-y:auto;
+  transition:.3s;
 }
 
+/* SCROLL */
 .sidebar::-webkit-scrollbar{width:4px;}
 .sidebar::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
 
@@ -57,7 +57,7 @@ body{
   margin-bottom:20px;
 }
 
-/* MENU */
+/* 🔥 MENU COM ANIMAÇÃO SUAVE */
 .menu-item{
   display:flex;
   align-items:center;
@@ -67,12 +67,26 @@ body{
   margin-bottom:8px;
   cursor:pointer;
   color:#aaa;
-  transition:0.2s;
+
+  transition:
+    background 0.25s ease,
+    border 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease;
 }
 
 .menu-item:hover{
   background:#0a0a0a;
   color:#fff;
+  border:1px solid rgba(59,130,246,0.25);
+  transform:translateX(2px);
+}
+
+.active{
+  background:#0a0a0a;
+  color:#fff;
+  border:1px solid rgba(59,130,246,0.35);
+  box-shadow:0 0 10px rgba(59,130,246,0.15);
 }
 
 .menu-left{
@@ -81,38 +95,37 @@ body{
   align-items:center;
 }
 
-.active{
-  background:#0a0a0a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.08);
-}
-
 /* BADGE */
 .badge{
   background:#ef4444;
   color:#fff;
-  font-size:11px;
-  padding:2px 6px;
+  font-size:10px;
+  padding:3px 7px;
   border-radius:999px;
+  font-weight:600;
 }
 
 /* SUBMENU */
 .submenu{
-  display:none;
-  padding-left:10px;
+  max-height:0;
+  overflow:hidden;
+  transition:all .3s ease;
+  padding-left:12px;
   margin-bottom:10px;
+  border-left:2px solid rgba(59,130,246,0.2);
+}
+
+.submenu.open{
+  max-height:300px;
 }
 
 .submenu .menu-item{
   font-size:13px;
   padding:10px;
+  margin-bottom:4px;
 }
 
-.submenu.open{
-  display:block;
-}
-
-/* LOGOUT */
+/* BOTÃO SAIR */
 .logout{
   margin-top:20px;
   padding:12px;
@@ -121,6 +134,15 @@ body{
   cursor:pointer;
   display:flex;
   gap:10px;
+  border:1px solid rgba(239,68,68,0.35);
+  color:#f87171;
+  transition:all .25s ease;
+}
+
+.logout:hover{
+  border:1px solid rgba(239,68,68,0.6);
+  background:rgba(239,68,68,0.08);
+  color:#ef4444;
 }
 
 /* MAIN */
@@ -147,26 +169,35 @@ iframe{
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.9);
+  background:rgba(0,0,0,0.85);
   display:none;
   z-index:1000;
 }
 
 @media(max-width:900px){
-  .sidebar{
-    position:fixed;
-    transform:translateX(-100%);
-    z-index:1001;
-    transition:0.3s;
+
+  body{
+    flex-direction:column;
   }
 
-  .sidebar.active{transform:translateX(0);}
+  .sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    transform:translateX(-100%);
+    z-index:1001;
+  }
+
+  .sidebar.active{
+    transform:translateX(0);
+  }
 
   .topbar{
     display:flex;
     align-items:center;
     gap:10px;
   }
+
 }
 </style>
 </head>
@@ -183,14 +214,12 @@ iframe{
 
 <div class="user" id="userBox"></div>
 
-<!-- DASHBOARD -->
 <div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
   <div class="menu-left">
     <i class="ri-home-5-line"></i> Dashboard
   </div>
 </div>
 
-<!-- USUÁRIOS -->
 <div class="menu-item" onclick="toggleMenu(this)">
   <div class="menu-left">
     <i class="ri-team-line"></i> Usuários
@@ -202,10 +231,9 @@ iframe{
   <div class="menu-item" onclick="abrir('criar-admins.html', this)">Administradores</div>
   <div class="menu-item" onclick="abrir('gerentes.html', this)">Gerentes</div>
   <div class="menu-item" onclick="abrir('operadores-admin.html', this)">Operadores</div>
-  <div class="menu-item" onclick="abrir('central-usuarios.html', this)">Central de Usuários</div>
+  <div class="menu-item" onclick="abrir('central-usuarios.html', this)">Central</div>
 </div>
 
-<!-- FINANCEIRO -->
 <div class="menu-item" onclick="toggleMenu(this)">
   <div class="menu-left">
     <i class="ri-wallet-3-line"></i> Financeiro
@@ -215,15 +243,10 @@ iframe{
 
 <div class="submenu">
   <div class="menu-item" onclick="abrir('transacoes-admin-root.html', this)">Transações</div>
-
-  <div class="menu-item" onclick="abrir('saques-admin.html', this)">
-    Saques
-  </div>
-
+  <div class="menu-item" onclick="abrir('saques-admin.html', this)">Saques</div>
   <div class="menu-item" onclick="abrir('definicoes-taxas.html', this)">Taxas</div>
 </div>
 
-<!-- KYC -->
 <div class="menu-item" onclick="abrir('kyc-root.html', this)">
   <div class="menu-left">
     <i class="ri-shield-user-line"></i> Verificações KYC
@@ -231,7 +254,6 @@ iframe{
   <span class="badge" id="kycBadge">0</span>
 </div>
 
-<!-- SISTEMA -->
 <div class="menu-item" onclick="toggleMenu(this)">
   <div class="menu-left">
     <i class="ri-settings-3-line"></i> Sistema
@@ -245,7 +267,6 @@ iframe{
   <div class="menu-item" onclick="abrir('orquestracao-pagamentos.html', this)">Pagamentos</div>
 </div>
 
-<!-- COBRANÇA -->
 <div class="menu-item" onclick="abrir('pdv-root.html', this)">
   <div class="menu-left">
     <i class="ri-qr-code-line"></i> Cobrança PIX
@@ -272,7 +293,6 @@ iframe{
 </div>
 
 <script>
-
 let logado = localStorage.getItem("logado");
 let tipo = localStorage.getItem("tipo");
 
@@ -287,45 +307,46 @@ userBox.innerHTML = `
 <small>ROOT</small>
 `;
 
-// 🔥 KYC BADGE DINÂMICO
-let kycPendentes = localStorage.getItem("kycPendentes") || 0;
+let kycPendentes = Number(localStorage.getItem("kycPendentes") || 0);
+let badge = document.getElementById("kycBadge");
 
 if(kycPendentes > 0){
-  document.getElementById("kycBadge").innerText = kycPendentes;
+  badge.innerText = kycPendentes;
 }else{
-  document.getElementById("kycBadge").style.display = "none";
+  badge.style.display = "none";
 }
 
 function abrir(pagina, el){
   frame.src = pagina;
-
-  document.querySelectorAll(".menu-item")
-    .forEach(i=>i.classList.remove("active"));
-
+  document.querySelectorAll(".menu-item").forEach(i=>i.classList.remove("active"));
   el.classList.add("active");
   fecharMenu();
 }
 
 function toggleMenu(el){
   let submenu = el.nextElementSibling;
+  document.querySelectorAll(".submenu").forEach(s=>{
+    if(s !== submenu) s.classList.remove("open");
+  });
   submenu.classList.toggle("open");
 }
 
 function abrirMenu(){
   sidebar.classList.add("active");
   overlay.style.display = "block";
+  document.body.style.overflow = "hidden";
 }
 
 function fecharMenu(){
   sidebar.classList.remove("active");
   overlay.style.display = "none";
+  document.body.style.overflow = "auto";
 }
 
 function logout(){
   localStorage.clear();
   window.location.href = "login.html";
 }
-
 </script>
 
 </body>
