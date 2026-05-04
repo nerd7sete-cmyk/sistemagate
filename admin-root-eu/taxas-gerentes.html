@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Ajuste de Taxas</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  display:flex;
+  justify-content:center;
+  padding:calc(20px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{width:100%;max-width:520px;}
+
+/* 🔥 HEADER PREMIUM */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 12px rgba(59,130,246,0.4);
+}
+
+.icon i{
+  font-size:16px;
+}
+
+.header-title{
+  font-size:18px;
+  font-weight:600;
+}
+
+/* 🔥 BOTÃO VOLTAR */
+.back{
+  font-size:13px;
+  color:#3b82f6;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.7),
+    inset 0 0 8px rgba(255,255,255,0.02);
+}
+
+.title{font-size:14px;font-weight:600;}
+.sub{font-size:12px;color:#9ca3af;margin-bottom:12px;}
+
+.input{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#050505;
+  color:white;
+  margin-top:8px;
+  transition:.2s;
+}
+
+.input:focus{
+  border:1px solid #3b82f6;
+  box-shadow:0 0 8px rgba(59,130,246,0.2);
+  outline:none;
+}
+
+.btn{
+  margin-top:10px;
+  padding:13px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 0 12px rgba(59,130,246,0.3);
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:scale(1.02);
+}
+
+/* LISTA */
+.lista{
+  margin-top:10px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.item{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.item:hover{
+  background:#0f172a;
+}
+
+.item.active{
+  background:#0b1220;
+  border-left:3px solid #3b82f6;
+}
+
+.nome{font-weight:600;font-size:13px;}
+.email{font-size:11px;color:#9ca3af;}
+
+.badge{
+  font-size:11px;
+  margin-top:4px;
+  color:#3b82f6;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:25px;
+  right:20px;
+  background:#0f0f0f;
+  padding:12px 18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- 🔥 HEADER -->
+  <div class="header">
+
+    <div class="header-left">
+      <div class="icon">
+        <i class="ri-percent-line"></i>
+      </div>
+      <div class="header-title">Painel de Taxas</div>
+    </div>
+
+    <div class="back" onclick="voltar()">
+      <i class="ri-arrow-left-line"></i>
+      Voltar
+    </div>
+
+  </div>
+
+  <!-- GLOBAL -->
+  <div class="card">
+    <div class="title">Taxa Global</div>
+    <div class="sub">Base padrão do sistema</div>
+
+    <input id="taxaGlobal" class="input">
+
+    <div class="btn" onclick="salvarGlobal()">Salvar</div>
+
+    <div style="margin-top:8px;font-size:12px;color:#9ca3af;">
+      Atual: <span id="atualGlobal"></span>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL -->
+  <div class="card">
+    <div class="title">Ajuste Individual</div>
+
+    <input id="busca" class="input" placeholder="Buscar gerente..." oninput="buscar()">
+
+    <div id="lista" class="lista"></div>
+
+    <input id="novaTaxa" class="input" placeholder="Nova taxa (%)">
+
+    <div class="btn" onclick="salvar()">Salvar Ajuste</div>
+
+    <div class="btn" style="background:#111;" onclick="removerIndividual()">
+      Usar taxa global
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let gerenteSelecionado = null;
+
+function voltar(){
+  window.location.href = "gerentes.html";
+}
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+function getConfig(){
+  return JSON.parse(localStorage.getItem("config_taxa_root")) || { taxa: 10 };
+}
+
+function salvarConfig(valor){
+  localStorage.setItem("config_taxa_root", JSON.stringify({ taxa: valor }));
+}
+
+function atualizarUI(){
+  let cfg = getConfig();
+  atualGlobal.innerText = cfg.taxa + "%";
+  taxaGlobal.value = cfg.taxa;
+}
+
+function salvarGlobal(){
+  let valor = parseFloat(taxaGlobal.value) || 0;
+  salvarConfig(valor);
+  atualizarUI();
+  toast("Taxa global atualizada");
+}
+
+function buscar(){
+
+  let termo = busca.value.toLowerCase();
+  let cfg = getConfig();
+  let lista = document.getElementById("lista");
+
+  lista.innerHTML = "";
+
+  let filtrados = gerentes.filter(g =>
+    g.nome.toLowerCase().includes(termo) ||
+    g.email.toLowerCase().includes(termo)
+  );
+
+  filtrados.forEach(g =>{
+
+    let taxa = g.taxa ?? cfg.taxa;
+
+    let div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <div class="nome">${g.nome}</div>
+      <div class="email">${g.email}</div>
+      <div class="badge">${taxa}%</div>
+    `;
+
+    div.onclick = () =>{
+      document.querySelectorAll(".item").forEach(i=>i.classList.remove("active"));
+      div.classList.add("active");
+
+      gerenteSelecionado = g;
+      novaTaxa.value = taxa;
+    };
+
+    lista.appendChild(div);
+  });
+}
+
+function salvar(){
+
+  if(!gerenteSelecionado){
+    toast("Selecione um gerente");
+    return;
+  }
+
+  let valor = parseFloat(novaTaxa.value);
+
+  if(isNaN(valor)){
+    toast("Taxa inválida");
+    return;
+  }
+
+  gerenteSelecionado.taxa = valor;
+
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+
+  toast("Taxa atualizada");
+  buscar();
+}
+
+function removerIndividual(){
+
+  if(!gerenteSelecionado){
+    toast("Selecione um gerente");
+    return;
+  }
+
+  delete gerenteSelecionado.taxa;
+
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+
+  toast("Usando taxa global");
+  buscar();
+}
+
+atualizarUI();
+
+</script>
+
+</body>
+</html>

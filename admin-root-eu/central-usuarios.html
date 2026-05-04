@@ -8,6 +8,8 @@
 
 <script src="/auth.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
@@ -22,9 +24,41 @@ body{
 }
 
 /* HEADER */
-.header{margin-bottom:25px;}
-.header h2{font-size:18px;font-weight:600;}
-.header span{font-size:12px;color:#888;}
+.header{
+  margin-bottom:25px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header-icon i{
+  font-size:18px;
+}
+
+.header h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header span{
+  font-size:12px;
+  color:#888;
+  display:block;
+  margin-top:4px;
+}
 
 /* BUSCA */
 .search{
@@ -39,12 +73,49 @@ body{
 
 /* USER CARD */
 .user{
-  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,0.05);
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  margin-bottom:12px;
+  margin-bottom:10px;
   cursor:pointer;
+  transition:.2s;
+}
+
+.user:hover{
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* LEFT INFO */
+.user-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#3b82f6;
+  font-size:16px;
+}
+
+.user-info strong{
+  font-size:14px;
+  display:block;
+}
+
+.user-info small{
+  font-size:11px;
+  color:#888;
 }
 
 /* BADGE */
@@ -52,10 +123,9 @@ body{
   font-size:10px;
   padding:4px 10px;
   border-radius:20px;
-  margin-top:6px;
-  display:inline-block;
 }
 
+/* CORES */
 .root{background:#3b82f6;color:#fff;}
 .admin{background:#f59e0b;color:#000;}
 .gerente{background:#7c3aed;color:#fff;}
@@ -89,11 +159,16 @@ body{
 <body>
 
 <div class="header">
-  <h2>Central de Usuários</h2>
-  <span>Busca global do sistema</span>
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-team-line"></i>
+    </div>
+    <h2>Central de Usuários</h2>
+  </div>
+  <span>Busca global de todos os níveis do sistema</span>
 </div>
 
-<input class="search" id="busca" placeholder="Buscar tudo...">
+<input class="search" id="busca" placeholder="Buscar usuários, admins, gerentes..." />
 
 <div id="listaUsuarios">
   <div class="empty">Digite algo para buscar...</div>
@@ -132,34 +207,41 @@ function getTodos(){
 
   let lista = [];
 
-  // ROOT
   lista.push({
     nome: rootNome,
     email: "root@system",
     tipo: "root"
   });
 
-  // ADMINS
   admins.forEach(a=>{
     lista.push({...a, tipo:"admin"});
   });
 
-  // GERENTES
   gerentes.forEach(g=>{
     lista.push({...g, tipo:"gerente"});
   });
 
-  // OPERADORES
   operadores.forEach(o=>{
     lista.push({...o, tipo:"operador"});
   });
 
-  // USUÁRIOS
   usuarios.forEach(u=>{
     lista.push({...u, tipo:"usuario"});
   });
 
   return lista;
+}
+
+/* ÍCONE POR TIPO */
+function getIcon(tipo){
+  let map = {
+    root:"ri-vip-crown-line",
+    admin:"ri-shield-user-line",
+    gerente:"ri-user-star-line",
+    operador:"ri-user-3-line",
+    usuario:"ri-user-line"
+  };
+  return map[tipo] || "ri-user-line";
 }
 
 /* RENDER */
@@ -178,8 +260,17 @@ function render(lista){
     div.className = "user";
 
     div.innerHTML = `
-      <strong>${u.nome || "Sem nome"}</strong>
-      <small>${u.email || "-"}</small>
+      <div class="user-left">
+        <div class="avatar">
+          <i class="${getIcon(u.tipo)}"></i>
+        </div>
+
+        <div class="user-info">
+          <strong>${u.nome || "Sem nome"}</strong>
+          <small>${u.email || "-"}</small>
+        </div>
+      </div>
+
       <div class="tipo ${u.tipo}">
         ${u.tipo.toUpperCase()}
       </div>

@@ -12,55 +12,99 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
 body{
-  background:#0a0a0a;
+  background:#050505; /* 🔥 preto mais premium */
   color:white;
   padding:20px;
 }
 
-.top{margin-bottom:20px;}
-.top h2{font-size:20px;color:#ffffff;}
+/* HEADER */
+.top{
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
+.top-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.top-icon i{
+  font-size:18px;
+}
+
+.top h2{
+  font-size:20px;
+  font-weight:600;
+}
+
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
+  gap:14px;
   margin-bottom:15px;
 }
 
+/* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
+  background:#070707;
   border-radius:18px;
-  padding:18px;
-  border:1px solid rgba(255,255,255,0.05);
+  padding:16px;
+  border:1px solid rgba(255,255,255,0.04);
   position:relative;
-  transition:0.2s;
+  transition:.2s;
 }
 
 .card:hover{
-  transform:translateY(-3px);
-  border-color:#3b82f6;
+  border:1px solid rgba(59,130,246,0.3);
+  transform:translateY(-2px);
 }
 
+/* ICON */
 .icon{
   position:absolute;
-  top:15px;
-  right:15px;
-  font-size:18px;
+  top:14px;
+  right:14px;
+  font-size:17px;
   color:#3b82f6;
+  opacity:.9;
 }
 
-.title{font-size:12px;color:#9ca3af;}
-.value{font-size:24px;margin-top:6px;font-weight:600;}
+.title{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.value{
+  font-size:22px;
+  margin-top:6px;
+  font-weight:600;
+}
 
 .green{color:#22c55e;}
 .red{color:#ef4444;}
 
+/* CHART */
 .chart-card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:20px;
-  padding:20px;
-  border:1px solid rgba(255,255,255,0.05);
+  background:#070707;
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.04);
   margin-bottom:20px;
 }
 
@@ -77,6 +121,9 @@ canvas{height:280px !important;}
 <body>
 
 <div class="top">
+  <div class="top-icon">
+    <i class="ri-dashboard-3-line"></i>
+  </div>
   <h2>Dashboard ROOT</h2>
 </div>
 
@@ -105,7 +152,6 @@ canvas{height:280px !important;}
     <div class="value" id="admins">0</div>
   </div>
 
-  <!-- 🔥 NOVO CARD -->
   <div class="card">
     <i class="ri-bank-card-line icon"></i>
     <div class="title">Saldo dos admins</div>
@@ -184,7 +230,6 @@ gerentes.forEach(g=>{
   totalOperadores += lista.length;
 });
 
-/* CALCULOS */
 let total = 0;
 let lucro = 0;
 let saldoAdmins = 0;
@@ -203,7 +248,6 @@ transacoes.forEach(t=>{
   porDia[dia] = (porDia[dia] || 0) + v;
 });
 
-/* SAQUES */
 let totalSaques = 0;
 let saldoGerentes = 0;
 
@@ -219,7 +263,6 @@ gerentes.forEach(g=>{
   });
 });
 
-/* SALDO OPERADORES */
 let saldoOperadores = 0;
 
 transacoes.forEach(t=>{
@@ -228,11 +271,9 @@ transacoes.forEach(t=>{
   }
 });
 
-/* TOTAL */
 let totalPagar = saldoOperadores + saldoGerentes;
 let totalUsuarios = totalOperadores + gerentes.length;
 
-/* RENDER */
 document.getElementById("total").innerText = f(total);
 document.getElementById("transacoes").innerText = transacoes.length;
 document.getElementById("saques").innerText = totalSaques;
@@ -246,7 +287,6 @@ document.getElementById("totalPagar").innerText = f(totalPagar);
 document.getElementById("admins").innerText = admins.length;
 document.getElementById("saldoAdmins").innerText = f(saldoAdmins);
 
-/* GRAFICO */
 let ctx = document.getElementById("grafico").getContext("2d");
 
 let gradient = ctx.createLinearGradient(0,0,0,280);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -12,55 +12,97 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html,body{
+  height:100%;
+  background:#050505;
+}
+
 body{
-  background:#000;
   color:white;
-  padding:25px;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
-/* TOPO */
+/* 🔥 HEADER PADRÃO */
 .top{
-  margin-bottom:25px;
+  margin-bottom:22px;
 }
 
-.top h2{
-  font-size:20px;
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.header-icon i{
+  font-size:18px;
+}
+
+.header-text h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header-text span{
+  font-size:12px;
+  color:#6b7280;
 }
 
 /* FILTROS */
 .filters{
   display:flex;
   gap:10px;
-  margin-bottom:20px;
+  margin-bottom:18px;
   flex-wrap:wrap;
 }
 
 .input{
   padding:12px;
-  border-radius:10px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
   color:white;
+  font-size:13px;
+}
+
+.input:focus{
+  border-color:#3b82f6;
+  outline:none;
 }
 
 /* CARD */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
   overflow:hidden;
 }
 
 /* ITEM */
 .item{
-  padding:18px;
+  padding:16px;
   border-bottom:1px solid #111;
+  transition:.2s;
 }
 
 .item:hover{
   background:#0a0a0a;
 }
 
+/* ROW */
 .row{
   display:flex;
   justify-content:space-between;
@@ -70,26 +112,28 @@ body{
 /* INFO */
 .info strong{
   display:block;
+  font-size:13px;
 }
 
 .info small{
-  color:#777;
-  font-size:12px;
+  color:#6b7280;
+  font-size:11px;
 }
 
 /* BADGES */
 .badges{
   display:flex;
-  gap:8px;
+  gap:6px;
   margin-top:6px;
   flex-wrap:wrap;
 }
 
 .badge{
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:20px;
-  background:#111;
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f0f0f;
+  color:#9ca3af;
 }
 
 /* TIPOS */
@@ -99,11 +143,20 @@ body{
 .create{color:#3b82f6;}
 .update{color:#a855f7;}
 
+/* STATUS BADGE */
+.type{
+  font-size:10px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:#0f0f0f;
+  font-weight:600;
+}
+
 /* EMPTY */
 .empty{
-  padding:20px;
+  padding:30px;
   text-align:center;
-  color:#666;
+  color:#555;
 }
 </style>
 </head>
@@ -111,18 +164,30 @@ body{
 <body>
 
 <div class="top">
-  <h2>Auditoria & Logs de Segurança</h2>
+
+  <!-- 🔥 HEADER PROFISSIONAL -->
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-shield-keyhole-line"></i>
+    </div>
+
+    <div class="header-text">
+      <h2>Auditoria & Segurança</h2>
+      <span>Monitoramento de atividades e logs do sistema em tempo real</span>
+    </div>
+  </div>
+
 </div>
 
 <!-- FILTROS -->
 <div class="filters">
 
-  <input id="busca" class="input" placeholder="Buscar usuário..." onkeyup="render()">
+  <input id="busca" class="input" placeholder="Buscar por usuário..." onkeyup="render()">
 
   <select id="tipo" class="input" onchange="render()">
-    <option value="todos">Todos</option>
+    <option value="todos">Todos os eventos</option>
     <option value="login">Login</option>
-    <option value="saque">Saque</option>
+    <option value="saque">Saques</option>
     <option value="create">Criação</option>
     <option value="delete">Exclusão</option>
     <option value="update">Atualização</option>
@@ -138,7 +203,7 @@ body{
 // 🔥 LOGS
 let logs = JSON.parse(localStorage.getItem("logs")) || [];
 
-// 🔥 RENDER
+// 🔥 RENDER (AO VIVO)
 function render(){
 
   let lista = document.getElementById("lista");
@@ -150,7 +215,7 @@ function render(){
   let dados = logs;
 
   if(busca){
-    dados = dados.filter(l => l.usuario?.toLowerCase().includes(busca));
+    dados = dados.filter(l => (l.usuario || "").toLowerCase().includes(busca));
   }
 
   if(tipo !== "todos"){
@@ -162,7 +227,7 @@ function render(){
     return;
   }
 
-  dados.reverse().forEach(l => {
+  dados.slice().reverse().forEach(l => {
 
     lista.innerHTML += `
     <div class="item">
@@ -174,13 +239,13 @@ function render(){
           <small>${new Date(l.data).toLocaleString()}</small>
 
           <div class="badges">
-            <div class="badge">Usuário: ${l.usuario}</div>
-            <div class="badge">IP: ${l.ip || "-"}</div>
-            <div class="badge">Dispositivo: ${l.device || "-"}</div>
+            <div class="badge">👤 ${l.usuario}</div>
+            <div class="badge">🌐 ${l.ip || "-"}</div>
+            <div class="badge">📱 ${l.device || "-"}</div>
           </div>
         </div>
 
-        <div class="badge ${l.tipo}">
+        <div class="type ${l.tipo}">
           ${l.tipo}
         </div>
 
@@ -192,16 +257,22 @@ function render(){
 
 }
 
+// 🔥 AUTO ATUALIZA (tempo real)
+setInterval(()=>{
+  logs = JSON.parse(localStorage.getItem("logs")) || [];
+  render();
+}, 2000);
+
 render();
 
 
-// 🔥 FUNÇÃO GLOBAL PRA REGISTRAR LOG
+// 🔥 REGISTRAR LOG GLOBAL (FUNCIONANDO NO SISTEMA TODO)
 function registrarLog(tipo, acao){
 
   let logs = JSON.parse(localStorage.getItem("logs")) || [];
 
   logs.push({
-    tipo, // login, saque, create...
+    tipo,
     acao,
     usuario: localStorage.getItem("usuario") || "desconhecido",
     data: new Date().toISOString(),

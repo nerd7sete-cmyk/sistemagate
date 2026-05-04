@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>Orquestração de Pagamentos</title>
+<title>Roteamento de Pagamentos</title>
 
 <script src="/auth.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
@@ -12,35 +12,60 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html,body{
+  height:100%;
+  background:#050505;
+}
+
 body{
-  background:#000;
   color:#fff;
-  padding:20px;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
-/* HEADER */
+/* 🔥 HEADER PADRÃO */
 .header{
-  margin-bottom:25px;
+  margin-bottom:22px;
 }
 
-.header h2{
-  font-size:18px;
-  font-weight:600;
+.header-top{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
 }
 
-.header span{
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.header-icon i{
+  font-size:18px;
+}
+
+.header-text h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header-text span{
   font-size:12px;
-  color:#777;
+  color:#6b7280;
 }
 
 /* GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:20px;
+  gap:16px;
 }
 
 @media(max-width:900px){
@@ -49,11 +74,11 @@ body{
 
 /* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#050505);
+  background:#070707;
   border:1px solid rgba(255,255,255,0.05);
-  border-radius:16px;
-  padding:18px;
-  transition:0.2s;
+  border-radius:14px;
+  padding:16px;
+  transition:.2s;
 }
 
 .card:hover{
@@ -71,8 +96,8 @@ body{
 
 .desc{
   font-size:11px;
-  color:#777;
-  margin:8px 0 15px;
+  color:#6b7280;
+  margin:8px 0 12px;
 }
 
 /* ITEM */
@@ -83,10 +108,10 @@ body{
   padding:12px;
   border-radius:12px;
   border:1px solid #111;
-  background:#0a0a0a;
-  margin-bottom:10px;
+  background:#050505;
+  margin-bottom:8px;
   cursor:pointer;
-  transition:0.2s;
+  transition:.2s;
 }
 
 .gateway:hover{
@@ -94,9 +119,8 @@ body{
 }
 
 .gateway.active{
-  border:1px solid rgba(59,130,246,0.6);
+  border:1px solid rgba(59,130,246,0.5);
   background:rgba(59,130,246,0.05);
-  box-shadow:0 0 8px rgba(59,130,246,0.2);
 }
 
 /* TEXTO */
@@ -114,7 +138,7 @@ body{
 
 .status{
   font-size:10px;
-  color:#777;
+  color:#6b7280;
 }
 
 /* RADIO */
@@ -124,7 +148,6 @@ body{
   border:2px solid #333;
   border-radius:50%;
   position:relative;
-  transition:0.2s;
 }
 
 .radio.active{
@@ -140,61 +163,42 @@ body{
   position:absolute;
   top:3px;
   left:3px;
-  box-shadow:0 0 6px #3b82f6;
 }
 
-/* 🔥 BOTÃO AJUSTADO (LADO ESQUERDO) */
+/* BOTÃO */
 .btn{
   display:inline-flex;
   align-items:center;
   gap:6px;
-
-  width:auto;
-  margin-top:12px; /* 🔥 sem centralizar */
-
-  padding:8px 16px;
-
-  border:none;
+  margin-top:10px;
+  padding:8px 14px;
   border-radius:10px;
-
   background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:#fff;
-
   font-size:12px;
   font-weight:600;
-
   cursor:pointer;
   transition:.25s;
-
-  box-shadow:
-    0 4px 12px rgba(59,130,246,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.1);
+  box-shadow:0 4px 12px rgba(59,130,246,0.25);
 }
 
 .btn:hover{
   transform:translateY(-1px);
-  box-shadow:
-    0 6px 18px rgba(59,130,246,0.4);
-}
-
-.btn:active{
-  transform:scale(0.95);
-  box-shadow:
-    inset 0 4px 10px rgba(0,0,0,0.5);
+  box-shadow:0 6px 18px rgba(59,130,246,0.35);
 }
 
 /* TOAST */
 .toast{
   position:fixed;
   top:20px;
-  right:20px;
-  background:#0a0a0a;
-  border:1px solid #222;
+  right:16px;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.08);
   padding:10px 14px;
   border-radius:10px;
   font-size:12px;
   opacity:0;
-  transition:0.3s;
+  transition:.3s;
 }
 
 .toast.show{opacity:1;}
@@ -204,8 +208,18 @@ body{
 <body>
 
 <div class="header">
-  <h2><i class="ri-shield-keyhole-line"></i> Orquestração de Pagamentos</h2>
-  <span>Gerencie depósitos e saques da plataforma</span>
+
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-route-line"></i>
+    </div>
+
+    <div class="header-text">
+      <h2>Roteamento de Pagamentos</h2>
+      <span>Defina como os fluxos de depósito e saque serão processados</span>
+    </div>
+  </div>
+
 </div>
 
 <div id="toast" class="toast"></div>
@@ -215,25 +229,25 @@ body{
 <!-- PIX -->
 <div class="card">
   <div class="title"><i class="ri-qr-code-line"></i> Depósitos via PIX</div>
-  <div class="desc">Escolha o gateway responsável</div>
+  <div class="desc">Selecione o gateway responsável pelos recebimentos</div>
 
   <div id="pixList"></div>
 
-  <button class="btn" onclick="salvarPix()">
-    <i class="ri-check-line"></i> Aplicar
-  </button>
+  <div class="btn" onclick="salvarPix()">
+    <i class="ri-check-line"></i> Aplicar configuração
+  </div>
 </div>
 
 <!-- SAQUE -->
 <div class="card">
   <div class="title"><i class="ri-bank-card-line"></i> Saques</div>
-  <div class="desc">Escolha o gateway responsável</div>
+  <div class="desc">Selecione o gateway responsável pelos pagamentos</div>
 
   <div id="saqueList"></div>
 
-  <button class="btn" onclick="salvarSaque()">
-    <i class="ri-check-line"></i> Aplicar
-  </button>
+  <div class="btn" onclick="salvarSaque()">
+    <i class="ri-check-line"></i> Aplicar configuração
+  </div>
 </div>
 
 </div>
@@ -248,8 +262,8 @@ function toast(msg){
 }
 
 let gateways = [
-  {nome:"Gateway Principal", status:"Online", icon:"ri-flashlight-line"},
-  {nome:"Gateway Reserva", status:"Backup automático", icon:"ri-refresh-line"},
+  {nome:"Gateway Principal", status:"Processamento ativo", icon:"ri-flashlight-line"},
+  {nome:"Gateway Reserva", status:"Fallback automático", icon:"ri-refresh-line"},
   {nome:"Gateway Manual", status:"Processamento manual", icon:"ri-settings-3-line"}
 ];
 
@@ -303,12 +317,12 @@ function selectSaque(i){
 
 function salvarPix(){
   localStorage.setItem("gateway_pix", pixSelected);
-  toast("PIX atualizado");
+  toast("Gateway de PIX atualizado");
 }
 
 function salvarSaque(){
   localStorage.setItem("gateway_saque", saqueSelected);
-  toast("Saques atualizado");
+  toast("Gateway de saque atualizado");
 }
 
 function load(){

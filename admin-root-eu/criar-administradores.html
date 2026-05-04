@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Criar Admin</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{max-width:520px;margin:auto;width:100%;}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:18px;
+  font-weight:600;
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.back{
+  color:#3b82f6;
+  font-size:13px;
+  cursor:pointer;
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:20px;
+}
+
+/* FIELD */
+.field{margin-top:14px;}
+
+.label{
+  font-size:12px;
+  color:#6b7280;
+  margin-bottom:6px;
+}
+
+/* INPUT */
+.input-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#050505;
+  border:1px solid #111;
+  border-radius:14px;
+  padding:12px;
+  transition:.2s;
+}
+
+.input-wrap i{
+  color:#3b82f6;
+  font-size:14px;
+}
+
+.input-wrap input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:white;
+}
+
+.input-wrap:focus-within{
+  border:1px solid #3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.15);
+}
+
+/* SELECT */
+.select{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  background:#050505;
+  border:1px solid #111;
+  color:white;
+}
+
+/* BADGE */
+.plano-badge{
+  margin-top:6px;
+  font-size:11px;
+  color:#3b82f6;
+}
+
+/* SWITCH */
+.switch{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+}
+
+.toggle{
+  width:44px;
+  height:24px;
+  border-radius:20px;
+  background:#111;
+  position:relative;
+  cursor:pointer;
+}
+
+.toggle::after{
+  content:"";
+  width:18px;
+  height:18px;
+  background:#fff;
+  position:absolute;
+  top:3px;
+  left:3px;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.toggle.active{
+  background:#3b82f6;
+}
+
+.toggle.active::after{
+  left:23px;
+}
+
+/* BTN */
+.btn{
+  margin-top:20px;
+  padding:15px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:16px;
+  right:16px;
+  background:#0f0f0f;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title">
+      <div class="icon">
+        <i class="ri-shield-user-line"></i>
+      </div>
+      Criar Administrador
+    </div>
+
+    <div class="back" onclick="voltar()">Voltar</div>
+  </div>
+
+  <div class="card">
+
+    <!-- NOME -->
+    <div class="field">
+      <div class="label">Nome do administrador</div>
+      <div class="input-wrap">
+        <i class="ri-user-line"></i>
+        <input id="nome" placeholder="Ex: João Silva">
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="field">
+      <div class="label">Email de acesso</div>
+      <div class="input-wrap">
+        <i class="ri-mail-line"></i>
+        <input id="email" placeholder="admin@empresa.com">
+      </div>
+    </div>
+
+    <!-- SENHA -->
+    <div class="field">
+      <div class="label">Senha</div>
+      <div class="input-wrap">
+        <i class="ri-lock-line"></i>
+        <input id="senha" type="password" placeholder="Mínimo 6 caracteres">
+      </div>
+    </div>
+
+    <!-- GATEWAY -->
+    <div class="field">
+      <div class="label">Nome da Gateway</div>
+      <div class="input-wrap">
+        <i class="ri-global-line"></i>
+        <input id="gateway" placeholder="Ex: NexPay / PrimePay">
+      </div>
+    </div>
+
+    <!-- PLANO -->
+    <div class="field">
+      <div class="label">Plano do administrador</div>
+      <select id="plano" class="select" onchange="atualizarPlano()">
+        <option value="mensal">Mensal</option>
+        <option value="3m">3 meses</option>
+        <option value="6m">6 meses</option>
+        <option value="anual">Anual</option>
+        <option value="vitalicio">Vitalício</option>
+      </select>
+
+      <div id="planoInfo" class="plano-badge"></div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="switch">
+      <span style="font-size:12px;color:#9ca3af;">Administrador ativo</span>
+      <div id="toggle" class="toggle active" onclick="toggleStatus()"></div>
+    </div>
+
+    <div class="btn" onclick="criarAdmin()">Criar administrador</div>
+
+  </div>
+
+</div>
+
+<div id="toast" class="toast">Administrador criado com sucesso</div>
+
+<script>
+
+let ativo = true;
+
+function toggleStatus(){
+  ativo = !ativo;
+  toggle.classList.toggle("active");
+}
+
+function atualizarPlano(){
+  let info = {
+    mensal:"Renovação mensal",
+    "3m":"Duração de 3 meses",
+    "6m":"Duração de 6 meses",
+    anual:"Duração de 1 ano",
+    vitalicio:"Acesso vitalício"
+  };
+
+  planoInfo.innerText = info[planoEl.value];
+}
+
+function calcExp(plano){
+  let d = new Date();
+
+  if(plano === "mensal") d.setMonth(d.getMonth()+1);
+  if(plano === "3m") d.setMonth(d.getMonth()+3);
+  if(plano === "6m") d.setMonth(d.getMonth()+6);
+  if(plano === "anual") d.setFullYear(d.getFullYear()+1);
+  if(plano === "vitalicio") return null;
+
+  return d.getTime();
+}
+
+function criarAdmin(){
+
+  let nome = nomeEl.value.trim();
+  let email = emailEl.value.trim();
+  let senha = senhaEl.value.trim();
+  let gateway = gatewayEl.value.trim();
+  let plano = planoEl.value;
+
+  if(!nome || !email || !senha || !gateway){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  let admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+  admins.unshift({
+    nome,
+    email,
+    senha,
+    gateway,
+    plano,
+    ativo,
+    criado: Date.now(),
+    expira: calcExp(plano)
+  });
+
+  localStorage.setItem("admins", JSON.stringify(admins));
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+    window.location.href = "admins.html";
+  },1200);
+}
+
+/* refs */
+let nomeEl = document.getElementById("nome");
+let emailEl = document.getElementById("email");
+let senhaEl = document.getElementById("senha");
+let gatewayEl = document.getElementById("gateway");
+let planoEl = document.getElementById("plano");
+let toggle = document.getElementById("toggle");
+let toast = document.getElementById("toast");
+let planoInfo = document.getElementById("planoInfo");
+
+function voltar(){
+  window.history.back();
+}
+
+atualizarPlano();
+
+</script>
+
+</body>
+</html>

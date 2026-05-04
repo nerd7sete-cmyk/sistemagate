@@ -11,53 +11,74 @@
 
 html, body{
   height:100%;
-  background:#0a0a0a;
+  background:#050505;
 }
 
 body{
   color:white;
-  padding:20px;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
 /* HEADER */
 .top{
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
   margin-bottom:20px;
 }
 
-.top h2{
+/* 🔥 HEADER PADRÃO */
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.header-icon i{
   font-size:18px;
 }
 
-/* 🔥 BOTÃO AZUL PREMIUM (PEQUENO) */
+.header-text h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header-text span{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* BOTÃO */
 .btn-control{
   display:inline-flex;
   align-items:center;
   gap:6px;
-
   width:fit-content;
   padding:8px 14px;
-
   border-radius:10px;
   font-size:12px;
   font-weight:600;
-
   background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:white;
-
   cursor:pointer;
   transition:.25s ease;
-
   box-shadow:0 0 12px rgba(59,130,246,0.25);
 }
 
-.btn-control i{
-  font-size:13px;
-}
-
-/* hover premium */
 .btn-control:hover{
   transform:translateY(-1px);
   box-shadow:0 0 18px rgba(59,130,246,0.35);
@@ -71,8 +92,8 @@ body{
 }
 
 .stat{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
   padding:10px 14px;
   border-radius:10px;
   font-size:12px;
@@ -87,16 +108,16 @@ body{
   width:100%;
   padding:12px;
   border-radius:10px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
+  border:1px solid #111;
+  background:#050505;
   color:white;
 }
 
 /* CARD */
 .card{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
   overflow:hidden;
 }
 
@@ -110,13 +131,13 @@ body{
 }
 
 .header{
-  background:#0a0a0a;
-  color:#777;
+  background:#050505;
+  color:#6b7280;
 }
 
 .small{
   font-size:11px;
-  color:#777;
+  color:#6b7280;
 }
 
 /* STATUS */
@@ -163,12 +184,20 @@ body{
 
 <div class="top">
 
-  <h2>Transações do Sistema</h2>
+  <!-- 🔥 HEADER NOVO -->
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-exchange-dollar-line"></i>
+    </div>
+    <div class="header-text">
+      <h2>Transações do Sistema</h2>
+      <span>Monitoramento completo das movimentações financeiras</span>
+    </div>
+  </div>
 
-  <!-- 🔥 BOTÃO FINAL -->
   <div class="btn-control" onclick="irControle()">
     <i class="ri-settings-3-line"></i>
-    Controle Aprovação
+    Controle de Aprovação
   </div>
 
   <div class="stats">
@@ -180,7 +209,7 @@ body{
 </div>
 
 <div class="filters">
-  <input id="busca" class="input" placeholder="Buscar tudo..." onkeyup="render()">
+  <input id="busca" class="input" placeholder="Buscar por usuário, operador ou gateway..." onkeyup="render()">
 </div>
 
 <div class="card" id="tabela"></div>
@@ -241,7 +270,7 @@ function render(){
   `;
 
   if(dados.length === 0){
-    tabela.innerHTML += `<div class="empty">Nenhuma transação</div>`;
+    tabela.innerHTML += `<div class="empty">Nenhuma transação encontrada</div>`;
     return;
   }
 

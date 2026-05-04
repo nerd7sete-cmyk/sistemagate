@@ -2,398 +2,359 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
-<title>Gerentes</title>
+<title>Gerentes do Root</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
 body{
-  background:#0a0a0a;
+  background:#050505;
   color:white;
-  padding:25px;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
-.top{
+/* HEADER */
+.header{margin-bottom:20px;}
+
+.header-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px;
 }
 
-.btn{
-  background:#3b82f6;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:10px;
-  cursor:pointer;
+.title{
+  font-size:20px;
   font-weight:600;
-}
-
-.input{
-  padding:12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:#0a0a0a;
-  color:white;
-  width:100%;
-  margin-bottom:20px;
-}
-
-.card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:20px;
-}
-
-.item{
-  padding:18px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  cursor:pointer; /* 🔥 deixa clicável */
-}
-
-.item:hover{background:#0f0f0f;}
-
-.row{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-}
-
-.nome{font-weight:600;}
-
-.badges{
-  display:flex;
   gap:8px;
-  margin-top:6px;
-  flex-wrap:wrap;
 }
 
-.badge{
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:20px;
-  background:#111;
-  color:#ccc;
+.title i{
+  color:#3b82f6;
+  font-size:18px;
+  opacity:0.9;
 }
 
-.status{
-  font-size:11px;
-  padding:4px 10px;
-  border-radius:20px;
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
 }
 
-.ativo{color:#22c55e;background:rgba(34,197,94,0.1);}
-.inativo{color:#ef4444;background:rgba(239,68,68,0.1);}
-
+/* BOTÕES */
 .actions{
   display:flex;
   gap:8px;
 }
 
-.btn-action{
-  width:36px;
-  height:36px;
-  border-radius:10px;
+.btn-top{
   display:flex;
   align-items:center;
-  justify-content:center;
-  border:1px solid rgba(255,255,255,0.08);
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:500;
   cursor:pointer;
+  transition:.2s;
 }
 
-/* CONFIG BOX */
-.config-box{
-  padding:20px;
+.btn-taxas{
+  background:#0b1220;
+  border:1px solid rgba(59,130,246,0.2);
+  color:#3b82f6;
 }
 
-.save-global{
-  margin-top:10px;
-  background:#3b82f6;
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
-  cursor:pointer;
-}
-
-/* MODAIS */
-.modal-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  padding:25px;
-  border-radius:18px;
-  width:100%;
-  max-width:420px;
-}
-
-.input-modal{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:#0a0a0a;
+.btn-novo{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:white;
 }
 
-.actions-modal{
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  color:white;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+/* LISTA */
+.lista{
   display:flex;
-  gap:10px;
-  margin-top:20px;
+  flex-direction:column;
+  gap:8px;
 }
 
-.save{
-  flex:1;
-  background:#3b82f6;
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.03);
+  border-radius:14px;
+  padding:12px 14px;
   cursor:pointer;
+  transition:.15s;
+  position:relative;
 }
 
-.cancel{
-  flex:1;
-  border:1px solid rgba(255,255,255,0.08);
-  padding:12px;
-  border-radius:10px;
+.card:hover{
+  background:#0a0a0a;
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding-right:50px; /* 🔥 espaço pro switch */
+}
+
+.nome{
+  font-size:14px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#6b7280;
+}
+
+/* BADGE */
+.badge{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f0f0f;
+  white-space:nowrap;
+}
+
+.ativo{color:#22c55e;}
+.inativo{color:#ef4444;}
+
+/* SALDO */
+.saldo{
+  font-size:15px;
+  font-weight:600;
+  margin-top:6px;
+}
+
+/* INFO */
+.badges{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.badges .badge{
+  font-size:10px;
+  opacity:.8;
+}
+
+/* FOOTER */
+.footer{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  font-size:11px;
+  color:#6b7280;
+}
+
+/* SWITCH */
+.switch{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:18px;
+  border-radius:20px;
+  background:#111;
+  transition:.2s;
+}
+
+.switch::after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#fff;
+  border-radius:50%;
+  top:2px;
+  left:2px;
+  transition:.2s;
+}
+
+.switch.on{
+  background:#22c55e;
+}
+
+.switch.on::after{
+  left:18px;
+}
+
+.switch.off{
+  background:#ef4444;
+}
+
+/* EMPTY */
+.empty{
   text-align:center;
-  cursor:pointer;
+  padding:20px;
+  color:#555;
+  font-size:12px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <h2>Gerentes (ROOT)</h2>
-  <div class="btn" onclick="abrirModal()">+ Criar Gerente</div>
-</div>
+<div class="header">
 
-<div class="card">
-  <div class="config-box">
-    <h3>Taxa Global dos Gerentes</h3>
+  <div class="header-top">
+    <div class="title">
+      <i class="ri-user-star-line"></i>
+      Gerentes do Root
+    </div>
 
-    <input id="taxaGlobal" class="input" placeholder="Ex: 20">
+    <div class="actions">
+      <div class="btn-top btn-taxas" onclick="irTaxas()">
+        <i class="ri-settings-3-line"></i>
+        Taxas
+      </div>
 
-    <div class="save-global" onclick="salvarGlobal()">Salvar Configuração</div>
-
-    <div style="margin-top:10px;font-size:12px;color:#9ca3af;">
-      Atual: <span id="atualGlobal"></span>
+      <div class="btn-top btn-novo" onclick="irCriar()">
+        <i class="ri-user-add-line"></i>
+        Novo gerente
+      </div>
     </div>
   </div>
-</div>
 
-<input id="busca" class="input" placeholder="Buscar gerente..." onkeyup="render()">
-
-<div class="card" id="lista"></div>
-
-<!-- MODAL -->
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <h3>Novo Gerente</h3>
-
-    <input id="nome" class="input-modal" placeholder="Nome">
-    <input id="email" class="input-modal" placeholder="Email">
-    <input id="senha" class="input-modal" placeholder="Senha">
-
-    <div class="actions-modal">
-      <div class="cancel" onclick="fecharModal()">Cancelar</div>
-      <div class="save" onclick="criar()">Criar</div>
-    </div>
+  <div class="sub">
+    Gerencie todos os gerentes vinculados à sua estrutura principal
   </div>
+
 </div>
 
-<!-- MODAL TAXA -->
-<div class="modal-bg" id="modalTaxa">
-  <div class="modal">
-    <h3>Taxa do Gerente (%)</h3>
+<input id="busca" class="input" placeholder="Buscar gerente..." oninput="render()">
 
-    <input id="valorTaxa" class="input-modal">
-
-    <div class="actions-modal">
-      <div class="cancel" onclick="fecharTaxa()">Cancelar</div>
-      <div class="save" onclick="salvarTaxa()">Salvar</div>
-    </div>
-  </div>
-</div>
+<div class="lista" id="lista"></div>
 
 <script>
 
 let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
-let usuario = localStorage.getItem("usuario");
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 
-let indexAtual = null;
-
-function getConfig(){
-  return JSON.parse(localStorage.getItem("config_gerente")) || { taxa: 20 };
+function f(v){
+  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-function salvarConfig(valor){
-  localStorage.setItem("config_gerente", JSON.stringify({ taxa: valor }));
+function saldoGerente(g){
+  let total = 0;
+  let ops = operadores.filter(o=>o.gerente === g.email);
+
+  ops.forEach(op=>{
+    transacoes.forEach(t=>{
+      if(t.operador === op.email && t.status === "aprovado"){
+        total += Number(t.valor || 0);
+      }
+    });
+  });
+
+  return total;
 }
 
-function salvar(){
-  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+function qtdOps(g){
+  return operadores.filter(o=>o.gerente === g.email).length;
 }
 
-function atualizarUI(){
-  let config = getConfig();
-  document.getElementById("atualGlobal").innerText = config.taxa + "%";
-  document.getElementById("taxaGlobal").value = config.taxa;
-}
-
-function salvarGlobal(){
-  let valor = parseFloat(document.getElementById("taxaGlobal").value) || 0;
-  salvarConfig(valor);
-  atualizarUI();
-  render();
-}
-
-function abrirOperadores(i){
-  localStorage.setItem("gerenteSelecionado", JSON.stringify(gerentes[i]));
+function abrirGerente(g){
+  localStorage.setItem("gerenteSelecionado", JSON.stringify(g));
   window.location.href = "operadores-gerente.html";
+}
+
+function toggleGerente(i, e){
+  e.stopPropagation();
+  gerentes[i].ativo = !gerentes[i].ativo;
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+  render();
 }
 
 function render(){
 
-  let config = getConfig();
-  let lista = document.getElementById("lista");
-  let busca = document.getElementById("busca").value.toLowerCase();
-
+  let termo = busca.value.toLowerCase();
   lista.innerHTML = "";
 
-  let dados = gerentes.filter(g => g.nome.toLowerCase().includes(busca));
+  let filtrados = gerentes.filter(g =>
+    g.nome.toLowerCase().includes(termo) ||
+    g.email.toLowerCase().includes(termo)
+  );
 
-  if(dados.length === 0){
-    lista.innerHTML = `<div style="padding:20px;color:#777;">Nenhum gerente</div>`;
+  if(filtrados.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum gerente encontrado</div>`;
     return;
   }
 
-  dados.forEach((g,i)=>{
-
-    let taxa = g.taxa ?? config.taxa;
-    let origem = g.taxa != null ? "" : " (global)";
+  filtrados.forEach((g,i)=>{
 
     lista.innerHTML += `
-    <div class="item" onclick="abrirOperadores(${i})">
-      <div class="row">
+    <div class="card" onclick='abrirGerente(${JSON.stringify(g)})'>
 
+      <div class="switch ${g.ativo ? "on" : "off"}"
+        onclick="toggleGerente(${i}, event)">
+      </div>
+
+      <div class="top">
         <div>
           <div class="nome">${g.nome}</div>
-          <small>${g.email}</small>
-
-          <div class="badges">
-            <div class="badge">Taxa: ${taxa}%${origem}</div>
-            <div class="badge">Root: ${g.root}</div>
-            <div class="status ${g.ativo?'ativo':'inativo'}">
-              ${g.ativo?'Ativo':'Inativo'}
-            </div>
-          </div>
+          <div class="email">${g.email}</div>
         </div>
 
-        <div class="actions">
-
-          <!-- 🔥 impede clique no card -->
-          <div class="btn-action" onclick="event.stopPropagation(); abrirTaxa(${i})">
-            <i class="ri-percent-line"></i>
-          </div>
-
-          <div class="btn-action" onclick="event.stopPropagation(); toggle(${i})">
-            <i class="ri-toggle-line"></i>
-          </div>
-
-          <div class="btn-action" onclick="event.stopPropagation(); remover(${i})">
-            <i class="ri-delete-bin-line"></i>
-          </div>
-
+        <div class="badge ${g.ativo?'ativo':'inativo'}">
+          ${g.ativo?'Ativo':'Inativo'}
         </div>
-
       </div>
+
+      <div class="saldo">${f(saldoGerente(g))}</div>
+
+      <div class="badges">
+        <div class="badge">${qtdOps(g)} operadores</div>
+        <div class="badge">${g.taxa ?? 'Global'}%</div>
+      </div>
+
+      <div class="footer">
+        <div>Gerenciar</div>
+        <div><i class="ri-arrow-right-s-line"></i></div>
+      </div>
+
     </div>`;
   });
 
-  atualizarUI();
 }
 
-function criar(){
-  let nome = document.getElementById("nome").value.trim();
-  let email = document.getElementById("email").value.trim();
-  let senha = document.getElementById("senha").value.trim();
-
-  if(!nome || !email || !senha){
-    alert("Preencha todos os campos");
-    return;
-  }
-
-  gerentes.unshift({
-    nome,
-    email,
-    senha,
-    root: usuario,
-    taxa: null,
-    ativo:true
-  });
-
-  salvar();
-  render();
-  fecharModal();
-
-  document.getElementById("nome").value="";
-  document.getElementById("email").value="";
-  document.getElementById("senha").value="";
+function irCriar(){
+  window.location.href = "criar-gerentes.html";
 }
 
-function toggle(i){
-  gerentes[i].ativo = !gerentes[i].ativo;
-  salvar();
-  render();
-}
-
-function remover(i){
-  if(confirm("Excluir gerente?")){
-    gerentes.splice(i,1);
-    salvar();
-    render();
-  }
-}
-
-function abrirTaxa(i){
-  indexAtual = i;
-  let config = getConfig();
-  document.getElementById("valorTaxa").value = gerentes[i].taxa ?? config.taxa;
-  document.getElementById("modalTaxa").style.display = "flex";
-}
-
-function fecharTaxa(){
-  document.getElementById("modalTaxa").style.display = "none";
-}
-
-function salvarTaxa(){
-  gerentes[indexAtual].taxa = parseFloat(document.getElementById("valorTaxa").value) || 0;
-  salvar();
-  render();
-  fecharTaxa();
-}
-
-function abrirModal(){
-  document.getElementById("modal").style.display="flex";
-}
-
-function fecharModal(){
-  document.getElementById("modal").style.display="none";
+function irTaxas(){
+  window.location.href = "taxas-gerentes.html";
 }
 
 render();

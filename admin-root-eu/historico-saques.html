@@ -14,12 +14,15 @@
 html, body{
   height:100%;
   min-height:100dvh;
-  background:#0a0a0a;
+  background:#050505;
 }
 
 body{
   color:white;
-  padding:16px;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
 .container{
@@ -27,18 +30,36 @@ body{
   margin:auto;
 }
 
+/* HEADER */
 .top{
   margin-bottom:20px;
 }
 
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
 .title{
-  font-size:20px;
+  font-size:18px;
   font-weight:600;
 }
 
 .sub{
   font-size:12px;
-  color:#9ca3af;
+  color:#6b7280;
   margin-top:4px;
 }
 
@@ -51,14 +72,14 @@ body{
 }
 
 .stat{
-  background:#050505;
-  border:1px solid rgba(255,255,255,0.06);
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
   padding:8px 12px;
   border-radius:10px;
   font-size:11px;
 }
 
-/* 🔥 FILTROS */
+/* FILTROS */
 .filtros{
   display:flex;
   gap:8px;
@@ -73,7 +94,6 @@ body{
   border:1px solid rgba(255,255,255,0.1);
   color:#9ca3af;
   cursor:pointer;
-  transition:.2s;
 }
 
 .filtro.active{
@@ -87,21 +107,22 @@ body{
   width:100%;
   padding:12px;
   border-radius:10px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
+  border:1px solid #111;
+  background:#050505;
   color:white;
   margin:15px 0;
 }
 
 /* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#050505);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:12px;
-  border:1px solid rgba(255,255,255,0.05);
+  background:#070707;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:10px;
+  border:1px solid rgba(255,255,255,0.04);
 }
 
+/* TOP */
 .row{
   display:flex;
   justify-content:space-between;
@@ -111,11 +132,15 @@ body{
 .valor{
   font-size:18px;
   font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
+/* STATUS */
 .status{
   font-size:10px;
-  padding:5px 10px;
+  padding:4px 10px;
   border-radius:999px;
 }
 
@@ -134,16 +159,21 @@ body{
   color:#eab308;
 }
 
+/* INFO */
 .info{
-  margin-top:10px;
+  margin-top:8px;
   font-size:12px;
   color:#9ca3af;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
+/* EMPTY */
 .empty{
   text-align:center;
   margin-top:60px;
-  color:#666;
+  color:#555;
 }
 </style>
 </head>
@@ -153,8 +183,16 @@ body{
 <div class="container">
 
 <div class="top">
-  <div class="title">Histórico de Saques</div>
-  <div class="sub">Acompanhe todas as movimentações</div>
+
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-time-line"></i>
+    </div>
+    <div>
+      <div class="title">Histórico de Saques</div>
+      <div class="sub">Visualize e acompanhe todas as movimentações financeiras</div>
+    </div>
+  </div>
 
   <div class="stats">
     <div class="stat" id="total">Total: 0</div>
@@ -163,12 +201,11 @@ body{
     <div class="stat" id="pendentes">Pendentes: 0</div>
   </div>
 
-  <!-- 🔥 FILTROS -->
   <div class="filtros">
     <div class="filtro active" onclick="setFiltro('todos',this)">Todos</div>
-    <div class="filtro" onclick="setFiltro('aprovado',this)">Aprovado</div>
-    <div class="filtro" onclick="setFiltro('recusado',this)">Recusado</div>
-    <div class="filtro" onclick="setFiltro('pendente',this)">Pendente</div>
+    <div class="filtro" onclick="setFiltro('aprovado',this)">Aprovados</div>
+    <div class="filtro" onclick="setFiltro('recusado',this)">Recusados</div>
+    <div class="filtro" onclick="setFiltro('pendente',this)">Pendentes</div>
   </div>
 
 </div>
@@ -183,7 +220,6 @@ body{
 
 let filtroAtual = "todos";
 
-/* FILTRO */
 function setFiltro(tipo, el){
   filtroAtual = tipo;
 
@@ -196,7 +232,6 @@ function setFiltro(tipo, el){
   render();
 }
 
-/* FORMAT */
 function f(v){
   return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
@@ -206,7 +241,6 @@ function formatarData(d){
   return new Date(d).toLocaleString();
 }
 
-/* PEGAR DADOS */
 function getTudo(){
 
   let historico = JSON.parse(localStorage.getItem("historico_saques")) || [];
@@ -229,7 +263,6 @@ function getTudo(){
   return [...pendentes, ...historico];
 }
 
-/* RENDER */
 function render(){
 
   let dados = getTudo();
@@ -267,15 +300,29 @@ function render(){
     <div class="card">
 
       <div class="row">
-        <div class="valor">${f(s.valor)}</div>
+        <div class="valor">
+          <i class="ri-money-dollar-circle-line"></i>
+          ${f(s.valor)}
+        </div>
         <div class="status ${s.status}">
           ${s.status}
         </div>
       </div>
 
-      <div class="info">👤 Usuário: ${s.usuario || "-"}</div>
-      <div class="info">💳 Tipo: ${s.tipo || "-"}</div>
-      <div class="info">📅 ${formatarData(s.finalizado_em || s.data)}</div>
+      <div class="info">
+        <i class="ri-user-line"></i>
+        ${s.usuario || "-"}
+      </div>
+
+      <div class="info">
+        <i class="ri-bank-line"></i>
+        ${s.tipo || "-"}
+      </div>
+
+      <div class="info">
+        <i class="ri-calendar-line"></i>
+        ${formatarData(s.finalizado_em || s.data)}
+      </div>
 
     </div>
     `;

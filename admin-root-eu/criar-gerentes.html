@@ -1,0 +1,374 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Criar Gerente</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+/* FIX IPHONE */
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  display:flex;
+  justify-content:center;
+  padding:calc(20px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{width:100%;max-width:520px;}
+
+/* HEADER PROFISSIONAL */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.title-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon-header{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:11px;
+  color:#9ca3af;
+}
+
+.back{
+  color:#3b82f6;
+  cursor:pointer;
+  font-size:13px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.9), inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+/* INPUT PROFISSIONAL */
+.input-group{
+  margin-top:15px;
+}
+
+.label{
+  font-size:11px;
+  color:#9ca3af;
+  margin-bottom:6px;
+}
+
+.input-wrap{
+  position:relative;
+}
+
+.input{
+  width:100%;
+  padding:14px 14px 14px 40px;
+  border-radius:14px;
+  border:1px solid #1a1a1a;
+  background:#050505;
+  color:white;
+  transition:.2s;
+}
+
+.input:focus{
+  border:1px solid #3b82f6;
+  box-shadow:0 0 10px rgba(59,130,246,0.25);
+  outline:none;
+}
+
+.input-icon{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#3b82f6;
+  font-size:16px;
+}
+
+.input.disabled{
+  opacity:0.4;
+  pointer-events:none;
+}
+
+/* SWITCH */
+.switch{
+  margin-top:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.toggle{
+  width:46px;
+  height:26px;
+  border-radius:20px;
+  background:#111;
+  position:relative;
+  cursor:pointer;
+}
+
+.toggle::after{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:#fff;
+  border-radius:50%;
+  top:3px;
+  left:3px;
+  transition:.3s;
+}
+
+.toggle.active{
+  background:#3b82f6;
+}
+
+.toggle.active::after{
+  left:23px;
+}
+
+/* BADGE */
+.badge{
+  margin-top:10px;
+  font-size:11px;
+  background:#111;
+  padding:6px 12px;
+  border-radius:20px;
+  display:inline-block;
+}
+
+.global{color:#22c55e;}
+.individual{color:#3b82f6;}
+
+/* BTN */
+.btn{
+  margin-top:22px;
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 0 20px rgba(59,130,246,0.3);
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:scale(1.02);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:30px;
+  right:20px;
+  background:#0f0f0f;
+  padding:18px 22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 0 25px rgba(0,0,0,0.7);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.toast-title{font-weight:600;}
+.toast-sub{font-size:12px;color:#9ca3af;margin-top:4px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title-box">
+      <div class="icon-header">
+        <i class="ri-user-add-line"></i>
+      </div>
+      <div>
+        <div class="title">Cadastro de Gerente</div>
+        <div class="sub">Adicionar novo gerente ao sistema</div>
+      </div>
+    </div>
+
+    <div class="back" onclick="voltar()">Voltar</div>
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+
+    <div class="input-group">
+      <div class="label">Nome</div>
+      <div class="input-wrap">
+        <i class="ri-user-line input-icon"></i>
+        <input id="nome" class="input" placeholder="Ex: João Silva">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="label">Email</div>
+      <div class="input-wrap">
+        <i class="ri-mail-line input-icon"></i>
+        <input id="email" class="input" placeholder="email@empresa.com">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <div class="label">Senha</div>
+      <div class="input-wrap">
+        <i class="ri-lock-2-line input-icon"></i>
+        <input id="senha" class="input" type="password" placeholder="••••••••">
+      </div>
+    </div>
+
+    <!-- TAXA -->
+    <div class="switch">
+      <span style="font-size:12px;color:#9ca3af;">Usar taxa global</span>
+      <div id="toggleGlobal" class="toggle active" onclick="toggleGlobal()"></div>
+    </div>
+
+    <div id="tipoBadge" class="badge global">Taxa global aplicada</div>
+
+    <div class="input-group">
+      <div class="label">Taxa (%)</div>
+      <div class="input-wrap">
+        <i class="ri-percent-line input-icon"></i>
+        <input id="taxa" class="input disabled" placeholder="Ex: 20">
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="switch">
+      <span style="font-size:12px;color:#9ca3af;">Status ativo</span>
+      <div id="toggleStatus" class="toggle active" onclick="toggleStatus()"></div>
+    </div>
+
+    <div class="btn" onclick="criarGerente()">Criar gerente</div>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <div class="toast-title">Gerente criado com sucesso</div>
+  <div class="toast-sub">Cadastro concluído e pronto para operação</div>
+</div>
+
+<script>
+
+let ativo = true;
+let usarGlobal = true;
+
+function toggleStatus(){
+  ativo = !ativo;
+  document.getElementById("toggleStatus").classList.toggle("active");
+}
+
+function toggleGlobal(){
+  usarGlobal = !usarGlobal;
+
+  let input = document.getElementById("taxa");
+  let badge = document.getElementById("tipoBadge");
+
+  document.getElementById("toggleGlobal").classList.toggle("active");
+
+  if(usarGlobal){
+    input.classList.add("disabled");
+    badge.className = "badge global";
+    badge.innerText = "Taxa global aplicada";
+  }else{
+    input.classList.remove("disabled");
+    badge.className = "badge individual";
+    badge.innerText = "Taxa personalizada";
+  }
+}
+
+function toast(){
+  let t = document.getElementById("toast");
+  t.classList.add("show");
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  },2500);
+}
+
+function criarGerente(){
+
+  let nome = document.getElementById("nome").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let senha = document.getElementById("senha").value.trim();
+  let taxa = parseFloat(document.getElementById("taxa").value);
+
+  if(!nome || !email || !senha){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+  gerentes.unshift({
+    nome,
+    email,
+    senha,
+    taxa: usarGlobal ? null : (isNaN(taxa) ? 0 : taxa),
+    ativo
+  });
+
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+
+  toast();
+
+  setTimeout(()=>{
+    window.location.href = "gerentes.html";
+  },1200);
+}
+
+function voltar(){
+  window.location.href = "gerentes.html";
+}
+
+</script>
+
+</body>
+</html>

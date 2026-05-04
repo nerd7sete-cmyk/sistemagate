@@ -6,7 +6,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
-<title>Operadores do Root</title>
+<title>Administradores</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
@@ -27,7 +27,9 @@ body{
 }
 
 /* HEADER */
-.header{margin-bottom:20px;}
+.header{
+  margin-bottom:18px;
+}
 
 .header-top{
   display:flex;
@@ -45,22 +47,15 @@ body{
 
 .title i{
   color:#3b82f6;
-  font-size:18px;
 }
 
-.sub{
-  font-size:12px;
-  color:#6b7280;
-  margin-top:4px;
-}
-
-/* BOTÕES */
+/* ACTIONS */
 .actions{
   display:flex;
   gap:8px;
 }
 
-.btn{
+.btn-top{
   display:flex;
   align-items:center;
   gap:6px;
@@ -88,11 +83,12 @@ body{
   border:1px solid #111;
   background:#050505;
   color:white;
-  margin:12px 0;
+  margin-top:12px;
 }
 
 /* LISTA */
 .lista{
+  margin-top:12px;
   display:flex;
   flex-direction:column;
   gap:8px;
@@ -101,15 +97,15 @@ body{
 /* CARD */
 .card{
   background:#070707;
-  border:1px solid rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.04);
   border-radius:14px;
   padding:12px;
   position:relative;
   cursor:pointer;
+  transition:.15s;
 }
 
 .card:hover{
-  background:#0a0a0a;
   border:1px solid rgba(59,130,246,0.2);
 }
 
@@ -139,6 +135,7 @@ body{
 .switch.on{
   background:#22c55e;
 }
+
 .switch.on::after{
   left:18px;
 }
@@ -147,7 +144,7 @@ body{
   background:#ef4444;
 }
 
-/* TEXTO */
+/* TEXT */
 .nome{
   font-size:14px;
   font-weight:600;
@@ -158,6 +155,7 @@ body{
   color:#6b7280;
 }
 
+/* BADGES */
 .badges{
   display:flex;
   gap:6px;
@@ -169,8 +167,10 @@ body{
   padding:4px 8px;
   border-radius:999px;
   background:#0f0f0f;
+  color:#3b82f6;
 }
 
+/* FOOTER */
 .footer{
   display:flex;
   justify-content:space-between;
@@ -182,6 +182,7 @@ body{
 .empty{
   text-align:center;
   padding:20px;
+  font-size:12px;
   color:#555;
 }
 </style>
@@ -193,82 +194,78 @@ body{
 
   <div class="header-top">
     <div class="title">
-      <i class="ri-team-line"></i>
-      Operadores do Root
+      <i class="ri-shield-user-line"></i>
+      Administradores
     </div>
 
     <div class="actions">
-
-      <div class="btn btn-taxas" onclick="irTaxas()">
-        <i class="ri-settings-3-line"></i>
+      <div class="btn-top btn-taxas" onclick="irTaxas()">
+        <i class="ri-percent-line"></i>
         Taxas
       </div>
 
-      <div class="btn btn-novo" onclick="irCriar()">
+      <div class="btn-top btn-novo" onclick="irCriar()">
         <i class="ri-user-add-line"></i>
-        Novo operador
+        Novo Admin
       </div>
-
     </div>
-  </div>
-
-  <div class="sub">
-    Gerencie todos os operadores da sua estrutura
   </div>
 
 </div>
 
-<input id="busca" class="input" placeholder="Buscar operador..." oninput="render()">
+<input id="busca" class="input" placeholder="Buscar administrador..." oninput="render()">
 
 <div id="lista" class="lista"></div>
 
 <script>
 
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
 
-function getGerenteNome(email){
-  let g = gerentes.find(g=>g.email === email);
-  return g ? g.nome : "Root";
-}
-
-function toggle(i,e){
+/* 🔥 TOGGLE */
+function toggleAdmin(i, e){
   e.stopPropagation();
-  operadores[i].ativo = !operadores[i].ativo;
-  localStorage.setItem("operadores", JSON.stringify(operadores));
+  admins[i].ativo = !admins[i].ativo;
+  localStorage.setItem("admins", JSON.stringify(admins));
   render();
 }
 
+/* 🔥 ABRIR ADMIN */
+function abrirAdmin(a){
+  localStorage.setItem("adminSelecionado", JSON.stringify(a));
+  window.location.href = "admin-detalhe.html";
+}
+
+/* RENDER */
 function render(){
 
   let termo = busca.value.toLowerCase();
   lista.innerHTML = "";
 
-  let filtrados = operadores.filter(o =>
-    o.nome.toLowerCase().includes(termo) ||
-    o.email.toLowerCase().includes(termo)
+  let filtrados = admins.filter(a =>
+    a.nome.toLowerCase().includes(termo) ||
+    a.email.toLowerCase().includes(termo)
   );
 
   if(filtrados.length === 0){
-    lista.innerHTML = `<div class="empty">Nenhum operador encontrado</div>`;
+    lista.innerHTML = `<div class="empty">Nenhum administrador encontrado</div>`;
     return;
   }
 
-  filtrados.forEach((o,i)=>{
+  filtrados.forEach((a,i)=>{
 
     lista.innerHTML += `
-    <div class="card">
+    <div class="card" onclick='abrirAdmin(${JSON.stringify(a)})'>
 
-      <div class="switch ${o.ativo ? "on" : "off"}"
-        onclick="toggle(${i},event)">
+      <div class="switch ${a.ativo ? "on" : "off"}"
+        onclick="toggleAdmin(${i}, event)">
       </div>
 
-      <div class="nome">${o.nome}</div>
-      <div class="email">${o.email}</div>
+      <div class="nome">${a.nome}</div>
+      <div class="email">${a.email}</div>
 
       <div class="badges">
-        <div class="badge">${getGerenteNome(o.gerente)}</div>
-        <div class="badge">${o.taxa ?? "Global"}%</div>
+        <div class="badge">${a.gateway}</div>
+        <div class="badge">${formatPlano(a.plano)}</div>
       </div>
 
       <div class="footer">
@@ -281,12 +278,25 @@ function render(){
 
 }
 
+/* FORMATAR PLANO */
+function formatPlano(p){
+  let map = {
+    mensal:"Mensal",
+    "3m":"3 meses",
+    "6m":"6 meses",
+    anual:"Anual",
+    vitalicio:"Vitalício"
+  };
+  return map[p] || p;
+}
+
+/* NAV */
 function irCriar(){
-  window.location.href = "criar-operadores.html";
+  window.location.href = "criar-administradores.html";
 }
 
 function irTaxas(){
-  window.location.href = "taxas-operadores.html";
+  window.location.href = "taxas-administradores.html";
 }
 
 render();
