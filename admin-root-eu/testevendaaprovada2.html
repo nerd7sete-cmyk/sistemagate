@@ -241,16 +241,7 @@ async function gerarPix(){
 
   /* 🔥 NOTIFICAÇÃO */
   let mensagem = `
-💰 NOVO PIX GERADO
-
-👤 Cliente: ${nomeCliente.value || "Cliente"}
-👨‍💻 Operador: ${usuario}
-
-💳 Valor: ${formatarBRL(valor)}
-
-⏰ ${new Date().toLocaleString()}
-
-🚀 PrimePay
+PIX recebido em  ${new Date().toLocaleString()} no valor: ${formatarBRL(valor)}
   `;
 
   enviarNotificacao(mensagem);

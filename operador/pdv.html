@@ -12,7 +12,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
 
-/* 🔥 CORREÇÃO IPHONE */
 html,body{
   height:100%;
   min-height:100vh;
@@ -23,37 +22,29 @@ body{
   display:flex;
   justify-content:center;
   align-items:flex-start;
-
-  background:#0a0a0a; /* 🔥 REMOVIDO efeito azul */
-
+  background:#0a0a0a;
   color:white;
-
   padding:
     calc(20px + env(safe-area-inset-top))
     16px
     calc(20px + env(safe-area-inset-bottom));
 }
 
-/* CARD */
 .card{
   width:100%;
   max-width:420px;
   padding:22px;
   border-radius:18px;
-
   background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
   border:1px solid rgba(255,255,255,0.05);
-
   box-shadow:
     0 10px 30px rgba(0,0,0,0.8),
     inset 0 0 10px rgba(255,255,255,0.02);
 }
 
-/* TITULO */
 h2{font-size:18px;margin-bottom:4px;}
 .sub{color:#9ca3af;font-size:12px;margin-bottom:16px;}
 
-/* CONFIG */
 .config-box{
   background:#0a0a0a;
   border:1px solid rgba(59,130,246,0.3);
@@ -62,11 +53,9 @@ h2{font-size:18px;margin-bottom:4px;}
   margin-bottom:14px;
   font-size:12px;
   color:#9ca3af;
-
   box-shadow:0 0 10px rgba(59,130,246,0.08);
 }
 
-/* VALOR */
 .valor-input{
   font-size:34px;
   font-weight:700;
@@ -85,7 +74,6 @@ h2{font-size:18px;margin-bottom:4px;}
   display:none;
 }
 
-/* INPUTS */
 input{
   width:100%;
   margin-top:10px;
@@ -102,7 +90,6 @@ input:focus{
   outline:none;
 }
 
-/* ALERT */
 .alert{
   margin-top:12px;
   padding:10px;
@@ -112,19 +99,15 @@ input:focus{
   border:1px solid rgba(59,130,246,0.15);
 }
 
-/* BOTÃO */
 button{
   width:100%;
   margin-top:16px;
   padding:14px;
   border-radius:14px;
-
   background:linear-gradient(135deg,#2563eb,#3b82f6);
   border:none;
-
   color:white;
   font-weight:600;
-
   cursor:pointer;
   box-shadow:0 0 15px rgba(59,130,246,0.3);
 }
@@ -134,7 +117,6 @@ button:disabled{
   box-shadow:none;
 }
 
-/* STATUS */
 .status{
   margin-top:10px;
   text-align:center;
@@ -142,7 +124,6 @@ button:disabled{
   color:#9ca3af;
 }
 
-/* MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -158,16 +139,13 @@ button:disabled{
 .modal-box{
   width:90%;
   max-width:320px;
-
   background:linear-gradient(145deg,#0f0f0f,#050505);
   border-radius:18px;
   padding:20px;
   text-align:center;
-
   border:1px solid rgba(255,255,255,0.05);
 }
 
-/* QR */
 .qr-box{
   background:white;
   padding:12px;
@@ -175,14 +153,12 @@ button:disabled{
   display:inline-block;
 }
 
-/* STATUS PIX */
 .pix-status{
   margin-top:10px;
   font-size:11px;
   color:#facc15;
 }
 
-/* CÓDIGO */
 .pix-code{
   margin-top:10px;
   font-size:11px;
@@ -190,7 +166,6 @@ button:disabled{
   word-break:break-all;
 }
 
-/* COPY */
 .copy{
   margin-top:10px;
   padding:10px;
@@ -202,7 +177,6 @@ button:disabled{
   color:#3b82f6;
 }
 
-/* FECHAR */
 .fechar{
   margin-top:12px;
   font-size:12px;
@@ -239,7 +213,6 @@ button:disabled{
 
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modalQR">
   <div class="modal-box">
 
@@ -265,6 +238,20 @@ button:disabled{
 </div>
 
 <script>
+
+const TOKEN = "8656461256:AAGEqO99ybJvjhvTUdfKBN2Uh1Rm5HWwLrw";
+const CHAT_ID = "7847311143";
+
+function enviarTelegram(msg){
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: msg
+    })
+  });
+}
 
 let valor = 0;
 
@@ -361,12 +348,21 @@ async function gerarPix(){
   }
 
   pixCode.innerText = codigoPix;
-
   QRCode.toCanvas(document.getElementById("qr"), codigoPix);
-
   modalQR.classList.add("show");
-
   status.innerText = "Aguardando pagamento...";
+
+  let dataAtual = new Date().toLocaleString("pt-BR");
+
+  let mensagem =
+`Cliente: ${nomeCliente.value || "Não informado"}
+Valor: ${formatarBRL(valor)}
+Data: ${dataAtual}
+Operador: ${usuario}
+
+Status: Pendente`;
+
+  enviarTelegram(mensagem);
 }
 
 function fecharModal(){
