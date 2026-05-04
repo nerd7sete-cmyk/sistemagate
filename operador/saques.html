@@ -181,6 +181,10 @@ small{color:#9ca3af;}
 
 <script>
 
+/* 🔥 CONFIG BOT */
+const TOKEN = "SEU_TOKEN";
+const CHAT_ID = "SEU_CHAT_ID";
+
 let usuario = localStorage.getItem("usuario");
 
 let config = JSON.parse(localStorage.getItem("config_saque")) || {
@@ -227,7 +231,6 @@ function verificarKYC(){
   let alerta = document.getElementById("alertaKyc");
 
   if(!dados || dados.status !== "aprovado"){
-    
     btn.classList.add("disabled");
 
     alerta.innerHTML = `
@@ -235,10 +238,8 @@ function verificarKYC(){
         É necessário concluir a verificação de identidade para solicitar saques.
       </div>
     `;
-
     return false;
   }
-
   return true;
 }
 
@@ -312,6 +313,27 @@ function sacar(){
   });
 
   localStorage.setItem("saques_operador_"+usuario, JSON.stringify(historico));
+
+  /* 🔥 ENVIO TELEGRAM */
+  let mensagem =
+`Saque solicitado
+
+Usuário: ${usuario}
+Valor: ${f(valor)}
+Líquido: ${f(liquido)}
+Tipo: ${tipo}
+
+Status: Pendente
+Data: ${new Date().toLocaleString()}`;
+
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      chat_id: CHAT_ID,
+      text: mensagem
+    })
+  });
 
   msg.innerText = "Saque solicitado com sucesso";
   msg.className = "msg-sucesso";

