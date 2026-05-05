@@ -14,14 +14,12 @@
 
 html, body{
   height:100%;
-  touch-action: manipulation;
-  -webkit-text-size-adjust: 100%;
   overflow:hidden;
 }
 
 body{
   display:flex;
-  background:#000;
+  background:#000000;
   color:white;
   font-family:"Segoe UI", Arial;
 }
@@ -30,12 +28,13 @@ body{
 .sidebar{
   width:260px;
   height:100dvh;
-  background:#000;
+  background:linear-gradient(180deg,#000000,#000000,#020202,#030303);
   border-right:1px solid rgba(255,255,255,0.05);
   padding:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  backdrop-filter:blur(12px);
 }
 
 /* LOGO */
@@ -49,38 +48,76 @@ body{
 .logo img{
   width:36px;
   height:36px;
-  border-radius:8px;
+  border-radius:10px;
+  box-shadow:0 0 12px rgba(59,130,246,0.25);
 }
 
-/* TEXTO LOGO */
+/* LOGO TEXTO */
 .logo-text{
   font-weight:700;
   font-size:16px;
   letter-spacing:0.5px;
 }
 
-/* NEX */
 .logo-text .nex{
-  background:linear-gradient(180deg,#60a5fa,#2563eb,#1e40af);
+  background:linear-gradient(180deg,#3b82f6,#2563eb);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  text-shadow:0 0 12px rgba(59,130,246,0.25);
 }
 
-/* BANK */
 .logo-text .bank{
   margin-left:4px;
-  background:linear-gradient(180deg,#ffffff,#d1d5db,#9ca3af);
+  background:linear-gradient(180deg,#ffffff,#9ca3af);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  text-shadow:0 0 8px rgba(255,255,255,0.15);
 }
 
-/* USER */
+/* 🔥 PERFIL PREMIUM */
 .user{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.06);
-  padding:12px;
-  border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.08);
+  padding:14px;
+  border-radius:14px;
   margin-bottom:20px;
+  backdrop-filter:blur(12px);
+  position:relative;
+  overflow:hidden;
+}
+
+/* brilho suave */
+.user::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+  opacity:0.2;
+  pointer-events:none;
+}
+
+/* bolinha online */
+.user::after{
+  content:"";
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:8px;
+  height:8px;
+  background:#22c55e;
+  border-radius:50%;
+  box-shadow:0 0 6px #22c55e;
+}
+
+/* texto perfil */
+.user strong{
+  font-size:14px;
+  letter-spacing:0.5px;
+}
+
+.user small{
+  color:#9ca3af;
+  font-size:11px;
 }
 
 /* MENU */
@@ -92,23 +129,27 @@ body{
   border-radius:12px;
   margin-bottom:8px;
   cursor:pointer;
-  color:#aaa;
-  transition:0.2s;
+  color:#94a3b8;
+  transition:0.25s;
   border:1px solid transparent;
 }
 
-.menu-item:hover{
-  background:#0a0a0a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.05);
+.menu-item i{
+  color:#3b82f6;
 }
 
-/* 🔥 ATIVO SEM AZUL */
-.active{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.08);
+.menu-item:hover{
+  background:rgba(255,255,255,0.04);
   color:#fff;
-  box-shadow:none;
+  border:1px solid rgba(255,255,255,0.08);
+  transform:translateX(3px);
+}
+
+.active{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#fff;
+  box-shadow:0 0 8px rgba(255,255,255,0.05);
 }
 
 /* LOGOUT */
@@ -116,12 +157,18 @@ body{
   margin-top:20px;
   padding:12px;
   border-radius:12px;
-  background:#0a0a0a;
+  background:rgba(255,0,0,0.05);
   cursor:pointer;
   display:flex;
   gap:10px;
   border:1px solid rgba(255,0,0,0.2);
   color:#ff4d4d;
+  transition:0.2s;
+}
+
+.logout:hover{
+  background:rgba(255,0,0,0.1);
+  transform:translateX(3px);
 }
 
 /* MAIN */
@@ -136,19 +183,21 @@ iframe{
   flex:1;
   width:100%;
   border:none;
+  background:#000000;
 }
 
 /* MOBILE */
 .topbar{
   display:none;
   padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  background:#000000;
 }
 
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.9);
+  background:rgba(0,0,0,0.85);
   display:none;
   z-index:1000;
 }
@@ -180,7 +229,6 @@ iframe{
 
 <div>
 
-<!-- LOGO -->
 <div class="logo">
   <img src="https://i.ibb.co/mCty6z1F/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
   <span class="logo-text">
@@ -189,8 +237,6 @@ iframe{
 </div>
 
 <div class="user" id="userBox"></div>
-
-<!-- MENU -->
 
 <div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
   <i class="ri-home-5-line"></i> Dashboard
@@ -229,8 +275,8 @@ iframe{
 <div class="topbar">
   <i class="ri-menu-line" onclick="abrirMenu()"></i>
   <strong>
-    <span style="background:linear-gradient(180deg,#60a5fa,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NEX</span>
-    <span style="background:linear-gradient(180deg,#fff,#9ca3af);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BANK</span>
+    <span style="background:linear-gradient(180deg,#3b82f6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NEX</span>
+    <span style="background:linear-gradient(180deg,#fff,#6b7280);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BANK</span>
   </strong>
 </div>
 
