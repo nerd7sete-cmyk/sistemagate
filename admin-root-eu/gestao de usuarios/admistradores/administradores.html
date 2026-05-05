@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Administradores</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* HEADER */
+.header{
+  margin-bottom:18px;
+}
+
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:20px;
+  font-weight:600;
+}
+
+.title i{
+  color:#3b82f6;
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-top{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:11px;
+  cursor:pointer;
+}
+
+.btn-taxas{
+  background:#0b1220;
+  border:1px solid rgba(59,130,246,0.2);
+  color:#3b82f6;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+}
+
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  color:white;
+  margin-top:12px;
+}
+
+/* LISTA */
+.lista{
+  margin-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:14px;
+  padding:12px;
+  position:relative;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.card:hover{
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* SWITCH */
+.switch{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:18px;
+  border-radius:20px;
+  background:#111;
+}
+
+.switch::after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#fff;
+  border-radius:50%;
+  top:2px;
+  left:2px;
+  transition:.2s;
+}
+
+.switch.on{
+  background:#22c55e;
+}
+
+.switch.on::after{
+  left:18px;
+}
+
+.switch.off{
+  background:#ef4444;
+}
+
+/* TEXT */
+.nome{
+  font-size:14px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#6b7280;
+}
+
+/* BADGES */
+.badges{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.badge{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f0f0f;
+  color:#3b82f6;
+}
+
+/* FOOTER */
+.footer{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  font-size:11px;
+  color:#6b7280;
+}
+
+.empty{
+  text-align:center;
+  padding:20px;
+  font-size:12px;
+  color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="header-top">
+    <div class="title">
+      <i class="ri-shield-user-line"></i>
+      Administradores
+    </div>
+
+    <div class="actions">
+      <div class="btn-top btn-taxas" onclick="irTaxas()">
+        <i class="ri-percent-line"></i>
+        Taxas
+      </div>
+
+      <div class="btn-top btn-novo" onclick="irCriar()">
+        <i class="ri-user-add-line"></i>
+        Novo Admin
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<input id="busca" class="input" placeholder="Buscar administrador..." oninput="render()">
+
+<div id="lista" class="lista"></div>
+
+<script>
+
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+/* 🔥 TOGGLE */
+function toggleAdmin(i, e){
+  e.stopPropagation();
+  admins[i].ativo = !admins[i].ativo;
+  localStorage.setItem("admins", JSON.stringify(admins));
+  render();
+}
+
+/* 🔥 ABRIR ADMIN */
+function abrirAdmin(a){
+  localStorage.setItem("adminSelecionado", JSON.stringify(a));
+  window.location.href = "admin-detalhe.html";
+}
+
+/* RENDER */
+function render(){
+
+  let termo = busca.value.toLowerCase();
+  lista.innerHTML = "";
+
+  let filtrados = admins.filter(a =>
+    a.nome.toLowerCase().includes(termo) ||
+    a.email.toLowerCase().includes(termo)
+  );
+
+  if(filtrados.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum administrador encontrado</div>`;
+    return;
+  }
+
+  filtrados.forEach((a,i)=>{
+
+    lista.innerHTML += `
+    <div class="card" onclick='abrirAdmin(${JSON.stringify(a)})'>
+
+      <div class="switch ${a.ativo ? "on" : "off"}"
+        onclick="toggleAdmin(${i}, event)">
+      </div>
+
+      <div class="nome">${a.nome}</div>
+      <div class="email">${a.email}</div>
+
+      <div class="badges">
+        <div class="badge">${a.gateway}</div>
+        <div class="badge">${formatPlano(a.plano)}</div>
+      </div>
+
+      <div class="footer">
+        <div>Gerenciar</div>
+        <div><i class="ri-arrow-right-s-line"></i></div>
+      </div>
+
+    </div>`;
+  });
+
+}
+
+/* FORMATAR PLANO */
+function formatPlano(p){
+  let map = {
+    mensal:"Mensal",
+    "3m":"3 meses",
+    "6m":"6 meses",
+    anual:"Anual",
+    vitalicio:"Vitalício"
+  };
+  return map[p] || p;
+}
+
+/* NAV */
+function irCriar(){
+  window.location.href = "criar-administradores.html";
+}
+
+function irTaxas(){
+  window.location.href = "taxas-administradores.html";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

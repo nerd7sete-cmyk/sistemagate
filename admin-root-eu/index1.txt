@@ -5,7 +5,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Painel</title>
+<title>PrimePay</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -16,7 +16,6 @@ html, body{
   height:100%;
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
-  overflow:hidden;
 }
 
 body{
@@ -28,7 +27,7 @@ body{
 
 /* SIDEBAR */
 .sidebar{
-  width:260px;
+  width:250px;
   height:100dvh;
   background:#000;
   border-right:1px solid rgba(255,255,255,0.05);
@@ -36,45 +35,20 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  overflow-y:auto;
 }
 
-/* LOGO */
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#222;border-radius:10px;}
+
+.sidebar-content{flex:1;}
+
 .logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  font-size:16px;
+  font-weight:600;
   margin-bottom:25px;
 }
 
-.logo img{
-  width:36px;
-  height:36px;
-  border-radius:8px;
-}
-
-/* TEXTO LOGO */
-.logo-text{
-  font-weight:700;
-  font-size:16px;
-  letter-spacing:0.5px;
-}
-
-/* NEX */
-.logo-text .nex{
-  background:linear-gradient(180deg,#60a5fa,#2563eb,#1e40af);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* BANK */
-.logo-text .bank{
-  margin-left:4px;
-  background:linear-gradient(180deg,#ffffff,#d1d5db,#9ca3af);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* USER */
 .user{
   background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.06);
@@ -87,28 +61,72 @@ body{
 .menu-item{
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:13px;
+  justify-content:space-between;
+  padding:12px;
   border-radius:12px;
   margin-bottom:8px;
   cursor:pointer;
   color:#aaa;
   transition:0.2s;
-  border:1px solid transparent;
 }
 
 .menu-item:hover{
   background:#0a0a0a;
   color:#fff;
-  border:1px solid rgba(255,255,255,0.05);
 }
 
-/* 🔥 ATIVO SEM AZUL */
+.menu-left{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
 .active{
   background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.08);
   color:#fff;
-  box-shadow:none;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* 🔥 DESTAQUE SAQUES */
+.destaque-saques{
+  border:1px solid rgba(250,204,21,0.25);
+  color:#facc15;
+  background:linear-gradient(145deg,#0a0a0a,#1a1200);
+  box-shadow:0 0 10px rgba(250,204,21,0.15);
+}
+
+.destaque-saques:hover{
+  color:#fff;
+  box-shadow:0 0 15px rgba(250,204,21,0.4);
+}
+
+/* 🔥 SUPORTE PREMIUM */
+.suporte{
+  border:1px solid rgba(59,130,246,0.25);
+  background:linear-gradient(145deg,#0a0a0a,#020617);
+  color:#3b82f6;
+  box-shadow:0 0 15px rgba(59,130,246,0.15);
+}
+
+.suporte:hover{
+  color:#fff;
+  box-shadow:0 0 20px rgba(59,130,246,0.4);
+}
+
+/* SUBMENU */
+.submenu{
+  display:none;
+  padding-left:10px;
+  margin-bottom:10px;
+}
+
+.submenu .menu-item{
+  font-size:13px;
+  padding:10px;
+}
+
+.submenu.open{
+  display:block;
 }
 
 /* LOGOUT */
@@ -120,8 +138,6 @@ body{
   cursor:pointer;
   display:flex;
   gap:10px;
-  border:1px solid rgba(255,0,0,0.2);
-  color:#ff4d4d;
 }
 
 /* MAIN */
@@ -178,42 +194,78 @@ iframe{
 
 <div class="sidebar" id="sidebar">
 
-<div>
+<div class="sidebar-content">
 
-<!-- LOGO -->
-<div class="logo">
-  <img src="https://i.ibb.co/mCty6z1F/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
-  <span class="logo-text">
-    <span class="nex">NEX</span><span class="bank">BANK</span>
-  </span>
-</div>
+<div class="logo">PrimePay</div>
 
 <div class="user" id="userBox"></div>
 
-<!-- MENU -->
-
+<!-- DASHBOARD -->
 <div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
-  <i class="ri-home-5-line"></i> Dashboard
+  <div class="menu-left">
+    <i class="ri-home-5-line"></i> Dashboard
+  </div>
 </div>
 
-<div class="menu-item" onclick="abrir('gestao%20de%20usuarios/index.html', this)">
-  <i class="ri-team-line"></i> Gestão de usuários
+<!-- USUÁRIOS -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-team-line"></i> Usuários
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
 </div>
 
-<div class="menu-item" onclick="abrir('financeiro-root.html', this)">
-  <i class="ri-wallet-3-line"></i> Financeiro
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('criar-admins.html', this)">Administradores</div>
+  <div class="menu-item" onclick="abrir('gerentes.html', this)">Gerentes</div>
+  <div class="menu-item" onclick="abrir('operadores-admin.html', this)">Operadores</div>
+  <div class="menu-item" onclick="abrir('central-usuarios.html', this)">Central de Usuários</div>
 </div>
 
-<div class="menu-item" onclick="abrir('kyc-root.html', this)">
-  <i class="ri-shield-check-line"></i> Verificações KYC
+<!-- FINANCEIRO -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-wallet-3-line"></i> Financeiro
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
 </div>
 
-<div class="menu-item" onclick="abrir('configuracoes/index.html', this)">
-  <i class="ri-settings-3-line"></i> Configurações
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('transacoes-admin-root.html', this)">Transações</div>
+
+  <div class="menu-item destaque-saques" onclick="abrir('saques-admin.html', this)">
+    Saques
+  </div>
+
+  <div class="menu-item" onclick="abrir('definicoes-taxas.html', this)">Taxas</div>
 </div>
 
+<!-- SISTEMA -->
+<div class="menu-item" onclick="toggleMenu(this)">
+  <div class="menu-left">
+    <i class="ri-settings-3-line"></i> Sistema
+  </div>
+  <i class="ri-arrow-down-s-line"></i>
+</div>
+
+<div class="submenu">
+  <div class="menu-item" onclick="abrir('configuracoes-root.html', this)">Configurações</div>
+  <div class="menu-item" onclick="abrir('auditoria-root.html', this)">Auditoria</div>
+  <div class="menu-item" onclick="abrir('orquestracao-pagamentos.html', this)">Pagamentos</div>
+</div>
+
+<!-- COBRANÇA -->
 <div class="menu-item" onclick="abrir('pdv-root.html', this)">
-  <i class="ri-qr-code-line"></i> Cobrança PIX
+  <div class="menu-left">
+    <i class="ri-qr-code-line"></i> Cobrança PIX
+  </div>
+</div>
+
+<!-- SUPORTE -->
+<div class="menu-item suporte" onclick="abrir('suporte-root.html', this)">
+  <div class="menu-left">
+    <i class="ri-customer-service-2-line"></i> Suporte
+  </div>
 </div>
 
 </div>
@@ -228,10 +280,7 @@ iframe{
 
 <div class="topbar">
   <i class="ri-menu-line" onclick="abrirMenu()"></i>
-  <strong>
-    <span style="background:linear-gradient(180deg,#60a5fa,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NEX</span>
-    <span style="background:linear-gradient(180deg,#fff,#9ca3af);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BANK</span>
-  </strong>
+  <strong>PrimePay</strong>
 </div>
 
 <iframe id="frame" src="dashboardcompleto.html"></iframe>
@@ -250,7 +299,7 @@ if(!logado || tipo !== "root"){
 let usuario = localStorage.getItem("usuario") || "ROOT";
 
 userBox.innerHTML = `
-<strong>${usuario}</strong><br>
+<strong>${usuario}</strong>
 <small>ROOT</small>
 `;
 
@@ -262,6 +311,11 @@ function abrir(pagina, el){
 
   el.classList.add("active");
   fecharMenu();
+}
+
+function toggleMenu(el){
+  let submenu = el.nextElementSibling;
+  submenu.classList.toggle("open");
 }
 
 function abrirMenu(){

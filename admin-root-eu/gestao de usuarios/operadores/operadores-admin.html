@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Operadores do Root</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* HEADER */
+.header{margin-bottom:20px;}
+
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:20px;
+  font-weight:600;
+}
+
+.title i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:11px;
+  cursor:pointer;
+}
+
+.btn-taxas{
+  background:#0b1220;
+  border:1px solid rgba(59,130,246,0.2);
+  color:#3b82f6;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+}
+
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  color:white;
+  margin:12px 0;
+}
+
+/* LISTA */
+.lista{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.03);
+  border-radius:14px;
+  padding:12px;
+  position:relative;
+  cursor:pointer;
+}
+
+.card:hover{
+  background:#0a0a0a;
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* SWITCH */
+.switch{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:18px;
+  border-radius:20px;
+  background:#111;
+}
+
+.switch::after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#fff;
+  border-radius:50%;
+  top:2px;
+  left:2px;
+  transition:.2s;
+}
+
+.switch.on{
+  background:#22c55e;
+}
+.switch.on::after{
+  left:18px;
+}
+
+.switch.off{
+  background:#ef4444;
+}
+
+/* TEXTO */
+.nome{
+  font-size:14px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#6b7280;
+}
+
+.badges{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.badge{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f0f0f;
+}
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  font-size:11px;
+  color:#6b7280;
+}
+
+.empty{
+  text-align:center;
+  padding:20px;
+  color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="header-top">
+    <div class="title">
+      <i class="ri-team-line"></i>
+      Operadores do Root
+    </div>
+
+    <div class="actions">
+
+      <div class="btn btn-taxas" onclick="irTaxas()">
+        <i class="ri-settings-3-line"></i>
+        Taxas
+      </div>
+
+      <div class="btn btn-novo" onclick="irCriar()">
+        <i class="ri-user-add-line"></i>
+        Novo operador
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sub">
+    Gerencie todos os operadores da sua estrutura
+  </div>
+
+</div>
+
+<input id="busca" class="input" placeholder="Buscar operador..." oninput="render()">
+
+<div id="lista" class="lista"></div>
+
+<script>
+
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+
+function getGerenteNome(email){
+  let g = gerentes.find(g=>g.email === email);
+  return g ? g.nome : "Root";
+}
+
+function toggle(i,e){
+  e.stopPropagation();
+  operadores[i].ativo = !operadores[i].ativo;
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+  render();
+}
+
+function render(){
+
+  let termo = busca.value.toLowerCase();
+  lista.innerHTML = "";
+
+  let filtrados = operadores.filter(o =>
+    o.nome.toLowerCase().includes(termo) ||
+    o.email.toLowerCase().includes(termo)
+  );
+
+  if(filtrados.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum operador encontrado</div>`;
+    return;
+  }
+
+  filtrados.forEach((o,i)=>{
+
+    lista.innerHTML += `
+    <div class="card">
+
+      <div class="switch ${o.ativo ? "on" : "off"}"
+        onclick="toggle(${i},event)">
+      </div>
+
+      <div class="nome">${o.nome}</div>
+      <div class="email">${o.email}</div>
+
+      <div class="badges">
+        <div class="badge">${getGerenteNome(o.gerente)}</div>
+        <div class="badge">${o.taxa ?? "Global"}%</div>
+      </div>
+
+      <div class="footer">
+        <div>Gerenciar</div>
+        <div><i class="ri-arrow-right-s-line"></i></div>
+      </div>
+
+    </div>`;
+  });
+
+}
+
+function irCriar(){
+  window.location.href = "criar-operadores.html";
+}
+
+function irTaxas(){
+  window.location.href = "taxas-operadores.html";
+}
+
+render();
+
+</script>
+
+</body>
+</html>

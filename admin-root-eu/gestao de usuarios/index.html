@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Gestão de Usuários</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+html, body{
+  height:100%;
+  min-height:100dvh;
+  background:#050505;
+}
+
+body{
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{
+  max-width:520px;
+  margin:auto;
+  width:100%;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:22px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 12px rgba(59,130,246,0.25);
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:16px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.card:active{
+  transform:scale(0.98);
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(59,130,246,0.3);
+}
+
+.card i{
+  font-size:18px;
+  color:#3b82f6;
+  margin-bottom:8px;
+}
+
+.card-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.card-desc{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
+/* FOOTER */
+.footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:11px;
+  color:#444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="icon">
+        <i class="ri-team-line"></i>
+      </div>
+      <div>
+        <div class="title">Gestão de Usuários</div>
+        <div class="sub">Admins, gerentes e operadores</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <!-- ADMIN -->
+    <div class="card" onclick="go('admistradores/administradores.html')">
+      <i class="ri-shield-user-line"></i>
+      <div class="card-title">Administradores</div>
+      <div class="card-desc">Criar • Gerenciar • Taxas</div>
+    </div>
+
+    <!-- GERENTES -->
+    <div class="card" onclick="go('gerentes/gerentes.html')">
+      <i class="ri-user-star-line"></i>
+      <div class="card-title">Gerentes</div>
+      <div class="card-desc">Equipes • Controle • Gestão</div>
+    </div>
+
+    <!-- OPERADORES -->
+    <div class="card" onclick="go('operadores/operadores-admin.html')">
+      <i class="ri-user-settings-line"></i>
+      <div class="card-title">Operadores</div>
+      <div class="card-desc">Execução • Taxas • Operação</div>
+    </div>
+
+    <!-- CENTRAL -->
+    <div class="card" onclick="go('central usuarios/central-usuarios.html')">
+      <i class="ri-search-eye-line"></i>
+      <div class="card-title">Busca Global</div>
+      <div class="card-desc">Localizar usuários no sistema</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Painel ROOT • Gestão de usuários
+  </div>
+
+</div>
+
+<script>
+function go(page){
+  window.location.href = page;
+}
+</script>
+
+</body>
+</html>

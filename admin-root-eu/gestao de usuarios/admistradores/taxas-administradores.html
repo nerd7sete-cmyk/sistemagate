@@ -1,0 +1,354 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Taxas de Administradores</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{
+  width:100%;
+  max-width:520px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:18px;
+  font-weight:600;
+}
+
+.title i{
+  color:#3b82f6;
+}
+
+.back{
+  color:#3b82f6;
+  font-size:13px;
+  cursor:pointer;
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+}
+
+/* TITLES */
+.title-card{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+.label{
+  font-size:12px;
+  color:#6b7280;
+  margin-bottom:6px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  color:white;
+}
+
+.input:focus{
+  border:1px solid #3b82f6;
+}
+
+/* BTN */
+.btn{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.primary{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+}
+
+.secondary{
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* LISTA */
+.lista{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.item{
+  padding:12px;
+  border-radius:12px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.item:hover{
+  border:1px solid rgba(59,130,246,0.3);
+}
+
+.item.active{
+  border:1px solid #3b82f6;
+  background:#0b1220;
+}
+
+.nome{
+  font-size:13px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#6b7280;
+}
+
+.badge{
+  margin-top:4px;
+  font-size:10px;
+  color:#3b82f6;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:16px;
+  right:16px;
+  background:#0f0f0f;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title">
+      <i class="ri-percent-line"></i>
+      Taxas dos Administradores
+    </div>
+
+    <div class="back" onclick="voltar()">Voltar</div>
+  </div>
+
+  <!-- GLOBAL -->
+  <div class="card">
+    <div class="title-card">Taxa Global</div>
+
+    <div class="label">Taxa padrão aplicada a todos os admins</div>
+    <input id="taxaGlobal" class="input" placeholder="Ex: 10">
+
+    <div class="btn primary" onclick="salvarGlobal()">Salvar taxa global</div>
+
+    <div style="margin-top:8px;font-size:11px;color:#6b7280;">
+      Atual: <span id="atualGlobal"></span>
+    </div>
+  </div>
+
+  <!-- INDIVIDUAL -->
+  <div class="card">
+    <div class="title-card">Ajuste Individual</div>
+
+    <input id="busca" class="input" placeholder="Buscar administrador..." oninput="buscar()">
+
+    <div id="lista" class="lista"></div>
+
+    <div class="label">Nova taxa (%)</div>
+    <input id="novaTaxa" class="input" placeholder="Ex: 15">
+
+    <div class="btn primary" onclick="salvar()">Aplicar taxa</div>
+
+    <div class="btn secondary" onclick="remover()">Usar taxa global</div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+let admins = JSON.parse(localStorage.getItem("admins")) || [];
+let selecionado = null;
+
+/* CONFIG GLOBAL */
+function getConfig(){
+  return JSON.parse(localStorage.getItem("taxa_admin_global")) || { taxa: 10 };
+}
+
+function salvarConfig(valor){
+  localStorage.setItem("taxa_admin_global", JSON.stringify({ taxa: valor }));
+}
+
+function atualizarUI(){
+  let cfg = getConfig();
+  taxaGlobal.value = cfg.taxa;
+  atualGlobal.innerText = cfg.taxa + "%";
+}
+
+function salvarGlobal(){
+  let v = parseFloat(taxaGlobal.value) || 0;
+  salvarConfig(v);
+  atualizarUI();
+  toast("Taxa global atualizada");
+}
+
+/* BUSCA */
+function buscar(){
+
+  let termo = busca.value.toLowerCase();
+  let cfg = getConfig();
+
+  lista.innerHTML = "";
+
+  let filtrados = admins.filter(a =>
+    a.nome.toLowerCase().includes(termo) ||
+    a.email.toLowerCase().includes(termo)
+  );
+
+  filtrados.forEach(a=>{
+
+    let taxa = a.taxa ?? cfg.taxa;
+
+    let div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <div class="nome">${a.nome}</div>
+      <div class="email">${a.email}</div>
+      <div class="badge">${taxa}%</div>
+    `;
+
+    div.onclick = ()=>{
+      document.querySelectorAll(".item").forEach(i=>i.classList.remove("active"));
+      div.classList.add("active");
+
+      selecionado = a;
+      novaTaxa.value = taxa;
+    };
+
+    lista.appendChild(div);
+  });
+
+}
+
+/* SALVAR */
+function salvar(){
+
+  if(!selecionado){
+    toast("Selecione um administrador");
+    return;
+  }
+
+  let v = parseFloat(novaTaxa.value);
+
+  if(isNaN(v)){
+    toast("Taxa inválida");
+    return;
+  }
+
+  selecionado.taxa = v;
+
+  localStorage.setItem("admins", JSON.stringify(admins));
+
+  toast("Taxa aplicada");
+  buscar();
+}
+
+/* REMOVER */
+function remover(){
+
+  if(!selecionado){
+    toast("Selecione um administrador");
+    return;
+  }
+
+  delete selecionado.taxa;
+
+  localStorage.setItem("admins", JSON.stringify(admins));
+
+  toast("Voltou para taxa global");
+  buscar();
+}
+
+/* TOAST */
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  },2000);
+}
+
+/* NAV */
+function voltar(){
+  window.history.back();
+}
+
+atualizarUI();
+
+</script>
+
+</body>
+</html>

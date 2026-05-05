@@ -2,335 +2,205 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ROOT - Vendas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Financeiro</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-body{
-  background:#0a0a0a;
-  color:white;
-  padding:15px;
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
 }
 
-/* HEADER */
-.top{
+body{
+  background:#050505;
+  color:white;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+
+  overflow-x:hidden;
+}
+
+.container{
+  max-width:520px;
+  margin:auto;
+}
+
+.header{margin-bottom:22px;}
+
+.header-top{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  margin-bottom:15px;
+  gap:10px;
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .title{
   font-size:18px;
-  color:#3b82f6;
+  font-weight:600;
 }
 
-/* TOGGLE */
-.toggle{
-  padding:6px 10px;
-  border-radius:10px;
-  font-size:11px;
-  cursor:pointer;
-  border:1px solid #333;
-}
-
-.manual{color:#facc15;border-color:#facc15;}
-.auto{color:#22c55e;border-color:#22c55e;}
-
-/* STATS */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.stat{
-  background:#0f0f0f;
-  padding:12px;
-  border-radius:12px;
-}
-
-.stat small{color:#888;font-size:10px;}
-.stat strong{display:block;margin-top:4px;font-size:14px;}
-
-/* SEARCH */
-.search input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  background:#111;
-  color:white;
-  margin-bottom:10px;
-}
-
-/* FILTER */
-.filters{display:flex;gap:8px;margin-bottom:10px;}
-
-.filter{
-  padding:6px 10px;
-  font-size:11px;
-  background:#111;
-  border-radius:8px;
-  cursor:pointer;
-  color:#888;
-}
-
-.filter.active{
-  color:white;
-  border:1px solid #3b82f6;
-}
-
-/* CARD */
-.card{
-  background:#0f0f0f;
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:10px;
-  border:1px solid rgba(255,255,255,0.04);
-}
-
-/* ROW */
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-/* LINHA 2 */
-.row2{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:6px;
-}
-
-.valor{font-weight:600;font-size:14px;}
-.small{font-size:10px;color:#9ca3af;}
-
-/* STATUS */
-.status{
-  font-size:10px;
-  padding:3px 7px;
-  border-radius:6px;
-}
-
-.pendente{background:#facc15;color:black;}
-.aprovado{background:#22c55e;color:black;}
-.cancelado{background:#ef4444;color:white;}
-
-/* MENU */
-.menu-btn{
-  cursor:pointer;
-  font-size:16px;
-  color:#888;
-}
-
-.menu-box{
-  position:absolute;
-  right:20px;
-  background:#111;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.08);
-  display:none;
-  flex-direction:column;
-  min-width:150px;
-  z-index:999;
-}
-
-.menu-box button{
-  background:none;
-  border:none;
-  color:white;
-  text-align:left;
-  padding:10px;
+.sub{
   font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.card{
+  position:relative;
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:16px;
   cursor:pointer;
-  display:flex;
-  gap:6px;
+  transition:.2s;
 }
 
-.menu-box button:hover{
-  background:#1a1a1a;
+.card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,0.12);
 }
 
+.card i{
+  font-size:18px;
+  color:#3b82f6;
+  margin-bottom:8px;
+}
+
+.card-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.card-desc{
+  font-size:11px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+.badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#ef4444;
+  color:#fff;
+  font-size:10px;
+  padding:4px 7px;
+  border-radius:999px;
+  font-weight:600;
+  display:none;
+}
+
+.footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:11px;
+  color:#444;
+}
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div class="title">Vendas</div>
-  <div id="modo" class="toggle"></div>
+<div class="container">
+
+<div class="header">
+  <div class="header-top">
+    <div class="icon">
+      <i class="ri-wallet-3-line"></i>
+    </div>
+    <div>
+      <div class="title">Financeiro</div>
+      <div class="sub">Controle de transações e saques</div>
+    </div>
+  </div>
 </div>
 
-<div class="stats">
-  <div class="stat"><small>Total</small><strong id="total">R$0</strong></div>
-  <div class="stat"><small>Aprovado</small><strong id="aprovado">R$0</strong></div>
-  <div class="stat"><small>Pendente</small><strong id="pendente">R$0</strong></div>
+<div class="grid">
+
+  <div class="card" onclick="go('transacoes-admin-root.html')">
+    <i class="ri-exchange-dollar-line"></i>
+    <div class="card-title">Transações</div>
+    <div class="card-desc">Entradas e histórico</div>
+  </div>
+
+  <div class="card" onclick="go('saques-admin.html')">
+
+    <div class="badge" id="badgeSaques">0</div>
+
+    <i class="ri-bank-card-line"></i>
+    <div class="card-title">Saques</div>
+    <div class="card-desc">Solicitações e controle</div>
+  </div>
+
 </div>
 
-<div class="search">
-  <input id="busca" placeholder="Buscar cliente...">
+<div class="footer">
+  Painel ROOT • Financeiro
 </div>
 
-<div class="filters">
-  <div class="filter active" data-filtro="todos">Todos</div>
-  <div class="filter" data-filtro="aprovado">Aprovado</div>
-  <div class="filter" data-filtro="pendente">Pendente</div>
 </div>
-
-<div id="lista"></div>
 
 <script>
 
-let filtro="todos";
+/* 🔥 BUSCA SAQUES REAIS DO SISTEMA */
+function getSaquesPendentes(){
+  let saques = JSON.parse(localStorage.getItem("saques")) || [];
 
-/* MODO */
-function getModo(){
-  return localStorage.getItem("modo_aprovacao") || "manual";
+  // conta só pendentes
+  return saques.filter(s => s.status === "pendente").length;
 }
 
-function toggleModo(){
-  let novo = getModo()==="manual" ? "auto" : "manual";
-  localStorage.setItem("modo_aprovacao",novo);
-  renderModo();
-}
+/* 🔥 ATUALIZA BADGE */
+function atualizarSaques(){
+  let badge = document.getElementById("badgeSaques");
+  let total = getSaquesPendentes();
 
-function renderModo(){
-  let m = document.getElementById("modo");
-  let modo = getModo();
-
-  m.innerText = modo==="manual" ? "Manual" : "Automático";
-  m.className = "toggle " + (modo==="manual" ? "manual" : "auto");
-}
-
-document.getElementById("modo").onclick = toggleModo;
-
-/* FORMAT */
-function f(v){
-  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-}
-
-/* GET */
-function getVendas(){
-  let tudo=[];
-  for(let i=0;i<localStorage.length;i++){
-    let key=localStorage.key(i);
-    if(key.includes("pix")||key.includes("transacoes")){
-      let lista=JSON.parse(localStorage.getItem(key))||[];
-      if(Array.isArray(lista)){
-        lista.forEach((item,index)=>{
-          item._origem=key;
-          item._index=index;
-          tudo.push(item);
-        });
-      }
-    }
+  if(total > 0){
+    badge.style.display = "block";
+    badge.innerText = total;
+  }else{
+    badge.style.display = "none";
   }
-  return tudo;
 }
 
-/* UPDATE */
-function atualizar(origem,index,status){
-  let lista=JSON.parse(localStorage.getItem(origem))||[];
-  if(lista[index]) lista[index].status=status;
-  localStorage.setItem(origem,JSON.stringify(lista));
-  render();
+/* 🔥 NAVEGAÇÃO SEM BUG */
+function go(page){
+  if(window.parent && window.parent.document.getElementById("frame")){
+    window.parent.document.getElementById("frame").src = page;
+  }else{
+    window.location.href = page;
+  }
 }
 
-/* RENDER */
-function render(){
+/* 🔥 ATUALIZA AUTOMÁTICO */
+setInterval(atualizarSaques, 2000);
 
-  renderModo();
-
-  let lista=getVendas();
-  let busca=document.getElementById("busca").value.toLowerCase();
-
-  let total=0, aprovado=0, pendente=0;
-  let html="";
-
-  lista.forEach((item,i)=>{
-
-    let status=item.status||"pendente";
-
-    if(busca && !(item.cliente||"").toLowerCase().includes(busca)) return;
-    if(filtro!=="todos" && status!==filtro) return;
-
-    total+=Number(item.valor||0);
-    if(status==="aprovado") aprovado+=Number(item.valor||0);
-    if(status==="pendente") pendente+=Number(item.valor||0);
-
-    html+=`
-    <div class="card">
-
-      <div class="row">
-        <div class="valor">${f(item.valor)}</div>
-        <div class="status ${status}">${status}</div>
-      </div>
-
-      <div class="row2">
-        <div class="small">${item.cliente||"-"}</div>
-
-        <div class="menu-btn" onclick="abrirMenu(event,'menu_${i}')">
-          <i class="ri-more-2-fill"></i>
-        </div>
-
-        <div class="menu-box" id="menu_${i}">
-          <button onclick="atualizar('${item._origem}',${item._index},'aprovado')">
-            <i class="ri-check-line"></i> Aprovar
-          </button>
-          <button onclick="atualizar('${item._origem}',${item._index},'pendente')">
-            <i class="ri-time-line"></i> Pendente
-          </button>
-          <button onclick="atualizar('${item._origem}',${item._index},'cancelado')">
-            <i class="ri-close-line"></i> Cancelar
-          </button>
-        </div>
-
-      </div>
-
-    </div>`;
-  });
-
-  document.getElementById("lista").innerHTML=html;
-
-  document.getElementById("total").innerText=f(total);
-  document.getElementById("aprovado").innerText=f(aprovado);
-  document.getElementById("pendente").innerText=f(pendente);
-}
-
-/* MENU */
-function abrirMenu(e,id){
-  e.stopPropagation();
-  document.querySelectorAll(".menu-box").forEach(m=>m.style.display="none");
-  document.getElementById(id).style.display="flex";
-}
-
-document.addEventListener("click",()=>{
-  document.querySelectorAll(".menu-box").forEach(m=>m.style.display="none");
-});
-
-/* FILTRO */
-document.querySelectorAll(".filter").forEach(f=>{
-  f.onclick=()=>{
-    filtro=f.dataset.filtro;
-    document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
-    f.classList.add("active");
-    render();
-  };
-});
-
-/* BUSCA */
-document.getElementById("busca").addEventListener("input",render);
-
-render();
+atualizarSaques();
 
 </script>
 

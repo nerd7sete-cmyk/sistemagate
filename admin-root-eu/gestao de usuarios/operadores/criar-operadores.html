@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Operador do Root</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{
+  width:100%;
+  max-width:520px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:18px;
+  font-weight:600;
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.back{
+  color:#3b82f6;
+  cursor:pointer;
+  font-size:13px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:20px;
+}
+
+/* INPUT */
+.field{margin-top:14px;}
+
+.label{
+  font-size:12px;
+  color:#6b7280;
+  margin-bottom:6px;
+}
+
+.input-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#070707;
+  border:1px solid #111;
+  border-radius:14px;
+  padding:12px;
+}
+
+.input-wrap:focus-within{
+  border:1px solid #3b82f6;
+}
+
+.input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:white;
+}
+
+/* SELECT */
+.select{
+  width:100%;
+  padding:13px;
+  border-radius:14px;
+  border:1px solid #111;
+  background:#070707;
+  color:white;
+  margin-top:6px;
+}
+
+/* DISABLED */
+.disabled{
+  opacity:0.4;
+  pointer-events:none;
+}
+
+/* SWITCH */
+.switch{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+}
+
+.toggle{
+  width:44px;
+  height:24px;
+  border-radius:20px;
+  background:#111;
+  position:relative;
+  cursor:pointer;
+}
+
+.toggle::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:#fff;
+  border-radius:50%;
+  top:3px;
+  left:3px;
+  transition:.2s;
+}
+
+.toggle.active{
+  background:#3b82f6;
+}
+
+.toggle.active::after{
+  left:23px;
+}
+
+/* BTN */
+.btn{
+  margin-top:20px;
+  padding:15px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:30px;
+  right:16px;
+  left:16px;
+  background:#0f0f0f;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title">
+      <div class="icon">
+        <i class="ri-user-3-line"></i>
+      </div>
+      Operador do Root
+    </div>
+
+    <div class="back" onclick="voltar()">Voltar</div>
+  </div>
+
+  <div class="card">
+
+    <!-- NOME -->
+    <div class="field">
+      <div class="label">Nome</div>
+      <div class="input-wrap">
+        <i class="ri-user-line"></i>
+        <input id="nome" class="input" placeholder="Ex: João Silva">
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="field">
+      <div class="label">Email</div>
+      <div class="input-wrap">
+        <i class="ri-mail-line"></i>
+        <input id="email" class="input" placeholder="exemplo@email.com">
+      </div>
+    </div>
+
+    <!-- SENHA -->
+    <div class="field">
+      <div class="label">Senha</div>
+      <div class="input-wrap">
+        <i class="ri-lock-line"></i>
+        <input id="senha" type="password" class="input" placeholder="Crie uma senha segura">
+      </div>
+    </div>
+
+    <!-- ROOT TOGGLE -->
+    <div class="switch">
+      <span style="font-size:12px;color:#9ca3af;">
+        Vincular direto ao Root
+      </span>
+      <div id="toggleRoot" class="toggle" onclick="toggleRootMode()"></div>
+    </div>
+
+    <!-- GERENTE -->
+    <div class="field">
+      <div class="label">Gerente</div>
+      <select id="gerente" class="select">
+        <option value="">Selecionar gerente responsável</option>
+      </select>
+    </div>
+
+    <!-- TAXA -->
+    <div class="field">
+      <div class="label">Taxa (%)</div>
+      <div class="input-wrap">
+        <i class="ri-percent-line"></i>
+        <input id="taxa" class="input" placeholder="Opcional (ex: 20%)">
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="switch">
+      <span style="font-size:12px;color:#9ca3af;">Conta ativa</span>
+      <div id="toggle" class="toggle active" onclick="toggleStatus()"></div>
+    </div>
+
+    <div class="btn" onclick="criarOperador()">Criar operador</div>
+
+  </div>
+
+</div>
+
+<div id="toast" class="toast">
+  <div>Operador criado com sucesso</div>
+</div>
+
+<script>
+
+let ativo = true;
+let rootDireto = false;
+
+function toggleStatus(){
+  ativo = !ativo;
+  toggle.classList.toggle("active");
+}
+
+function toggleRootMode(){
+  rootDireto = !rootDireto;
+
+  toggleRoot.classList.toggle("active");
+
+  if(rootDireto){
+    gerente.classList.add("disabled");
+    gerente.value = "";
+  }else{
+    gerente.classList.remove("disabled");
+  }
+}
+
+function carregarGerentes(){
+  let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+  gerente.innerHTML = `<option value="">Selecionar gerente responsável</option>`;
+
+  gerentes.forEach(g=>{
+    gerente.innerHTML += `<option value="${g.email}">${g.nome}</option>`;
+  });
+}
+
+function toast(){
+  let t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+function criarOperador(){
+
+  let nome = nomeEl.value.trim();
+  let email = emailEl.value.trim();
+  let senha = senhaEl.value.trim();
+  let gerenteVal = gerente.value;
+  let taxa = parseFloat(taxaEl.value);
+
+  if(!nome || !email || !senha){
+    alert("Preencha os campos obrigatórios");
+    return;
+  }
+
+  if(!rootDireto && !gerenteVal){
+    alert("Selecione um gerente ou ative Root");
+    return;
+  }
+
+  let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+
+  operadores.unshift({
+    nome,
+    email,
+    senha,
+    gerente: rootDireto ? null : gerenteVal,
+    taxa: isNaN(taxa) ? null : taxa,
+    ativo
+  });
+
+  localStorage.setItem("operadores", JSON.stringify(operadores));
+
+  toast();
+
+  setTimeout(()=>{
+    window.location.href = "operadores.html";
+  },1000);
+}
+
+let nomeEl = document.getElementById("nome");
+let emailEl = document.getElementById("email");
+let senhaEl = document.getElementById("senha");
+let gerente = document.getElementById("gerente");
+let taxaEl = document.getElementById("taxa");
+let toggle = document.getElementById("toggle");
+let toggleRoot = document.getElementById("toggleRoot");
+
+function voltar(){
+  window.history.back();
+}
+
+carregarGerentes();
+
+</script>
+
+</body>
+</html>

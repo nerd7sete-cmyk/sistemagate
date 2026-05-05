@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔥 IMPORTANTE -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Configurações do Sistema</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+/* 🔥 FIX iPHONE */
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+/* 🔥 FUNDO GARANTIDO */
+body{
+  background:#050505;
+  color:white;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+
+  /* 🔥 evita tela branca */
+  overflow-x:hidden;
+}
+
+.container{
+  max-width:520px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:22px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 12px rgba(59,130,246,0.25);
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:16px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(59,130,246,0.3);
+}
+
+.card i{
+  font-size:18px;
+  color:#3b82f6;
+  margin-bottom:8px;
+}
+
+.card-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.card-desc{
+  font-size:11px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* FOOTER */
+.footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:11px;
+  color:#444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="icon">
+        <i class="ri-settings-3-line"></i>
+      </div>
+      <div>
+        <div class="title">Configurações</div>
+        <div class="sub">Controle geral do sistema</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card" onclick="go('financeiro.html')">
+      <i class="ri-money-dollar-circle-line"></i>
+      <div class="card-title">Financeiro</div>
+      <div class="card-desc">Lucro e monetização</div>
+    </div>
+
+    <div class="card" onclick="go('config-limites.html')">
+      <i class="ri-ticket-2-line"></i>
+      <div class="card-title">Tickets & Saques</div>
+      <div class="card-desc">Valores e regras</div>
+    </div>
+
+    <div class="card" onclick="go('orquestracao.html')">
+      <i class="ri-exchange-funds-line"></i>
+      <div class="card-title">Pagamentos</div>
+      <div class="card-desc">Gateways e fluxo</div>
+    </div>
+
+    <div class="card" onclick="go('logs.html')">
+      <i class="ri-file-list-3-line"></i>
+      <div class="card-title">Auditoria</div>
+      <div class="card-desc">Logs e rastreamento</div>
+    </div>
+
+    <div class="card" onclick="go('config-root.html')">
+      <i class="ri-global-line"></i>
+      <div class="card-title">Sistema</div>
+      <div class="card-desc">Configuração geral</div>
+    </div>
+
+    <div class="card" onclick="go('alertas.html')">
+      <i class="ri-notification-3-line"></i>
+      <div class="card-title">Alertas</div>
+      <div class="card-desc">Monitoramento</div>
+    </div>
+
+    <div class="card" onclick="go('permissoes.html')">
+      <i class="ri-shield-user-line"></i>
+      <div class="card-title">Permissões</div>
+      <div class="card-desc">Controle de acesso</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Painel ROOT • Sistema profissional
+  </div>
+
+</div>
+
+<script>
+function go(page){
+  window.location.href = page;
+}
+</script>
+
+</body>
+</html>

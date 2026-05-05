@@ -29,10 +29,8 @@ body{
   margin:auto;
 }
 
-/* 🔥 HEADER PADRÃO */
-.header{
-  margin-bottom:22px;
-}
+/* HEADER */
+.header{margin-bottom:22px;}
 
 .header-top{
   display:flex;
@@ -49,10 +47,6 @@ body{
   align-items:center;
   justify-content:center;
   box-shadow:0 0 15px rgba(59,130,246,0.3);
-}
-
-.header-icon i{
-  font-size:18px;
 }
 
 .header-text .title{
@@ -142,7 +136,7 @@ body{
   margin-top:12px;
 }
 
-/* BOTÕES */
+/* BOTÕES BASE */
 .btn{
   flex:1;
   padding:10px;
@@ -157,36 +151,45 @@ body{
   gap:6px;
 }
 
-/* VER */
+/* 👁 VER */
 .btn-view{
-  background:#050505;
+  background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.08);
-  color:#ccc;
+  color:#aaa;
 }
 
 .btn-view:hover{
   border-color:#3b82f6;
   color:#fff;
+  box-shadow:0 0 10px rgba(59,130,246,0.15);
 }
 
-/* APROVAR */
+/* ✅ APROVAR (premium suave) */
 .btn-aprovar{
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:white;
+  background:rgba(34,197,94,0.10);
+  border:1px solid rgba(34,197,94,0.25);
+  color:#22c55e;
 }
 
 .btn-aprovar:hover{
-  box-shadow:0 0 14px rgba(34,197,94,0.3);
+  background:rgba(34,197,94,0.18);
+  border-color:#22c55e;
+  color:#4ade80;
+  box-shadow:0 0 12px rgba(34,197,94,0.2);
 }
 
-/* REPROVAR */
+/* ❌ REPROVAR (elegante) */
 .btn-reprovar{
-  background:linear-gradient(135deg,#ef4444,#dc2626);
-  color:white;
+  background:rgba(239,68,68,0.10);
+  border:1px solid rgba(239,68,68,0.25);
+  color:#ef4444;
 }
 
 .btn-reprovar:hover{
-  box-shadow:0 0 14px rgba(239,68,68,0.3);
+  background:rgba(239,68,68,0.18);
+  border-color:#ef4444;
+  color:#f87171;
+  box-shadow:0 0 12px rgba(239,68,68,0.2);
 }
 
 /* MODAL */
@@ -234,35 +237,33 @@ body{
 
 <div class="container">
 
-  <!-- 🔥 HEADER -->
-  <div class="header">
-    <div class="header-top">
-      <div class="header-icon">
-        <i class="ri-shield-check-line"></i>
-      </div>
-
-      <div class="header-text">
-        <div class="title">Verificação KYC</div>
-        <div class="subtitle">Análise e validação de identidade dos usuários</div>
-      </div>
+<div class="header">
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-shield-check-line"></i>
     </div>
 
-    <div class="stats">
-      <div class="stat" id="pendentes">
-        <i class="ri-time-line"></i> Pendentes: 0
-      </div>
-
-      <div class="stat aprovados" id="aprovados" onclick="abrirAprovados()">
-        <i class="ri-check-double-line"></i> Aprovados: 0 →
-      </div>
+    <div class="header-text">
+      <div class="title">Verificação KYC</div>
+      <div class="subtitle">Análise e validação de identidade dos usuários</div>
     </div>
   </div>
 
-  <div id="lista"></div>
+  <div class="stats">
+    <div class="stat" id="pendentes">
+      <i class="ri-time-line"></i> Pendentes: 0
+    </div>
+
+    <div class="stat aprovados" id="aprovados" onclick="abrirAprovados()">
+      <i class="ri-check-double-line"></i> Aprovados: 0 →
+    </div>
+  </div>
+</div>
+
+<div id="lista"></div>
 
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <div class="close" onclick="fecharModal()">✕ Fechar</div>
@@ -277,7 +278,6 @@ function abrirAprovados(){
 }
 
 function carregar(){
-
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
@@ -307,18 +307,15 @@ function carregar(){
   }
 
   dadosLista.forEach(dados=>{
-
     let email = dados.key.replace("kyc_","");
 
     lista.innerHTML += `
       <div class="card">
-
         <div class="user">
           <div>
             <div class="name">${dados.nome || "Sem nome"}</div>
             <div class="email">${email}</div>
           </div>
-
           <div class="status">Em análise</div>
         </div>
 
@@ -335,7 +332,6 @@ function carregar(){
             <i class="ri-close-line"></i> Reprovar
           </button>
         </div>
-
       </div>
     `;
   });

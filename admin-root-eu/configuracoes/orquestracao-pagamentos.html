@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Roteamento de Pagamentos</title>
+
+<script src="/auth.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  background:#050505;
+}
+
+body{
+  color:#fff;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* 🔥 HEADER PADRÃO */
+.header{
+  margin-bottom:22px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+.header-icon i{
+  font-size:18px;
+}
+
+.header-text h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.header-text span{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:16px;
+  transition:.2s;
+}
+
+.card:hover{
+  border-color:#3b82f6;
+}
+
+/* TITULO */
+.title{
+  font-size:13px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.desc{
+  font-size:11px;
+  color:#6b7280;
+  margin:8px 0 12px;
+}
+
+/* ITEM */
+.gateway{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.gateway:hover{
+  border-color:#3b82f6;
+}
+
+.gateway.active{
+  border:1px solid rgba(59,130,246,0.5);
+  background:rgba(59,130,246,0.05);
+}
+
+/* TEXTO */
+.left{
+  display:flex;
+  flex-direction:column;
+}
+
+.nome{
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.status{
+  font-size:10px;
+  color:#6b7280;
+}
+
+/* RADIO */
+.radio{
+  width:18px;
+  height:18px;
+  border:2px solid #333;
+  border-radius:50%;
+  position:relative;
+}
+
+.radio.active{
+  border-color:#3b82f6;
+}
+
+.radio.active::after{
+  content:"";
+  width:8px;
+  height:8px;
+  background:#3b82f6;
+  border-radius:50%;
+  position:absolute;
+  top:3px;
+  left:3px;
+}
+
+/* BOTÃO */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:10px;
+  padding:8px 14px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 4px 12px rgba(59,130,246,0.25);
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(59,130,246,0.35);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  top:20px;
+  right:16px;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:12px;
+  opacity:0;
+  transition:.3s;
+}
+
+.toast.show{opacity:1;}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="header-top">
+    <div class="header-icon">
+      <i class="ri-route-line"></i>
+    </div>
+
+    <div class="header-text">
+      <h2>Roteamento de Pagamentos</h2>
+      <span>Defina como os fluxos de depósito e saque serão processados</span>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="grid">
+
+<!-- PIX -->
+<div class="card">
+  <div class="title"><i class="ri-qr-code-line"></i> Depósitos via PIX</div>
+  <div class="desc">Selecione o gateway responsável pelos recebimentos</div>
+
+  <div id="pixList"></div>
+
+  <div class="btn" onclick="salvarPix()">
+    <i class="ri-check-line"></i> Aplicar configuração
+  </div>
+</div>
+
+<!-- SAQUE -->
+<div class="card">
+  <div class="title"><i class="ri-bank-card-line"></i> Saques</div>
+  <div class="desc">Selecione o gateway responsável pelos pagamentos</div>
+
+  <div id="saqueList"></div>
+
+  <div class="btn" onclick="salvarSaque()">
+    <i class="ri-check-line"></i> Aplicar configuração
+  </div>
+</div>
+
+</div>
+
+<script>
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+let gateways = [
+  {nome:"Gateway Principal", status:"Processamento ativo", icon:"ri-flashlight-line"},
+  {nome:"Gateway Reserva", status:"Fallback automático", icon:"ri-refresh-line"},
+  {nome:"Gateway Manual", status:"Processamento manual", icon:"ri-settings-3-line"}
+];
+
+let pixSelected = 0;
+let saqueSelected = 0;
+
+function render(){
+
+  pixList.innerHTML = "";
+  saqueList.innerHTML = "";
+
+  gateways.forEach((g,i)=>{
+
+    pixList.innerHTML += `
+      <div class="gateway ${pixSelected===i?'active':''}" onclick="selectPix(${i})">
+        <div class="left">
+          <div class="nome">
+            <i class="${g.icon}"></i> ${g.nome}
+          </div>
+          <div class="status">${g.status}</div>
+        </div>
+        <div class="radio ${pixSelected===i?'active':''}"></div>
+      </div>
+    `;
+
+    saqueList.innerHTML += `
+      <div class="gateway ${saqueSelected===i?'active':''}" onclick="selectSaque(${i})">
+        <div class="left">
+          <div class="nome">
+            <i class="${g.icon}"></i> ${g.nome}
+          </div>
+          <div class="status">${g.status}</div>
+        </div>
+        <div class="radio ${saqueSelected===i?'active':''}"></div>
+      </div>
+    `;
+
+  });
+
+}
+
+function selectPix(i){
+  pixSelected = i;
+  render();
+}
+
+function selectSaque(i){
+  saqueSelected = i;
+  render();
+}
+
+function salvarPix(){
+  localStorage.setItem("gateway_pix", pixSelected);
+  toast("Gateway de PIX atualizado");
+}
+
+function salvarSaque(){
+  localStorage.setItem("gateway_saque", saqueSelected);
+  toast("Gateway de saque atualizado");
+}
+
+function load(){
+  pixSelected = Number(localStorage.getItem("gateway_pix")) || 0;
+  saqueSelected = Number(localStorage.getItem("gateway_saque")) || 0;
+  render();
+}
+
+load();
+
+</script>
+
+</body>
+</html>

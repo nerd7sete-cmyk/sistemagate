@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Gerentes do Root</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+body{
+  background:#050505;
+  color:white;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* HEADER */
+.header{margin-bottom:20px;}
+
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:20px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.title i{
+  color:#3b82f6;
+  font-size:18px;
+  opacity:0.9;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn-top{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:500;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn-taxas{
+  background:#0b1220;
+  border:1px solid rgba(59,130,246,0.2);
+  color:#3b82f6;
+}
+
+.btn-novo{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+}
+
+/* BUSCA */
+.input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #111;
+  background:#050505;
+  color:white;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+/* LISTA */
+.lista{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* CARD */
+.card{
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.03);
+  border-radius:14px;
+  padding:12px 14px;
+  cursor:pointer;
+  transition:.15s;
+  position:relative;
+}
+
+.card:hover{
+  background:#0a0a0a;
+  border:1px solid rgba(59,130,246,0.2);
+}
+
+/* TOPO */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding-right:50px; /* 🔥 espaço pro switch */
+}
+
+.nome{
+  font-size:14px;
+  font-weight:600;
+}
+
+.email{
+  font-size:11px;
+  color:#6b7280;
+}
+
+/* BADGE */
+.badge{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f0f0f;
+  white-space:nowrap;
+}
+
+.ativo{color:#22c55e;}
+.inativo{color:#ef4444;}
+
+/* SALDO */
+.saldo{
+  font-size:15px;
+  font-weight:600;
+  margin-top:6px;
+}
+
+/* INFO */
+.badges{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.badges .badge{
+  font-size:10px;
+  opacity:.8;
+}
+
+/* FOOTER */
+.footer{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  font-size:11px;
+  color:#6b7280;
+}
+
+/* SWITCH */
+.switch{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:18px;
+  border-radius:20px;
+  background:#111;
+  transition:.2s;
+}
+
+.switch::after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#fff;
+  border-radius:50%;
+  top:2px;
+  left:2px;
+  transition:.2s;
+}
+
+.switch.on{
+  background:#22c55e;
+}
+
+.switch.on::after{
+  left:18px;
+}
+
+.switch.off{
+  background:#ef4444;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  padding:20px;
+  color:#555;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="header-top">
+    <div class="title">
+      <i class="ri-user-star-line"></i>
+      Gerentes do Root
+    </div>
+
+    <div class="actions">
+      <div class="btn-top btn-taxas" onclick="irTaxas()">
+        <i class="ri-settings-3-line"></i>
+        Taxas
+      </div>
+
+      <div class="btn-top btn-novo" onclick="irCriar()">
+        <i class="ri-user-add-line"></i>
+        Novo gerente
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    Gerencie todos os gerentes vinculados à sua estrutura principal
+  </div>
+
+</div>
+
+<input id="busca" class="input" placeholder="Buscar gerente..." oninput="render()">
+
+<div class="lista" id="lista"></div>
+
+<script>
+
+let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
+let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+function f(v){
+  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function saldoGerente(g){
+  let total = 0;
+  let ops = operadores.filter(o=>o.gerente === g.email);
+
+  ops.forEach(op=>{
+    transacoes.forEach(t=>{
+      if(t.operador === op.email && t.status === "aprovado"){
+        total += Number(t.valor || 0);
+      }
+    });
+  });
+
+  return total;
+}
+
+function qtdOps(g){
+  return operadores.filter(o=>o.gerente === g.email).length;
+}
+
+function abrirGerente(g){
+  localStorage.setItem("gerenteSelecionado", JSON.stringify(g));
+  window.location.href = "operadores-gerente.html";
+}
+
+function toggleGerente(i, e){
+  e.stopPropagation();
+  gerentes[i].ativo = !gerentes[i].ativo;
+  localStorage.setItem("gerentes", JSON.stringify(gerentes));
+  render();
+}
+
+function render(){
+
+  let termo = busca.value.toLowerCase();
+  lista.innerHTML = "";
+
+  let filtrados = gerentes.filter(g =>
+    g.nome.toLowerCase().includes(termo) ||
+    g.email.toLowerCase().includes(termo)
+  );
+
+  if(filtrados.length === 0){
+    lista.innerHTML = `<div class="empty">Nenhum gerente encontrado</div>`;
+    return;
+  }
+
+  filtrados.forEach((g,i)=>{
+
+    lista.innerHTML += `
+    <div class="card" onclick='abrirGerente(${JSON.stringify(g)})'>
+
+      <div class="switch ${g.ativo ? "on" : "off"}"
+        onclick="toggleGerente(${i}, event)">
+      </div>
+
+      <div class="top">
+        <div>
+          <div class="nome">${g.nome}</div>
+          <div class="email">${g.email}</div>
+        </div>
+
+        <div class="badge ${g.ativo?'ativo':'inativo'}">
+          ${g.ativo?'Ativo':'Inativo'}
+        </div>
+      </div>
+
+      <div class="saldo">${f(saldoGerente(g))}</div>
+
+      <div class="badges">
+        <div class="badge">${qtdOps(g)} operadores</div>
+        <div class="badge">${g.taxa ?? 'Global'}%</div>
+      </div>
+
+      <div class="footer">
+        <div>Gerenciar</div>
+        <div><i class="ri-arrow-right-s-line"></i></div>
+      </div>
+
+    </div>`;
+  });
+
+}
+
+function irCriar(){
+  window.location.href = "criar-gerentes.html";
+}
+
+function irTaxas(){
+  window.location.href = "taxas-gerentes.html";
+}
+
+render();
+
+</script>
+
+</body>
+</html>
