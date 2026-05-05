@@ -51,6 +51,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  box-shadow:0 0 15px rgba(59,130,246,0.4);
 }
 
 .title{
@@ -70,6 +71,7 @@ body{
   gap:12px;
 }
 
+/* CARD */
 .card{
   position:relative;
   background:linear-gradient(145deg,#0f0f0f,#050505);
@@ -82,7 +84,8 @@ body{
 
 .card:hover{
   transform:translateY(-2px);
-  border-color:rgba(255,255,255,0.12);
+  border-color:rgba(59,130,246,0.3);
+  box-shadow:0 0 12px rgba(59,130,246,0.2);
 }
 
 .card i{
@@ -102,6 +105,17 @@ body{
   margin-top:4px;
 }
 
+/* CARD PREMIUM (LUCRO) */
+.card-blue{
+  border:1px solid rgba(59,130,246,0.25);
+  box-shadow:0 0 15px rgba(59,130,246,0.15);
+}
+
+.card-blue i{
+  font-size:20px;
+}
+
+/* BADGE */
 .badge{
   position:absolute;
   top:10px;
@@ -142,6 +156,13 @@ body{
 
 <div class="grid">
 
+  <!-- 💰 NOVO CARD -->
+  <div class="card card-blue" onclick="go('lucros-por-empresa.html')">
+    <i class="ri-bar-chart-box-line"></i>
+    <div class="card-title">Lucro por Empresa</div>
+    <div class="card-desc">Ranking e desempenho</div>
+  </div>
+
   <div class="card" onclick="go('transacoes-admin-root.html')">
     <i class="ri-exchange-dollar-line"></i>
     <div class="card-title">Transações</div>
@@ -167,15 +188,13 @@ body{
 
 <script>
 
-/* 🔥 BUSCA SAQUES REAIS DO SISTEMA */
+/* 🔥 BUSCA SAQUES */
 function getSaquesPendentes(){
   let saques = JSON.parse(localStorage.getItem("saques")) || [];
-
-  // conta só pendentes
   return saques.filter(s => s.status === "pendente").length;
 }
 
-/* 🔥 ATUALIZA BADGE */
+/* 🔥 BADGE */
 function atualizarSaques(){
   let badge = document.getElementById("badgeSaques");
   let total = getSaquesPendentes();
@@ -188,7 +207,7 @@ function atualizarSaques(){
   }
 }
 
-/* 🔥 NAVEGAÇÃO SEM BUG */
+/* 🔥 NAVEGAÇÃO */
 function go(page){
   if(window.parent && window.parent.document.getElementById("frame")){
     window.parent.document.getElementById("frame").src = page;
@@ -197,9 +216,8 @@ function go(page){
   }
 }
 
-/* 🔥 ATUALIZA AUTOMÁTICO */
+/* 🔥 AUTO UPDATE */
 setInterval(atualizarSaques, 2000);
-
 atualizarSaques();
 
 </script>

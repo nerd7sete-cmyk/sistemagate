@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Dashboard Financeiro</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+/* BASE */
+html,body{
+  min-height:100vh;
+  min-height:100dvh;
+  background:#050505;
+}
+
+body{
+  color:#fff;
+  padding:20px;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* ICON */
+.header-icon{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 25px rgba(59,130,246,0.45);
+}
+
+.header-icon i{
+  font-size:20px;
+  color:#fff;
+}
+
+.title{
+  font-size:20px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* BOTÃO */
+.btn{
+  background:rgba(59,130,246,0.1);
+  border:1px solid rgba(59,130,246,0.3);
+  color:#3b82f6;
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover{
+  background:#3b82f6;
+  color:#fff;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#0a0a0a,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+/* VALORES */
+.valor{
+  font-size:24px;
+  font-weight:600;
+  margin-top:6px;
+  color:#3b82f6;
+  text-shadow:0 0 10px rgba(59,130,246,0.3);
+}
+
+.label{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* GRID */
+.grid{
+  display:flex;
+  gap:10px;
+}
+
+.grid .card{
+  flex:1;
+}
+
+/* EMPRESA */
+.empresa{
+  margin-top:12px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+}
+
+/* BARRA */
+.bar{
+  height:6px;
+  background:#111;
+  border-radius:10px;
+  margin-top:6px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#3b82f6,#2563eb);
+  border-radius:10px;
+}
+
+/* RANK */
+.rank{
+  margin-top:15px;
+}
+
+.rank-item{
+  padding:12px;
+  border-radius:14px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.05);
+  margin-bottom:10px;
+}
+
+.rank-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nome{
+  font-weight:600;
+}
+
+.percent{
+  background:rgba(59,130,246,0.1);
+  border:1px solid rgba(59,130,246,0.3);
+  color:#3b82f6;
+  padding:4px 8px;
+  border-radius:8px;
+  font-size:11px;
+}
+
+/* MINI BOX */
+.mini{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.box{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  background:#050505;
+  border:1px solid rgba(255,255,255,0.05);
+  font-size:11px;
+}
+
+.blue{
+  color:#3b82f6;
+}
+
+.red{
+  color:#ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+
+  <div class="header-left">
+    <div class="header-icon">
+      <i class="ri-bar-chart-2-line"></i>
+    </div>
+
+    <div>
+      <div class="title">Lucro por Empresa</div>
+      <div class="sub">Dados em tempo real da plataforma</div>
+    </div>
+  </div>
+
+  <div class="btn">Exportar</div>
+
+</div>
+
+<!-- TOTAL -->
+<div class="card">
+  <div class="label">Lucro total</div>
+  <div class="valor" id="total">R$ 0</div>
+</div>
+
+<!-- MÉTRICAS -->
+<div class="grid">
+  <div class="card">
+    <div class="label">Margem média</div>
+    <div class="valor" id="media">0%</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Top empresa</div>
+    <div class="valor" id="top">-</div>
+  </div>
+</div>
+
+<!-- GRAFICO -->
+<div class="card">
+  <div class="label">Performance</div>
+  <div id="grafico"></div>
+</div>
+
+<!-- RANK -->
+<div class="rank" id="ranking"></div>
+
+<script>
+
+/* DADOS */
+let dados = JSON.parse(localStorage.getItem("empresas")) || [
+ {nome:"Danilo", lucro:189486, receita:252649, custo:63162},
+ {nome:"pxgm", lucro:82254, receita:102818, custo:20563},
+ {nome:"geovane", lucro:64144, receita:91635, custo:27490},
+ {nome:"Aldo", lucro:41514, receita:53915, custo:12400},
+ {nome:"Vinicius", lucro:40017, receita:51304, custo:11287}
+];
+
+/* CALCULOS */
+let total = dados.reduce((a,b)=>a+b.lucro,0);
+let media = Math.round(dados.reduce((a,b)=>a+(b.lucro/b.receita),0)/dados.length*100);
+let top = [...dados].sort((a,b)=>b.lucro-a.lucro)[0];
+
+/* FIX IDs */
+document.getElementById("total").innerText = "R$ " + total.toLocaleString();
+document.getElementById("media").innerText = media + "%";
+document.getElementById("top").innerText = top.nome;
+
+/* GRAFICO */
+let max = Math.max(...dados.map(d=>d.lucro));
+
+grafico.innerHTML = dados.map(d=>`
+  <div class="empresa">
+    <div class="row">
+      <span>${d.nome}</span>
+      <span class="blue">R$ ${d.lucro.toLocaleString()}</span>
+    </div>
+    <div class="bar">
+      <div class="fill" style="width:${(d.lucro/max)*100}%"></div>
+    </div>
+  </div>
+`).join("");
+
+/* RANK */
+ranking.innerHTML = dados.map((d,i)=>{
+  let margem = Math.round((d.lucro/d.receita)*100);
+
+  return `
+  <div class="rank-item">
+    <div class="rank-top">
+      <div class="nome">${i+1}. ${d.nome}</div>
+      <div class="percent">${margem}%</div>
+    </div>
+
+    <div class="mini">
+      <div class="box blue">Receita<br>R$ ${d.receita.toLocaleString()}</div>
+      <div class="box red">Custos<br>-R$ ${d.custo.toLocaleString()}</div>
+    </div>
+
+    <div style="margin-top:8px;font-size:14px;" class="blue">
+      Lucro: R$ ${d.lucro.toLocaleString()}
+    </div>
+  </div>
+  `;
+}).join("");
+
+/* TEMPO REAL */
+setInterval(()=>{
+  dados.forEach(d=>{
+    d.lucro += Math.floor(Math.random()*800);
+  });
+  localStorage.setItem("empresas", JSON.stringify(dados));
+  location.reload();
+}, 8000);
+
+</script>
+
+</body>
+</html>

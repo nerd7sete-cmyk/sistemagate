@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Alertas do Sistema</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  background:#050505;
+}
+
+body{
+  color:#fff;
+  overflow-x:hidden;
+  padding:20px;
+}
+
+.container{max-width:520px;margin:auto;}
+
+.header{margin-bottom:20px;}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  width:38px;height:38px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;align-items:center;justify-content:center;
+}
+
+.title{font-size:18px;font-weight:600;}
+.sub{font-size:12px;color:#6b7280;}
+
+.stats{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.stat{
+  flex:1;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  padding:8px;
+  border-radius:10px;
+  font-size:11px;
+  text-align:center;
+}
+
+.filtros{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.filtro{
+  flex:1;
+  padding:8px;
+  border-radius:10px;
+  font-size:11px;
+  background:#070707;
+  border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;
+  text-align:center;
+}
+
+.filtro.active{
+  border-color:#3b82f6;
+  color:#3b82f6;
+}
+
+.alerta{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border-radius:14px;
+  padding:12px;
+  margin-top:10px;
+}
+
+.alerta.risco{border:1px solid rgba(239,68,68,0.4);}
+.alerta.atencao{border:1px solid rgba(234,179,8,0.4);}
+.alerta.info{border:1px solid rgba(59,130,246,0.4);}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+}
+
+.tipo{
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:999px;
+}
+
+.risco .tipo{background:rgba(239,68,68,0.2);color:#ef4444;}
+.atencao .tipo{background:rgba(234,179,8,0.2);color:#eab308;}
+.info .tipo{background:rgba(59,130,246,0.2);color:#3b82f6;}
+
+.time{font-size:10px;color:#777;}
+
+.titulo{font-size:13px;font-weight:600;margin-top:6px;}
+.desc{font-size:11px;color:#aaa;margin-top:4px;}
+
+.empty{text-align:center;margin-top:40px;color:#555;}
+
+.clear{
+  margin-top:15px;
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#aaa;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="icon">
+        <i class="ri-notification-3-line"></i>
+      </div>
+      <div>
+        <div class="title">Alertas</div>
+        <div class="sub">Admin ROOT • Tempo real</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">Risco: <b id="cRisco">0</b></div>
+      <div class="stat">Atenção: <b id="cAtencao">0</b></div>
+      <div class="stat">Info: <b id="cInfo">0</b></div>
+    </div>
+
+    <div class="filtros">
+      <div class="filtro active" onclick="filtrar(event,'todos')">Todos</div>
+      <div class="filtro" onclick="filtrar(event,'risco')">Risco</div>
+      <div class="filtro" onclick="filtrar(event,'atencao')">Atenção</div>
+      <div class="filtro" onclick="filtrar(event,'info')">Info</div>
+    </div>
+  </div>
+
+  <div id="lista"></div>
+
+  <button class="clear" onclick="limpar()">Limpar alertas</button>
+
+</div>
+
+<script>
+
+/* CONFIG */
+const API_URL = "https://seusite.com/api/alertas"; // 🔥 COLOCA SUA API
+const BOT_TOKEN = "SEU_TOKEN";
+const CHAT_ID = "SEU_CHAT";
+
+let alertas = [];
+
+/* 🔥 BUSCAR DO SISTEMA */
+async function buscarAlertas(){
+
+  try{
+    let res = await fetch(API_URL);
+    let data = await res.json();
+
+    alertas = data;
+    salvarLocal();
+    carregar();
+
+  }catch(e){
+    console.log("API offline, usando localStorage");
+
+    alertas = JSON.parse(localStorage.getItem("alertas") || "[]");
+    carregar();
+  }
+}
+
+/* LOCAL */
+function salvarLocal(){
+  localStorage.setItem("alertas", JSON.stringify(alertas));
+}
+
+/* CRIAR ALERTA GLOBAL */
+function criarAlerta(tipo,titulo,desc){
+
+  let alerta = {
+    tipo,
+    titulo,
+    desc,
+    tempo: new Date().toLocaleTimeString()
+  };
+
+  alertas.unshift(alerta);
+  salvarLocal();
+
+  enviarTelegram(alerta);
+  carregar();
+}
+
+/* TELEGRAM */
+function enviarTelegram(a){
+
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      chat_id:CHAT_ID,
+      text:`🚨 ALERTA ROOT\n${a.titulo}\n${a.desc}`
+    })
+  });
+}
+
+/* RENDER */
+function render(lista){
+
+  let el = document.getElementById("lista");
+
+  if(lista.length === 0){
+    el.innerHTML = `<div class="empty">Sem alertas</div>`;
+    return;
+  }
+
+  el.innerHTML = lista.map(a=>`
+    <div class="alerta ${a.tipo}">
+      <div class="top">
+        <div class="tipo">${a.tipo}</div>
+        <div class="time">${a.tempo}</div>
+      </div>
+      <div class="titulo">${a.titulo}</div>
+      <div class="desc">${a.desc}</div>
+    </div>
+  `).join("");
+}
+
+/* FILTRO */
+function filtrar(e,tipo){
+
+  document.querySelectorAll(".filtro").forEach(f=>f.classList.remove("active"));
+  e.target.classList.add("active");
+
+  if(tipo==="todos") render(alertas);
+  else render(alertas.filter(a=>a.tipo===tipo));
+}
+
+/* STATS */
+function atualizarStats(){
+  cRisco.innerText = alertas.filter(a=>a.tipo==="risco").length;
+  cAtencao.innerText = alertas.filter(a=>a.tipo==="atencao").length;
+  cInfo.innerText = alertas.filter(a=>a.tipo==="info").length;
+}
+
+/* LIMPAR */
+function limpar(){
+  alertas = [];
+  salvarLocal();
+  carregar();
+}
+
+/* LOAD */
+function carregar(){
+  render(alertas);
+  atualizarStats();
+}
+
+/* 🔥 AUTO UPDATE (tempo real fake tipo banco) */
+setInterval(buscarAlertas, 5000);
+
+/* INIT */
+buscarAlertas();
+
+</script>
+
+</body>
+</html>

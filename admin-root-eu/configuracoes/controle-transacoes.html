@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Controle de Transações</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+body{
+  background:#000;
+  color:#fff;
+  padding:20px;
+  min-height:100vh;
+}
+
+/* container */
+.container{
+  max-width:900px;
+  margin:auto;
+}
+
+/* card */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:15px;
+}
+
+h2{font-size:18px;margin-bottom:10px;}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:15px;}
+
+.toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.switch{
+  width:50px;height:26px;
+  background:#222;
+  border-radius:999px;
+  position:relative;
+  cursor:pointer;
+}
+
+.switch::after{
+  content:"";
+  position:absolute;
+  width:22px;height:22px;
+  background:#fff;
+  border-radius:50%;
+  top:2px;left:2px;
+  transition:.25s;
+}
+
+.switch.active{
+  background:#2563eb;
+}
+
+.switch.active::after{
+  left:26px;
+}
+
+/* faixas */
+.range{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.range input{
+  flex:1;
+}
+
+.range button{
+  background:#ef4444;
+  border:none;
+  color:#fff;
+  border-radius:10px;
+  padding:10px;
+  cursor:pointer;
+}
+
+/* input */
+input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #1a1a1a;
+  background:#0a0a0a;
+  color:white;
+}
+
+/* add */
+.add{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  background:#2563eb;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* stats */
+.stats{
+  display:flex;
+  gap:10px;
+}
+
+.stat{
+  flex:1;
+  padding:15px;
+  border-radius:12px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.05);
+  text-align:center;
+}
+
+.stat h3{font-size:20px;}
+
+/* lista */
+.transacao{
+  padding:15px;
+  border-radius:12px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.05);
+  margin-bottom:10px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.pago{color:#22c55e;}
+.pendente{color:#facc15;}
+.bloqueado{color:#ef4444;}
+
+/* botões */
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.btn{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.btn-aprovar{
+  background:#2563eb;
+}
+
+.btn-bloquear{
+  background:#ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Controle de Aprovação</h2>
+<div class="sub">Defina regras por faixa de valor</div>
+
+<div class="toggle">
+  <span>Aprovação Manual</span>
+  <div id="switch" class="switch" onclick="toggleModo()"></div>
+</div>
+
+<div id="ranges"></div>
+
+<div class="add" onclick="addRange()">+ Adicionar faixa</div>
+
+</div>
+
+<div class="card stats">
+
+<div class="stat">
+  <div class="sub">Pendentes</div>
+  <h3 id="totalPendentes">0</h3>
+</div>
+
+<div class="stat">
+  <div class="sub">Pagos</div>
+  <h3 id="totalPagos">0</h3>
+</div>
+
+</div>
+
+<div class="card">
+<h2>Transações</h2>
+<div id="lista"></div>
+</div>
+
+</div>
+
+<script>
+
+// SAFE
+function getLS(key, def){
+  try{
+    return JSON.parse(localStorage.getItem(key)) || def;
+  }catch{
+    return def;
+  }
+}
+
+let modo = localStorage.getItem("modoManual") || "off";
+let ranges = getLS("ranges", []);
+
+const switchEl = document.getElementById("switch");
+
+if(modo === "on"){
+  switchEl.classList.add("active");
+}
+
+// toggle
+function toggleModo(){
+  modo = modo === "on" ? "off" : "on";
+  localStorage.setItem("modoManual", modo);
+  switchEl.classList.toggle("active");
+}
+
+// ranges
+function addRange(){
+  ranges.push({min:0,max:0});
+  saveRanges();
+  renderRanges();
+}
+
+function removeRange(i){
+  ranges.splice(i,1);
+  saveRanges();
+  renderRanges();
+}
+
+function saveRanges(){
+  localStorage.setItem("ranges", JSON.stringify(ranges));
+}
+
+function updateRange(i,type,val){
+  ranges[i][type] = Number(val);
+  saveRanges();
+}
+
+function renderRanges(){
+  let html = "";
+
+  ranges.forEach((r,i)=>{
+    html += `
+      <div class="range">
+        <input value="${r.min}" placeholder="Mín" oninput="updateRange(${i},'min',this.value)">
+        <input value="${r.max}" placeholder="Máx" oninput="updateRange(${i},'max',this.value)">
+        <button onclick="removeRange(${i})">x</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("ranges").innerHTML = html;
+}
+
+// regra
+function dentroDaFaixa(valor){
+  return ranges.some(r => valor >= r.min && valor <= r.max);
+}
+
+// criar transação
+function criarTransacao(valor){
+
+  let status_operador;
+
+  if(modo === "on" && dentroDaFaixa(valor)){
+    status_operador = "pendente";
+  }else{
+    status_operador = "pago";
+  }
+
+  let lista = getLS("transacoes", []);
+
+  lista.unshift({
+    id: Date.now(),
+    valor,
+    status_pagamento:"pago",
+    status_operador
+  });
+
+  localStorage.setItem("transacoes", JSON.stringify(lista));
+  render();
+}
+
+// aprovar
+function aprovar(id){
+  let lista = getLS("transacoes", []);
+  let t = lista.find(x=>x.id===id);
+  if(t) t.status_operador="pago";
+  localStorage.setItem("transacoes", JSON.stringify(lista));
+  render();
+}
+
+// bloquear
+function bloquear(id){
+  let lista = getLS("transacoes", []);
+  let t = lista.find(x=>x.id===id);
+  if(t) t.status_operador="bloqueado";
+  localStorage.setItem("transacoes", JSON.stringify(lista));
+  render();
+}
+
+// render
+function render(){
+
+  let data = getLS("transacoes", []);
+
+  let html="";
+  let p=0, pg=0;
+
+  data.forEach(t=>{
+
+    if(t.status_operador==="pendente") p++;
+    if(t.status_operador==="pago") pg++;
+
+    html+=`
+      <div class="transacao">
+        <div class="row">
+          <strong>R$ ${t.valor}</strong>
+          <span class="pago">${t.status_pagamento}</span>
+        </div>
+
+        <div class="row">
+          <span>Operador</span>
+          <span class="${
+            t.status_operador==="pendente"?"pendente":
+            t.status_operador==="bloqueado"?"bloqueado":"pago"
+          }">
+            ${t.status_operador}
+          </span>
+        </div>
+
+        ${
+          t.status_operador==="pendente"
+          ? `
+            <div class="actions">
+              <div class="btn btn-aprovar" onclick="aprovar(${t.id})">Aprovar</div>
+              <div class="btn btn-bloquear" onclick="bloquear(${t.id})">Bloquear</div>
+            </div>
+          `
+          : ""
+        }
+      </div>
+    `;
+  });
+
+  document.getElementById("lista").innerHTML = html;
+  document.getElementById("totalPendentes").innerText = p;
+  document.getElementById("totalPagos").innerText = pg;
+}
+
+// init
+render();
+renderRanges();
+
+</script>
+
+</body>
+</html>

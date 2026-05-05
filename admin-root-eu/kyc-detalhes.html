@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Detalhes KYC</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+html,body{
+  min-height:100vh;
+  min-height:100dvh;
+  background:#050505;
+}
+
+body{
+  color:#fff;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.back{
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:12px;
+  color:#aaa;
+}
+
+.back:hover{
+  border-color:#3b82f6;
+  color:#fff;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:18px;
+}
+
+/* INFO */
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.info-box{
+  background:#070707;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.label{
+  font-size:10px;
+  color:#777;
+}
+
+.value{
+  font-size:13px;
+  font-weight:600;
+  margin-top:3px;
+}
+
+/* IMAGENS */
+.images{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:15px;
+}
+
+.img-box{
+  background:#000;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.img-box img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+}
+
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+/* STATUS */
+.btn-aprovado{
+  background:rgba(34,197,94,0.15);
+  border:1px solid rgba(34,197,94,0.3);
+  color:#22c55e;
+}
+
+/* PDF */
+.btn-pdf{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;
+}
+
+.btn-pdf:hover{
+  box-shadow:0 0 12px rgba(59,130,246,0.3);
+}
+
+.btn-pdf i{
+  font-size:14px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  .images{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="icon">
+        <i class="ri-user-line"></i>
+      </div>
+      <div>
+        <div class="title">Detalhes do Usuário</div>
+        <div class="sub">Informações do KYC</div>
+      </div>
+    </div>
+
+    <div class="back" onclick="voltar()">← Voltar</div>
+  </div>
+
+  <div class="card">
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="label">Nome</div>
+        <div class="value" id="nome"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">Email</div>
+        <div class="value" id="email"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">CPF</div>
+        <div class="value" id="cpf"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="label">Status</div>
+        <div class="value">Aprovado</div>
+      </div>
+    </div>
+
+    <div class="images">
+      <div class="img-box"><img id="frente"></div>
+      <div class="img-box"><img id="verso"></div>
+      <div class="img-box"><img id="selfie"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-aprovado">
+        ✔ Aprovado
+      </button>
+
+      <button class="btn btn-pdf" onclick="gerarPDF()">
+        <i class="ri-file-download-line"></i>
+        Baixar PDF
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const { jsPDF } = window.jspdf;
+
+let dados = JSON.parse(localStorage.getItem("kyc_view"));
+
+document.getElementById("nome").innerText = dados.nome || "Sem nome";
+document.getElementById("email").innerText = dados.email;
+document.getElementById("cpf").innerText = dados.cpf;
+
+document.getElementById("frente").src = dados.frente;
+document.getElementById("verso").src = dados.verso;
+document.getElementById("selfie").src = dados.selfie;
+
+function voltar(){
+  history.back();
+}
+
+function gerarPDF(){
+
+  const doc = new jsPDF();
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(18);
+  doc.text("Relatório KYC", 20, 20);
+
+  doc.setFontSize(12);
+  doc.setFont("helvetica","normal");
+
+  doc.text("Nome: " + (dados.nome || "-"), 20, 40);
+  doc.text("Email: " + dados.email, 20, 48);
+  doc.text("CPF: " + dados.cpf, 20, 56);
+  doc.text("Status: Aprovado", 20, 64);
+
+  let y = 80;
+
+  try{
+    doc.addImage(dados.frente, "JPEG", 20, y, 60, 40);
+    doc.text("Frente", 20, y-3);
+
+    doc.addImage(dados.verso, "JPEG", 100, y, 60, 40);
+    doc.text("Verso", 100, y-3);
+
+    doc.addImage(dados.selfie, "JPEG", 60, y+50, 60, 40);
+    doc.text("Selfie", 60, y+47);
+  }catch(e){
+    console.log("Erro imagem PDF", e);
+  }
+
+  doc.save("kyc_"+dados.email+".pdf");
+}
+
+</script>
+
+</body>
+</html>

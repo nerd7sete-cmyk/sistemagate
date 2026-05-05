@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>KYC Aprovados</title>
 
@@ -10,185 +11,176 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
 
 html,body{
-  height:100%;
-  background:#0a0a0a;
+  min-height:100vh;
+  min-height:100dvh;
+  background:#050505;
 }
 
 body{
   color:#fff;
+  overflow-x:hidden;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
-/* CONTAINER */
 .container{
-  max-width:1100px;
+  max-width:900px;
   margin:auto;
-  padding:20px;
 }
 
 /* HEADER */
 .header{
-  margin-bottom:25px;
+  margin-bottom:20px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px rgba(59,130,246,0.25);
 }
 
 .title{
-  font-size:22px;
+  font-size:18px;
   font-weight:600;
 }
 
-.subtitle{
+.sub{
   font-size:12px;
-  color:#777;
-  margin-top:4px;
+  color:#6b7280;
 }
 
-.stat{
+/* SEARCH */
+.search{
   margin-top:15px;
-  display:inline-block;
-  background:#0f0f0f;
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
+  position:relative;
 }
 
-/* CARD */
-.card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:15px;
+.search input{
+  width:100%;
+  padding:12px 14px 12px 42px;
+  background:#070707;
   border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  color:#fff;
+  outline:none;
 }
 
-/* TOP */
-.top{
-  margin-bottom:15px;
+.search input:focus{
+  border-color:#3b82f6;
+}
+
+.search i{
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#777;
+}
+
+/* LIST */
+.item{
+  background:linear-gradient(145deg,#0f0f0f,#050505);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:14px;
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:.2s;
+}
+
+.item:hover{
+  border-color:#3b82f6;
+  transform:translateY(-2px);
+}
+
+/* INFO */
+.info{
+  display:flex;
+  flex-direction:column;
 }
 
 .name{
-  font-size:15px;
+  font-size:14px;
   font-weight:600;
 }
 
 .email{
   font-size:11px;
-  color:#777;
+  color:#6b7280;
 }
 
-/* DOC GRID */
-.images{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-bottom:12px;
-}
-
-.img-box{
-  background:#000;
-  border-radius:12px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,0.05);
-  cursor:pointer;
-}
-
-.img-box span{
+/* STATUS */
+.badge{
   font-size:10px;
-  color:#777;
-  display:block;
-  padding:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(34,197,94,0.15);
+  color:#22c55e;
 }
 
-.img-box img{
-  width:100%;
-  height:140px;
-  object-fit:cover;
+/* ACTIONS */
+.actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 /* BOTÕES */
-.actions{
-  display:flex;
-  gap:10px;
-}
-
 .btn{
-  flex:1;
-  padding:12px;
-  border-radius:12px;
-  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:11px;
   cursor:pointer;
-  font-size:12px;
-  font-weight:600;
+  border:none;
   transition:.2s;
 }
 
+/* VER */
 .btn-view{
-  background:#111;
-  border:1px solid rgba(59,130,246,0.4);
-  color:#fff;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#aaa;
 }
 
 .btn-view:hover{
   border-color:#3b82f6;
+  color:#fff;
 }
 
+/* PDF */
 .btn-pdf{
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  color:#fff;
+  background:rgba(59,130,246,0.12);
+  border:1px solid rgba(59,130,246,0.3);
+  color:#3b82f6;
 }
 
-/* 🔥 MODAL PROFISSIONAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  backdrop-filter:blur(6px);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-  padding:20px;
-}
-
-/* BOX CENTRAL */
-.modal-box{
-  width:100%;
-  max-width:600px;
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.08);
-  padding:15px;
-  position:relative;
-}
-
-/* IMG */
-.modal img{
-  width:100%;
-  border-radius:12px;
-}
-
-/* BOTÃO FECHAR */
-.close-btn{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:#111;
-  border:1px solid rgba(59,130,246,0.4);
-  color:#fff;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  font-size:16px;
-  transition:.2s;
-}
-
-.close-btn:hover{
-  border-color:#3b82f6;
+.btn-pdf:hover{
+  background:rgba(59,130,246,0.2);
+  box-shadow:0 0 10px rgba(59,130,246,0.2);
 }
 
 /* EMPTY */
@@ -196,13 +188,6 @@ body{
   text-align:center;
   padding:40px;
   color:#555;
-}
-
-/* MOBILE */
-@media(max-width:800px){
-  .images{
-    grid-template-columns:1fr;
-  }
 }
 </style>
 </head>
@@ -212,42 +197,45 @@ body{
 <div class="container">
 
   <div class="header">
-    <div class="title">KYC Aprovados</div>
-    <div class="subtitle">Verificação validada pelo sistema</div>
+    <div class="header-top">
+      <div class="header-icon">
+        <i class="ri-check-double-line"></i>
+      </div>
+      <div>
+        <div class="title">KYC Aprovados</div>
+        <div class="sub">Usuários verificados</div>
+      </div>
+    </div>
 
-    <div class="stat" id="totalAprovados">Total: 0</div>
+    <div class="search">
+      <i class="ri-search-line"></i>
+      <input type="text" id="search" placeholder="Buscar usuário..." oninput="filtrar()">
+    </div>
   </div>
 
   <div id="lista"></div>
 
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <div class="close-btn" onclick="fechar()">
-      <i class="ri-close-line"></i>
-    </div>
-    <img id="imgModal">
-  </div>
-</div>
-
 <script>
 
 const { jsPDF } = window.jspdf;
+let dadosCache = [];
 
-function abrirImg(src){
-  modal.style.display = "flex";
-  imgModal.src = src;
-}
+/* 🔥 NOVO: IR PRA TELA DETALHES */
+function verKYC(d){
+  localStorage.setItem("kyc_view", JSON.stringify(d));
 
-function fechar(){
-  modal.style.display = "none";
+  // se estiver dentro do iframe
+  if(window.parent && window.parent.document.getElementById("frame")){
+    window.parent.document.getElementById("frame").src = "kyc-detalhes.html";
+  }else{
+    window.location.href = "kyc-detalhes.html";
+  }
 }
 
 /* PDF */
 function gerarPDF(d,email){
-
   const doc = new jsPDF();
 
   doc.text("Relatório KYC", 20, 20);
@@ -258,77 +246,75 @@ function gerarPDF(d,email){
   doc.save("kyc_"+email+".pdf");
 }
 
+/* RENDER */
+function render(lista){
+
+  let el = document.getElementById("lista");
+  el.innerHTML = "";
+
+  if(lista.length === 0){
+    el.innerHTML = `<div class="empty">Nenhum resultado</div>`;
+    return;
+  }
+
+  lista.forEach(d=>{
+
+    el.innerHTML += `
+      <div class="item">
+
+        <div class="info">
+          <div class="name">${d.nome || "Sem nome"}</div>
+          <div class="email">${d.email}</div>
+        </div>
+
+        <div class="actions">
+          <span class="badge">Aprovado</span>
+
+          <button class="btn btn-view" onclick='verKYC(${JSON.stringify(d)})'>
+            Ver
+          </button>
+
+          <button class="btn btn-pdf" onclick='gerarPDF(${JSON.stringify(d)}, "${d.email}")'>
+            PDF
+          </button>
+        </div>
+
+      </div>
+    `;
+  });
+}
+
 /* LOAD */
 function carregar(){
 
-  let lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  let total = 0;
+  dadosCache = [];
 
   for(let i=0;i<localStorage.length;i++){
-
     let key = localStorage.key(i);
 
     if(key.startsWith("kyc_")){
       let d = JSON.parse(localStorage.getItem(key));
 
       if(d.status === "aprovado"){
-
-        total++;
-
-        let email = key.replace("kyc_","");
-
-        lista.innerHTML += `
-          <div class="card">
-
-            <div class="top">
-              <div class="name">${d.nome || "Sem nome"}</div>
-              <div class="email">${email}</div>
-            </div>
-
-            <div class="images">
-
-              <div class="img-box" onclick="abrirImg('${d.frente}')">
-                <span>Documento Frente</span>
-                <img src="${d.frente}">
-              </div>
-
-              <div class="img-box" onclick="abrirImg('${d.verso}')">
-                <span>Documento Verso</span>
-                <img src="${d.verso}">
-              </div>
-
-              <div class="img-box" onclick="abrirImg('${d.selfie}')">
-                <span>Selfie</span>
-                <img src="${d.selfie}">
-              </div>
-
-            </div>
-
-            <div class="actions">
-
-              <button class="btn btn-view" onclick="abrirImg('${d.frente}')">
-                Ver Documento
-              </button>
-
-              <button class="btn btn-pdf" onclick='gerarPDF(${JSON.stringify(d)}, "${email}")'>
-                Baixar PDF
-              </button>
-
-            </div>
-
-          </div>
-        `;
+        d.email = key.replace("kyc_","");
+        dadosCache.push(d);
       }
     }
   }
 
-  if(total === 0){
-    lista.innerHTML = `<div class="empty">Nenhum aprovado</div>`;
-  }
+  render(dadosCache);
+}
 
-  totalAprovados.innerText = "Total: " + total;
+/* SEARCH */
+function filtrar(){
+  let termo = document.getElementById("search").value.toLowerCase();
+
+  let filtrado = dadosCache.filter(d =>
+    (d.nome || "").toLowerCase().includes(termo) ||
+    d.email.toLowerCase().includes(termo)
+  );
+
+  render(filtrado);
 }
 
 carregar();

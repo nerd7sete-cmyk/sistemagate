@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- 🔥 IMPORTANTE -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
@@ -13,14 +12,13 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-/* 🔥 FIX iPHONE */
+/* FIX iPHONE */
 html,body{
   height:100%;
   min-height:100vh;
   min-height:100dvh;
 }
 
-/* 🔥 FUNDO GARANTIDO */
 body{
   background:#050505;
   color:white;
@@ -30,7 +28,6 @@ body{
     16px
     calc(30px + env(safe-area-inset-bottom));
 
-  /* 🔥 evita tela branca */
   overflow-x:hidden;
 }
 
@@ -94,6 +91,16 @@ body{
   border-color:rgba(59,130,246,0.3);
 }
 
+/* 🔥 CARD DESTAQUE (Transações) */
+.card.highlight{
+  border:1px solid rgba(59,130,246,0.3);
+  box-shadow:0 0 12px rgba(59,130,246,0.15);
+}
+
+.card.highlight:hover{
+  box-shadow:0 0 18px rgba(59,130,246,0.25);
+}
+
 .card i{
   font-size:18px;
   color:#3b82f6;
@@ -138,6 +145,13 @@ body{
   </div>
 
   <div class="grid">
+
+    <!-- 🔥 NOVO BOTÃO (DESTAQUE) -->
+    <div class="card highlight" onclick="go('controle-transacoes.html')">
+      <i class="ri-bar-chart-2-line"></i>
+      <div class="card-title">Controle de Transações</div>
+      <div class="card-desc">Aprovações, limites e monitoramento</div>
+    </div>
 
     <div class="card" onclick="go('financeiro.html')">
       <i class="ri-money-dollar-circle-line"></i>
