@@ -7,6 +7,10 @@
 
 <title>Painel</title>
 
+<!-- 🔥 ICONE APP / TELA INICIAL -->
+<link rel="apple-touch-icon" href="https://i.ibb.co/Y4PTJ78n/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+<link rel="icon" href="https://i.ibb.co/Y4PTJ78n/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
@@ -63,7 +67,6 @@ body{
   background:linear-gradient(180deg,#3b82f6,#2563eb);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:0 0 12px rgba(59,130,246,0.25);
 }
 
 .logo-text .bank{
@@ -71,53 +74,15 @@ body{
   background:linear-gradient(180deg,#ffffff,#9ca3af);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:0 0 8px rgba(255,255,255,0.15);
 }
 
-/* 🔥 PERFIL PREMIUM */
+/* USER */
 .user{
   background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border:1px solid rgba(255,255,255,0.08);
   padding:14px;
   border-radius:14px;
   margin-bottom:20px;
-  backdrop-filter:blur(12px);
-  position:relative;
-  overflow:hidden;
-}
-
-/* brilho suave */
-.user::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
-  opacity:0.2;
-  pointer-events:none;
-}
-
-/* bolinha online */
-.user::after{
-  content:"";
-  position:absolute;
-  top:12px;
-  right:12px;
-  width:8px;
-  height:8px;
-  background:#22c55e;
-  border-radius:50%;
-  box-shadow:0 0 6px #22c55e;
-}
-
-/* texto perfil */
-.user strong{
-  font-size:14px;
-  letter-spacing:0.5px;
-}
-
-.user small{
-  color:#9ca3af;
-  font-size:11px;
 }
 
 /* MENU */
@@ -131,7 +96,6 @@ body{
   cursor:pointer;
   color:#94a3b8;
   transition:0.25s;
-  border:1px solid transparent;
 }
 
 .menu-item i{
@@ -141,15 +105,11 @@ body{
 .menu-item:hover{
   background:rgba(255,255,255,0.04);
   color:#fff;
-  border:1px solid rgba(255,255,255,0.08);
-  transform:translateX(3px);
 }
 
 .active{
   background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.12);
   color:#fff;
-  box-shadow:0 0 8px rgba(255,255,255,0.05);
 }
 
 /* LOGOUT */
@@ -161,14 +121,7 @@ body{
   cursor:pointer;
   display:flex;
   gap:10px;
-  border:1px solid rgba(255,0,0,0.2);
   color:#ff4d4d;
-  transition:0.2s;
-}
-
-.logout:hover{
-  background:rgba(255,0,0,0.1);
-  transform:translateX(3px);
 }
 
 /* MAIN */
@@ -190,8 +143,6 @@ iframe{
 .topbar{
   display:none;
   padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  background:#000000;
 }
 
 .overlay{
@@ -230,7 +181,7 @@ iframe{
 <div>
 
 <div class="logo">
-  <img src="https://i.ibb.co/mCty6z1F/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+  <img src="https://i.ibb.co/Y4PTJ78n/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
   <span class="logo-text">
     <span class="nex">NEX</span><span class="bank">BANK</span>
   </span>
@@ -274,10 +225,7 @@ iframe{
 
 <div class="topbar">
   <i class="ri-menu-line" onclick="abrirMenu()"></i>
-  <strong>
-    <span style="background:linear-gradient(180deg,#3b82f6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NEX</span>
-    <span style="background:linear-gradient(180deg,#fff,#6b7280);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BANK</span>
-  </strong>
+  <strong>NEX BANK</strong>
 </div>
 
 <iframe id="frame" src="dashboardcompleto.html"></iframe>
@@ -295,13 +243,13 @@ if(!logado || tipo !== "root"){
 
 let usuario = localStorage.getItem("usuario") || "ROOT";
 
-userBox.innerHTML = `
+document.getElementById("userBox").innerHTML = `
 <strong>${usuario}</strong><br>
 <small>ROOT</small>
 `;
 
 function abrir(pagina, el){
-  frame.src = pagina;
+  document.getElementById("frame").src = pagina;
 
   document.querySelectorAll(".menu-item")
     .forEach(i=>i.classList.remove("active"));
@@ -311,13 +259,13 @@ function abrir(pagina, el){
 }
 
 function abrirMenu(){
-  sidebar.classList.add("active");
-  overlay.style.display = "block";
+  document.getElementById("sidebar").classList.add("active");
+  document.getElementById("overlay").style.display = "block";
 }
 
 function fecharMenu(){
-  sidebar.classList.remove("active");
-  overlay.style.display = "none";
+  document.getElementById("sidebar").classList.remove("active");
+  document.getElementById("overlay").style.display = "none";
 }
 
 function logout(){
