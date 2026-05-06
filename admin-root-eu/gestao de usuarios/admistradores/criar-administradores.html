@@ -2,14 +2,23 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+viewport-fit=cover">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <title>Criar Admin</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"SF Pro Display","Segoe UI";
+}
 
 html,body{
   height:100%;
@@ -20,38 +29,71 @@ html,body{
 body{
   background:#050505;
   color:white;
+
   padding:
-    calc(20px + env(safe-area-inset-top))
-    16px
-    calc(30px + env(safe-area-inset-bottom));
+  calc(20px + env(safe-area-inset-top))
+  16px
+  calc(30px + env(safe-area-inset-bottom));
+
+  background:
+  radial-gradient(circle at top right,
+  rgba(59,130,246,.08),
+  transparent 30%),
+
+  radial-gradient(circle at bottom left,
+  rgba(59,130,246,.04),
+  transparent 30%),
+
+  #050505;
 }
 
-.container{max-width:520px;margin:auto;width:100%;}
+.container{
+  max-width:520px;
+  margin:auto;
+  width:100%;
+}
 
 /* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
+
   margin-bottom:22px;
 }
 
 .title{
   display:flex;
   align-items:center;
-  gap:10px;
-  font-size:18px;
-  font-weight:600;
+  gap:12px;
+
+  font-size:19px;
+  font-weight:700;
 }
 
 .icon{
-  width:36px;
-  height:36px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  width:42px;
+  height:42px;
+
+  border-radius:14px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  box-shadow:
+  0 10px 25px rgba(37,99,235,.30);
+}
+
+.icon i{
+  font-size:18px;
 }
 
 .back{
@@ -62,66 +104,150 @@ body{
 
 /* CARD */
 .card{
-  background:#070707;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:20px;
-  padding:20px;
+  background:
+  linear-gradient(
+    180deg,
+    rgba(12,12,12,.98),
+    rgba(6,6,6,.98)
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:28px;
+
+  padding:22px;
+
+  box-shadow:
+  0 25px 60px rgba(0,0,0,.50),
+  inset 0 1px 0 rgba(255,255,255,.03);
 }
 
 /* FIELD */
-.field{margin-top:14px;}
+.field{
+  margin-top:16px;
+}
 
 .label{
   font-size:12px;
   color:#6b7280;
-  margin-bottom:6px;
+
+  margin-bottom:8px;
 }
 
 /* INPUT */
 .input-wrap{
   display:flex;
   align-items:center;
-  gap:10px;
-  background:#050505;
-  border:1px solid #111;
-  border-radius:14px;
-  padding:12px;
-  transition:.2s;
+  gap:12px;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(10,10,10,.98),
+    rgba(5,5,5,.98)
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:16px;
+
+  padding:14px;
+
+  transition:.22s;
 }
 
 .input-wrap i{
   color:#3b82f6;
-  font-size:14px;
+  font-size:15px;
 }
 
 .input-wrap input{
   flex:1;
+
   background:transparent;
   border:none;
   outline:none;
+
   color:white;
+
+  font-size:13px;
 }
 
 .input-wrap:focus-within{
-  border:1px solid #3b82f6;
-  box-shadow:0 0 10px rgba(59,130,246,0.15);
+  border-color:
+  rgba(59,130,246,.20);
+
+  box-shadow:
+  0 0 20px rgba(59,130,246,.08);
+}
+
+/* PREVIEW */
+.banner-preview{
+  margin-top:12px;
+
+  width:100%;
+  height:170px;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(12,12,12,.98),
+    rgba(5,5,5,.98)
+  );
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  position:relative;
+}
+
+.banner-preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.preview-placeholder{
+  color:#6b7280;
+  font-size:12px;
 }
 
 /* SELECT */
 .select{
   width:100%;
-  padding:12px;
-  border-radius:12px;
-  background:#050505;
-  border:1px solid #111;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(10,10,10,.98),
+    rgba(5,5,5,.98)
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
   color:white;
+
+  outline:none;
 }
 
 /* BADGE */
 .plano-badge{
-  margin-top:6px;
+  margin-top:8px;
+
   font-size:11px;
-  color:#3b82f6;
+  color:#60a5fa;
 }
 
 /* SWITCH */
@@ -129,68 +255,140 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-top:18px;
+
+  margin-top:20px;
+
+  background:
+  rgba(255,255,255,.02);
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:18px;
+
+  padding:14px;
 }
 
+.switch span{
+  font-size:12px;
+  color:#9ca3af;
+}
+
+/* TOGGLE */
 .toggle{
-  width:44px;
+  width:46px;
   height:24px;
+
   border-radius:20px;
+
   background:#111;
+
   position:relative;
+
   cursor:pointer;
+
+  transition:.2s;
 }
 
 .toggle::after{
   content:"";
+
   width:18px;
   height:18px;
+
   background:#fff;
+
   position:absolute;
+
   top:3px;
   left:3px;
+
   border-radius:50%;
+
   transition:.2s;
 }
 
 .toggle.active{
-  background:#3b82f6;
+  background:#2563eb;
 }
 
 .toggle.active::after{
-  left:23px;
+  left:25px;
 }
 
 /* BTN */
 .btn{
-  margin-top:20px;
-  padding:15px;
-  border-radius:16px;
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
-  text-align:center;
+  margin-top:22px;
+
+  height:54px;
+
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
   cursor:pointer;
-  font-weight:600;
+
+  font-weight:700;
+
+  box-shadow:
+  0 15px 35px rgba(37,99,235,.30);
+
+  transition:.22s;
+}
+
+.btn i{
+  font-size:18px;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
 }
 
 /* TOAST */
 .toast{
   position:fixed;
+
   bottom:30px;
   left:16px;
   right:16px;
-  background:#0f0f0f;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(16,16,16,.98),
+    rgba(8,8,8,.98)
+  );
+
   padding:16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
+
+  border-radius:16px;
+
+  border:1px solid rgba(255,255,255,.06);
+
   opacity:0;
+
   transform:translateY(20px);
+
   transition:.3s;
+
+  box-shadow:
+  0 15px 40px rgba(0,0,0,.45);
 }
 
 .toast.show{
   opacity:1;
   transform:translateY(0);
 }
+
 </style>
 </head>
 
@@ -199,162 +397,395 @@ body{
 <div class="container">
 
   <div class="header">
+
     <div class="title">
+
       <div class="icon">
         <i class="ri-shield-user-line"></i>
       </div>
+
       Criar Administrador
+
     </div>
 
-    <div class="back" onclick="voltar()">Voltar</div>
+    <div class="back"
+    onclick="voltar()">
+
+      Voltar
+
+    </div>
+
   </div>
 
   <div class="card">
 
     <!-- NOME -->
     <div class="field">
-      <div class="label">Nome do administrador</div>
-      <div class="input-wrap">
-        <i class="ri-user-line"></i>
-        <input id="nome" placeholder="Ex: João Silva">
+
+      <div class="label">
+        Nome do administrador
       </div>
+
+      <div class="input-wrap">
+
+        <i class="ri-user-line"></i>
+
+        <input
+        id="nome"
+        placeholder="Ex: João Silva">
+
+      </div>
+
     </div>
 
     <!-- EMAIL -->
     <div class="field">
-      <div class="label">Email de acesso</div>
-      <div class="input-wrap">
-        <i class="ri-mail-line"></i>
-        <input id="email" placeholder="admin@empresa.com">
+
+      <div class="label">
+        Email de acesso
       </div>
+
+      <div class="input-wrap">
+
+        <i class="ri-mail-line"></i>
+
+        <input
+        id="email"
+        placeholder="admin@empresa.com">
+
+      </div>
+
     </div>
 
     <!-- SENHA -->
     <div class="field">
-      <div class="label">Senha</div>
-      <div class="input-wrap">
-        <i class="ri-lock-line"></i>
-        <input id="senha" type="password" placeholder="Mínimo 6 caracteres">
+
+      <div class="label">
+        Senha
       </div>
+
+      <div class="input-wrap">
+
+        <i class="ri-lock-line"></i>
+
+        <input
+        id="senha"
+        type="password"
+        placeholder="Mínimo 6 caracteres">
+
+      </div>
+
     </div>
 
     <!-- GATEWAY -->
     <div class="field">
-      <div class="label">Nome da Gateway</div>
-      <div class="input-wrap">
-        <i class="ri-global-line"></i>
-        <input id="gateway" placeholder="Ex: NexPay / PrimePay">
+
+      <div class="label">
+        Nome da Gateway
       </div>
+
+      <div class="input-wrap">
+
+        <i class="ri-global-line"></i>
+
+        <input
+        id="gateway"
+        placeholder="Ex: NexPay / PrimePay">
+
+      </div>
+
+    </div>
+
+    <!-- BANNER -->
+    <div class="field">
+
+      <div class="label">
+        Link do banner
+      </div>
+
+      <div class="input-wrap">
+
+        <i class="ri-image-2-line"></i>
+
+        <input
+        id="banner"
+        placeholder="https://site.com/banner.png"
+        oninput="previewBanner()">
+
+      </div>
+
+      <!-- PREVIEW -->
+      <div
+      id="bannerPreview"
+      class="banner-preview">
+
+        <img
+        id="previewImg"
+        src="">
+
+      </div>
+
     </div>
 
     <!-- PLANO -->
     <div class="field">
-      <div class="label">Plano do administrador</div>
-      <select id="plano" class="select" onchange="atualizarPlano()">
-        <option value="mensal">Mensal</option>
-        <option value="3m">3 meses</option>
-        <option value="6m">6 meses</option>
-        <option value="anual">Anual</option>
-        <option value="vitalicio">Vitalício</option>
+
+      <div class="label">
+        Plano do administrador
+      </div>
+
+      <select
+      id="plano"
+      class="select"
+      onchange="atualizarPlano()">
+
+        <option value="mensal">
+          Mensal
+        </option>
+
+        <option value="3m">
+          3 meses
+        </option>
+
+        <option value="6m">
+          6 meses
+        </option>
+
+        <option value="anual">
+          Anual
+        </option>
+
+        <option value="vitalicio">
+          Vitalício
+        </option>
+
       </select>
 
-      <div id="planoInfo" class="plano-badge"></div>
+      <div id="planoInfo"
+      class="plano-badge"></div>
+
     </div>
 
     <!-- STATUS -->
     <div class="switch">
-      <span style="font-size:12px;color:#9ca3af;">Administrador ativo</span>
-      <div id="toggle" class="toggle active" onclick="toggleStatus()"></div>
+
+      <span>
+        Administrador ativo
+      </span>
+
+      <div
+      id="toggle"
+      class="toggle active"
+      onclick="toggleStatus()"></div>
+
     </div>
 
-    <div class="btn" onclick="criarAdmin()">Criar administrador</div>
+    <!-- BTN -->
+    <div class="btn"
+    onclick="criarAdmin()">
+
+      <i class="ri-add-circle-line"></i>
+
+      Criar administrador
+
+    </div>
 
   </div>
 
 </div>
 
-<div id="toast" class="toast">Administrador criado com sucesso</div>
+<div id="toast"
+class="toast">
+
+  Administrador criado com sucesso
+
+</div>
 
 <script>
 
 let ativo = true;
 
 function toggleStatus(){
+
   ativo = !ativo;
+
   toggle.classList.toggle("active");
+
 }
 
 function atualizarPlano(){
+
   let info = {
+
     mensal:"Renovação mensal",
+
     "3m":"Duração de 3 meses",
+
     "6m":"Duração de 6 meses",
+
     anual:"Duração de 1 ano",
+
     vitalicio:"Acesso vitalício"
+
   };
 
-  planoInfo.innerText = info[planoEl.value];
+  planoInfo.innerText =
+  info[planoEl.value];
+
+}
+
+function previewBanner(){
+
+  let url =
+  bannerEl.value.trim();
+
+  if(!url){
+
+    bannerPreview.style.display =
+    "none";
+
+    return;
+
+  }
+
+  previewImg.src = url;
+
+  bannerPreview.style.display =
+  "flex";
+
 }
 
 function calcExp(plano){
+
   let d = new Date();
 
-  if(plano === "mensal") d.setMonth(d.getMonth()+1);
-  if(plano === "3m") d.setMonth(d.getMonth()+3);
-  if(plano === "6m") d.setMonth(d.getMonth()+6);
-  if(plano === "anual") d.setFullYear(d.getFullYear()+1);
-  if(plano === "vitalicio") return null;
+  if(plano==="mensal")
+  d.setMonth(d.getMonth()+1);
+
+  if(plano==="3m")
+  d.setMonth(d.getMonth()+3);
+
+  if(plano==="6m")
+  d.setMonth(d.getMonth()+6);
+
+  if(plano==="anual")
+  d.setFullYear(d.getFullYear()+1);
+
+  if(plano==="vitalicio")
+  return null;
 
   return d.getTime();
+
 }
 
 function criarAdmin(){
 
-  let nome = nomeEl.value.trim();
-  let email = emailEl.value.trim();
-  let senha = senhaEl.value.trim();
-  let gateway = gatewayEl.value.trim();
-  let plano = planoEl.value;
+  let nome =
+  nomeEl.value.trim();
 
-  if(!nome || !email || !senha || !gateway){
+  let email =
+  emailEl.value.trim();
+
+  let senha =
+  senhaEl.value.trim();
+
+  let gateway =
+  gatewayEl.value.trim();
+
+  let banner =
+  bannerEl.value.trim();
+
+  let plano =
+  planoEl.value;
+
+  if(
+    !nome ||
+    !email ||
+    !senha ||
+    !gateway
+  ){
+
     alert("Preencha todos os campos");
+
     return;
+
   }
 
-  let admins = JSON.parse(localStorage.getItem("admins")) || [];
+  let admins =
+  JSON.parse(
+    localStorage.getItem("admins")
+  ) || [];
 
   admins.unshift({
+
     nome,
     email,
     senha,
     gateway,
+    banner,
     plano,
     ativo,
-    criado: Date.now(),
-    expira: calcExp(plano)
+
+    criado:Date.now(),
+
+    expira:calcExp(plano)
+
   });
 
-  localStorage.setItem("admins", JSON.stringify(admins));
+  localStorage.setItem(
+    "admins",
+    JSON.stringify(admins)
+  );
 
   toast.classList.add("show");
 
   setTimeout(()=>{
-    window.location.href = "admins.html";
+
+    window.location.href =
+    "admins.html";
+
   },1200);
+
 }
 
-/* refs */
-let nomeEl = document.getElementById("nome");
-let emailEl = document.getElementById("email");
-let senhaEl = document.getElementById("senha");
-let gatewayEl = document.getElementById("gateway");
-let planoEl = document.getElementById("plano");
-let toggle = document.getElementById("toggle");
-let toast = document.getElementById("toast");
-let planoInfo = document.getElementById("planoInfo");
+/* REFS */
+let nomeEl =
+document.getElementById("nome");
+
+let emailEl =
+document.getElementById("email");
+
+let senhaEl =
+document.getElementById("senha");
+
+let gatewayEl =
+document.getElementById("gateway");
+
+let bannerEl =
+document.getElementById("banner");
+
+let planoEl =
+document.getElementById("plano");
+
+let toggle =
+document.getElementById("toggle");
+
+let toast =
+document.getElementById("toast");
+
+let planoInfo =
+document.getElementById("planoInfo");
+
+let bannerPreview =
+document.getElementById("bannerPreview");
+
+let previewImg =
+document.getElementById("previewImg");
 
 function voltar(){
+
   window.history.back();
+
 }
 
 atualizarPlano();

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>PrimePay Operador</title>
+<title>NEX BANK Operador</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
@@ -26,41 +26,130 @@ body{
   display:flex;
   background:#020202;
   color:#fff;
-  font-family:"Segoe UI",Arial;
+  font-family:"Segoe UI",Arial,sans-serif;
 }
 
 /* SIDEBAR */
 .sidebar{
-  width:270px;
+  width:290px;
   height:100dvh;
 
-  background:#050505;
+  background:
+  linear-gradient(
+    180deg,
+    #050505 0%,
+    #030303 100%
+  );
 
-  border-right:1px solid rgba(255,255,255,.04);
+  border-right:1px solid rgba(255,255,255,.05);
 
-  padding:18px 14px;
+  padding:18px 14px 14px;
 
   display:flex;
   flex-direction:column;
   justify-content:space-between;
 
   overflow-y:auto;
+
+  box-shadow:
+  inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+/* TOP CONTENT */
+.sidebar-content{
+  padding-bottom:18px;
+}
+
+/* LOGO */
+.logo-box{
+  display:flex;
+  align-items:center;
+
+  margin-bottom:22px;
+
+  padding:4px 2px;
+}
+
+.logo-top{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.logo-img{
+  width:54px;
+  height:54px;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+  flex-shrink:0;
+
+  background:#000;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  box-shadow:
+  0 0 20px rgba(0,102,255,.10);
+}
+
+.logo-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* TEXTO */
+.logo-text strong{
+
+  font-size:30px;
+  font-weight:900;
+
+  letter-spacing:1.5px;
+
+  text-transform:uppercase;
+
+  background:linear-gradient(
+    90deg,
+    #19a7ff 0%,
+    #0066ff 22%,
+    #1f7cff 38%,
+    #f5f5f5 55%,
+    #cfcfcf 75%,
+    #ffffff 100%
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  text-shadow:
+  0 0 10px rgba(0,102,255,.18),
+  0 0 20px rgba(255,255,255,.05);
 }
 
 /* USER */
 .user{
-  background:#080808;
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #080808 100%
+  );
 
-  border:1px solid rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
 
-  border-radius:24px;
+  border-radius:26px;
 
-  padding:16px;
+  padding:18px;
 
-  margin-bottom:22px;
+  margin-bottom:18px;
+
+  box-shadow:
+  inset 0 1px 0 rgba(255,255,255,.03),
+  0 0 18px rgba(0,0,0,.25);
 }
 
-/* TOP USER */
 .user-top{
   display:flex;
   align-items:center;
@@ -68,14 +157,19 @@ body{
 }
 
 .avatar{
-  width:54px;
-  height:54px;
+  width:56px;
+  height:56px;
 
   border-radius:18px;
 
-  background:#0f172a;
+  background:
+  linear-gradient(
+    180deg,
+    #101827 0%,
+    #0b1220 100%
+  );
 
-  border:1px solid rgba(59,130,246,.10);
+  border:1px solid rgba(59,130,246,.15);
 
   display:flex;
   align-items:center;
@@ -85,7 +179,7 @@ body{
 }
 
 .avatar i{
-  font-size:23px;
+  font-size:24px;
   color:#3b82f6;
 }
 
@@ -98,14 +192,18 @@ body{
   color:#6b7280;
   font-size:11px;
 
-  margin-bottom:5px;
+  margin-bottom:6px;
+
+  letter-spacing:.4px;
 }
 
 .user strong{
   display:block;
 
-  font-size:15px;
-  font-weight:600;
+  font-size:16px;
+  font-weight:700;
+
+  color:#fff;
 
   white-space:nowrap;
   overflow:hidden;
@@ -114,19 +212,19 @@ body{
 
 /* BADGE */
 .badge{
-  margin-top:10px;
+  margin-top:11px;
 
   display:inline-flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
 
-  padding:7px 11px;
+  padding:7px 12px;
 
   border-radius:999px;
 
-  background:#0c0c0c;
+  background:#0f0f0f;
 
-  border:1px solid rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
 
   font-size:11px;
 
@@ -140,13 +238,16 @@ body{
   border-radius:50%;
 
   background:#22c55e;
+
+  box-shadow:
+  0 0 12px rgba(34,197,94,.55);
 }
 
 /* MENU */
 .menu{
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:10px;
 }
 
 /* ITEM */
@@ -157,9 +258,9 @@ body{
 
   border:1px solid transparent;
 
-  border-radius:18px;
+  border-radius:20px;
 
-  padding:13px 14px;
+  padding:14px;
 
   display:flex;
   align-items:center;
@@ -179,12 +280,17 @@ body{
 
 /* ICON */
 .menu-icon{
-  width:42px;
-  height:42px;
+  width:46px;
+  height:46px;
 
-  border-radius:14px;
+  border-radius:16px;
 
-  background:#0a0a0a;
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #090909 100%
+  );
 
   border:1px solid rgba(255,255,255,.04);
 
@@ -196,8 +302,8 @@ body{
 }
 
 .menu-icon i{
-  font-size:18px;
-  color:#8b949e;
+  font-size:19px;
+  color:#9ca3af;
 }
 
 /* TEXT */
@@ -208,9 +314,9 @@ body{
 
 .menu-text strong{
   font-size:13px;
-  font-weight:600;
+  font-weight:700;
 
-  color:#e5e7eb;
+  color:#f3f4f6;
 }
 
 .menu-text span{
@@ -223,38 +329,54 @@ body{
 
 /* RIGHT */
 .menu-right i{
-  font-size:17px;
-  color:#52525b;
+  font-size:18px;
+  color:#4b5563;
+
+  transition:.18s;
 }
 
 /* HOVER */
 .menu-item:hover{
-  background:#080808;
+  background:#090909;
 
-  border-color:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.05);
+
+  transform:translateY(-1px);
 }
 
 .menu-item:hover .menu-icon{
-  border-color:rgba(59,130,246,.12);
+  background:#0d1322;
 
-  background:#0c1220;
+  border-color:rgba(59,130,246,.16);
 }
 
 .menu-item:hover .menu-icon i{
   color:#3b82f6;
 }
 
+.menu-item:hover .menu-right i{
+  color:#3b82f6;
+}
+
 /* ACTIVE */
 .menu-item.active{
-  background:#0a0a0a;
+  background:
+  linear-gradient(
+    180deg,
+    rgba(13,13,13,1) 0%,
+    rgba(9,9,9,1) 100%
+  );
 
-  border-color:rgba(59,130,246,.12);
+  border-color:rgba(59,130,246,.15);
+
+  box-shadow:
+  0 0 20px rgba(0,102,255,.06);
 }
 
 .menu-item.active .menu-icon{
   background:#0c1220;
 
-  border-color:rgba(59,130,246,.16);
+  border-color:rgba(59,130,246,.22);
 }
 
 .menu-item.active .menu-icon i{
@@ -267,24 +389,29 @@ body{
 
 /* DIVIDER */
 .divider{
-  margin:22px 6px 14px;
+  margin:18px 6px 12px;
 
   color:#52525b;
 
   font-size:10px;
 
-  font-weight:600;
+  font-weight:700;
 
-  letter-spacing:1.2px;
+  letter-spacing:1.3px;
 
   text-transform:uppercase;
 }
 
 /* SUPPORT */
 .support-card{
-  background:#080808;
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #080808 100%
+  );
 
-  border:1px solid rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
 
   border-radius:22px;
 
@@ -296,9 +423,9 @@ body{
 }
 
 .support-card:hover{
-  border-color:rgba(59,130,246,.12);
+  border-color:rgba(59,130,246,.15);
 
-  background:#090909;
+  transform:translateY(-1px);
 }
 
 .support-top{
@@ -308,14 +435,14 @@ body{
 }
 
 .support-icon{
-  width:46px;
-  height:46px;
+  width:48px;
+  height:48px;
 
-  border-radius:15px;
+  border-radius:16px;
 
   background:#0a0a0a;
 
-  border:1px solid rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
 
   display:flex;
   align-items:center;
@@ -324,14 +451,14 @@ body{
 
 .support-icon i{
   color:#3b82f6;
-  font-size:20px;
+  font-size:21px;
 }
 
 .support-text strong{
   display:block;
 
   font-size:14px;
-  font-weight:600;
+  font-weight:700;
 }
 
 .support-text span{
@@ -344,17 +471,27 @@ body{
   font-size:11px;
 }
 
+/* FOOTER */
+.sidebar-footer{
+  padding-top:10px;
+}
+
 /* LOGOUT */
 .logout{
-  margin-top:14px;
+  width:100%;
 
-  background:#080808;
+  background:
+  linear-gradient(
+    180deg,
+    #101010 0%,
+    #090909 100%
+  );
 
-  border:1px solid rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.05);
 
-  border-radius:18px;
+  border-radius:20px;
 
-  padding:15px;
+  padding:16px;
 
   display:flex;
   align-items:center;
@@ -368,17 +505,25 @@ body{
   color:#f87171;
 
   font-size:13px;
-  font-weight:600;
+  font-weight:700;
+
+  box-shadow:
+  inset 0 1px 0 rgba(255,255,255,.02);
 }
 
 .logout i{
-  font-size:17px;
+  font-size:18px;
 }
 
 .logout:hover{
-  background:#0b0b0b;
+  background:#111111;
 
-  border-color:rgba(239,68,68,.14);
+  border-color:rgba(239,68,68,.20);
+
+  transform:translateY(-1px);
+
+  box-shadow:
+  0 0 20px rgba(239,68,68,.06);
 }
 
 /* MAIN */
@@ -391,30 +536,56 @@ body{
   height:100dvh;
 }
 
-/* MOBILE TOP */
+/* TOPBAR */
 .topbar{
   display:none;
 
-  height:65px;
+  height:72px;
 
-  padding:0 16px;
+  padding:0 18px;
 
   align-items:center;
-  gap:12px;
 
-  border-bottom:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.05);
 
   background:#050505;
 }
 
-.topbar strong{
-  font-size:15px;
-  font-weight:600;
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
 .menu-btn{
-  font-size:24px;
+  font-size:30px;
+
+  color:#f5f5f5;
+
   cursor:pointer;
+}
+
+.topbar-logo{
+
+  font-size:24px;
+  font-weight:900;
+
+  letter-spacing:1.2px;
+
+  text-transform:uppercase;
+
+  background:linear-gradient(
+    90deg,
+    #19a7ff 0%,
+    #0066ff 24%,
+    #2d7dff 40%,
+    #ffffff 56%,
+    #d8d8d8 74%,
+    #ffffff 100%
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 /* IFRAME */
@@ -430,7 +601,9 @@ iframe{
   position:fixed;
   inset:0;
 
-  background:rgba(0,0,0,.75);
+  background:rgba(0,0,0,.78);
+
+  backdrop-filter:blur(2px);
 
   display:none;
 
@@ -461,6 +634,10 @@ iframe{
     display:flex;
   }
 
+  .logo-text strong{
+    font-size:22px;
+  }
+
 }
 
 </style>
@@ -476,7 +653,24 @@ onclick="fecharMenu()"></div>
 <div class="sidebar"
 id="sidebar">
 
-  <div>
+  <div class="sidebar-content">
+
+    <!-- LOGO -->
+    <div class="logo-box">
+
+      <div class="logo-top">
+
+        <div class="logo-img">
+          <img src="https://i.ibb.co/Y4PTJ78n/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+        </div>
+
+        <div class="logo-text">
+          <strong>NEX BANK</strong>
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- USER -->
     <div class="user"
@@ -485,7 +679,6 @@ id="sidebar">
     <!-- MENU -->
     <div class="menu">
 
-      <!-- DASHBOARD -->
       <div class="menu-item active"
       onclick="abrir('dashboard2.html', this)">
 
@@ -508,7 +701,6 @@ id="sidebar">
 
       </div>
 
-      <!-- RECEBIMENTOS -->
       <div class="menu-item"
       onclick="abrir('pdv.html', this)">
 
@@ -531,7 +723,6 @@ id="sidebar">
 
       </div>
 
-      <!-- MOV -->
       <div class="menu-item"
       onclick="abrir('extrato.html', this)">
 
@@ -554,7 +745,6 @@ id="sidebar">
 
       </div>
 
-      <!-- SAQUES -->
       <div class="menu-item"
       onclick="abrir('saques.html', this)">
 
@@ -577,7 +767,6 @@ id="sidebar">
 
       </div>
 
-      <!-- CONFIG -->
       <div class="menu-item"
       onclick="abrir('configuracoes-operador.html', this)">
 
@@ -602,12 +791,10 @@ id="sidebar">
 
     </div>
 
-    <!-- DIVIDER -->
     <div class="divider">
       suporte
     </div>
 
-    <!-- SUPPORT -->
     <div class="support-card"
     onclick="abrir('suporte-operador.html')">
 
@@ -633,13 +820,17 @@ id="sidebar">
 
   </div>
 
-  <!-- LOGOUT -->
-  <div class="logout"
-  onclick="logout()">
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
 
-    <i class="ri-logout-box-r-line"></i>
+    <div class="logout"
+    onclick="logout()">
 
-    Encerrar sessão
+      <i class="ri-logout-box-r-line"></i>
+
+      Encerrar sessão
+
+    </div>
 
   </div>
 
@@ -648,15 +839,19 @@ id="sidebar">
 <!-- MAIN -->
 <div class="main">
 
-  <!-- MOBILE -->
+  <!-- TOPBAR -->
   <div class="topbar">
 
-    <i class="ri-menu-line menu-btn"
-    onclick="abrirMenu()"></i>
+    <div class="topbar-left">
 
-    <strong>
-      PrimePay
-    </strong>
+      <i class="ri-menu-line menu-btn"
+      onclick="abrirMenu()"></i>
+
+      <strong class="topbar-logo">
+        NEX BANK
+      </strong>
+
+    </div>
 
   </div>
 

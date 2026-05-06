@@ -820,19 +820,9 @@ async function gerarPix(){
 
   let mensagem =
 
-`💳 Nova cobrança PIX
-
-👤 Cliente: ${nomeCliente.value || "Não informado"}
-
-💰 Valor: ${formatarBRL(valor)}
-
-🧾 CPF: ${cpf.value || "Não informado"}
-
-👨‍💻 Operador: ${usuario}
-
-📌 Status: Pendente
-
-🕒 ${dataAtual}`;
+`Valor: ${formatarBRL(valor)}
+Operador: ${usuario}
+${dataAtual}`;
 
   enviarTelegram(mensagem);
 

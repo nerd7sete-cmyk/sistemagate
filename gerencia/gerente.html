@@ -2,200 +2,902 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Painel Gerente</title>
+<title>NEX BANK Gerente</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
 
 body{
   display:flex;
-  background:#000;
-  color:white;
-  font-family:"Segoe UI", Arial;
+  background:#020202;
+  color:#fff;
+  font-family:"Segoe UI",Arial,sans-serif;
 }
 
 /* SIDEBAR */
 .sidebar{
-  width:250px;
-  height:100vh;
-  background:#000;
-  border-right:1px solid rgba(255,255,255,0.05);
-  padding:20px;
+  width:290px;
+  height:100dvh;
+
+  background:
+  linear-gradient(
+    180deg,
+    #050505 0%,
+    #030303 100%
+  );
+
+  border-right:1px solid rgba(255,255,255,.05);
+
+  padding:18px 14px 14px;
+
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+
+  overflow-y:auto;
+
+  box-shadow:
+  inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+/* CONTENT */
+.sidebar-content{
+  padding-bottom:18px;
 }
 
 /* LOGO */
-.logo{
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:20px;
+.logo-box{
+  display:flex;
+  align-items:center;
 
-  background:linear-gradient(120deg,#fff,#999,#fff);
-  background-size:200%;
+  margin-bottom:22px;
+
+  padding:4px 2px;
+}
+
+.logo-top{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.logo-img{
+  width:54px;
+  height:54px;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+  flex-shrink:0;
+
+  background:#000;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  box-shadow:
+  0 0 20px rgba(0,102,255,.10);
+}
+
+.logo-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* TEXTO */
+.logo-text strong{
+
+  font-size:30px;
+  font-weight:900;
+
+  letter-spacing:1.5px;
+
+  text-transform:uppercase;
+
+  background:linear-gradient(
+    90deg,
+    #19a7ff 0%,
+    #0066ff 22%,
+    #1f7cff 38%,
+    #f5f5f5 55%,
+    #cfcfcf 75%,
+    #ffffff 100%
+  );
+
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:shine 6s linear infinite;
+
+  text-shadow:
+  0 0 10px rgba(0,102,255,.18),
+  0 0 20px rgba(255,255,255,.05);
 }
 
-@keyframes shine{
-  0%{background-position:200%;}
-  100%{background-position:-200%;}
+/* USER */
+.user{
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #080808 100%
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:26px;
+
+  padding:18px;
+
+  margin-bottom:18px;
+
+  box-shadow:
+  inset 0 1px 0 rgba(255,255,255,.03),
+  0 0 18px rgba(0,0,0,.25);
 }
 
-/* PERFIL */
-.user-box{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:20px;
+.user-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
-.user-name{
-  font-size:14px;
-  font-weight:600;
+.avatar{
+  width:56px;
+  height:56px;
+
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+    180deg,
+    #101827 0%,
+    #0b1220 100%
+  );
+
+  border:1px solid rgba(59,130,246,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
 }
 
-.user-role{
+.avatar i{
+  font-size:24px;
+  color:#3b82f6;
+}
+
+.user-info{
+  flex:1;
+  min-width:0;
+}
+
+.painel{
+  color:#6b7280;
   font-size:11px;
-  color:#777;
-  margin-top:3px;
+
+  margin-bottom:6px;
+
+  letter-spacing:.4px;
+}
+
+.user strong{
+  display:block;
+
+  font-size:16px;
+  font-weight:700;
+
+  color:#fff;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* BADGE */
+.badge{
+  margin-top:11px;
+
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:7px 12px;
+
+  border-radius:999px;
+
+  background:#0f0f0f;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  font-size:11px;
+
+  color:#d1d5db;
+}
+
+.badge-dot{
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:
+  0 0 12px rgba(34,197,94,.55);
 }
 
 /* MENU */
-.menu-item{
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:10px;
-  cursor:pointer;
+.menu{
   display:flex;
+  flex-direction:column;
   gap:10px;
-  color:#aaa;
-  transition:0.2s;
 }
 
+/* ITEM */
+.menu-item{
+  width:100%;
+
+  background:transparent;
+
+  border:1px solid transparent;
+
+  border-radius:20px;
+
+  padding:14px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  cursor:pointer;
+
+  transition:.18s ease;
+}
+
+/* LEFT */
+.menu-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+/* ICON */
+.menu-icon{
+  width:46px;
+  height:46px;
+
+  border-radius:16px;
+
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #090909 100%
+  );
+
+  border:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:.18s;
+}
+
+.menu-icon i{
+  font-size:19px;
+  color:#9ca3af;
+}
+
+/* TEXT */
+.menu-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.menu-text strong{
+  font-size:13px;
+  font-weight:700;
+
+  color:#f3f4f6;
+}
+
+.menu-text span{
+  margin-top:3px;
+
+  font-size:11px;
+
+  color:#6b7280;
+}
+
+/* RIGHT */
+.menu-right i{
+  font-size:18px;
+  color:#4b5563;
+
+  transition:.18s;
+}
+
+/* HOVER */
 .menu-item:hover{
-  background:#0a0a0a;
-  color:#fff;
+  background:#090909;
+
+  border-color:rgba(255,255,255,.05);
+
+  transform:translateY(-1px);
 }
 
-.active{
-  background:#0a0a0a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.08);
+.menu-item:hover .menu-icon{
+  background:#0d1322;
+
+  border-color:rgba(59,130,246,.16);
 }
 
-/* 🔥 SUPORTE PREMIUM */
-.suporte{
-  border:1px solid rgba(59,130,246,0.25);
-  background:linear-gradient(145deg,#0a0a0a,#020617);
+.menu-item:hover .menu-icon i{
   color:#3b82f6;
-  box-shadow:0 0 15px rgba(59,130,246,0.15);
 }
 
-.suporte:hover{
-  color:#fff;
-  box-shadow:0 0 20px rgba(59,130,246,0.4);
+.menu-item:hover .menu-right i{
+  color:#3b82f6;
+}
+
+/* ACTIVE */
+.menu-item.active{
+  background:
+  linear-gradient(
+    180deg,
+    rgba(13,13,13,1) 0%,
+    rgba(9,9,9,1) 100%
+  );
+
+  border-color:rgba(59,130,246,.15);
+
+  box-shadow:
+  0 0 20px rgba(0,102,255,.06);
+}
+
+.menu-item.active .menu-icon{
+  background:#0c1220;
+
+  border-color:rgba(59,130,246,.22);
+}
+
+.menu-item.active .menu-icon i{
+  color:#3b82f6;
+}
+
+.menu-item.active .menu-right i{
+  color:#3b82f6;
+}
+
+/* DIVIDER */
+.divider{
+  margin:18px 6px 12px;
+
+  color:#52525b;
+
+  font-size:10px;
+
+  font-weight:700;
+
+  letter-spacing:1.3px;
+
+  text-transform:uppercase;
+}
+
+/* SUPPORT */
+.support-card{
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #080808 100%
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:22px;
+
+  padding:16px;
+
+  cursor:pointer;
+
+  transition:.18s;
+}
+
+.support-card:hover{
+  border-color:rgba(59,130,246,.15);
+
+  transform:translateY(-1px);
+}
+
+.support-top{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.support-icon{
+  width:48px;
+  height:48px;
+
+  border-radius:16px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.support-icon i{
+  color:#3b82f6;
+  font-size:21px;
+}
+
+.support-text strong{
+  display:block;
+
+  font-size:14px;
+  font-weight:700;
+}
+
+.support-text span{
+  display:block;
+
+  margin-top:4px;
+
+  color:#6b7280;
+
+  font-size:11px;
+}
+
+/* FOOTER */
+.sidebar-footer{
+  padding-top:10px;
 }
 
 /* LOGOUT */
 .logout{
-  padding:12px;
-  border-radius:12px;
-  background:#0a0a0a;
-  color:#fff;
-  cursor:pointer;
+  width:100%;
+
+  background:
+  linear-gradient(
+    180deg,
+    #101010 0%,
+    #090909 100%
+  );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:20px;
+
+  padding:16px;
+
   display:flex;
+  align-items:center;
+  justify-content:center;
   gap:10px;
+
+  cursor:pointer;
+
+  transition:.18s;
+
+  color:#f87171;
+
+  font-size:13px;
+  font-weight:700;
 }
 
-.logout:hover{
-  background:#141414;
+.logout i{
+  font-size:18px;
 }
 
 /* MAIN */
 .main{
   flex:1;
-  background:#000;
+
+  display:flex;
+  flex-direction:column;
+
+  height:100dvh;
 }
 
-iframe{
-  width:100%;
-  height:100vh;
-  border:none;
+/* TOPBAR */
+.topbar{
+  display:none;
+
+  height:72px;
+
+  padding:0 18px;
+
+  align-items:center;
+
+  border-bottom:1px solid rgba(255,255,255,.05);
+
+  background:#050505;
 }
+
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.menu-btn{
+  font-size:30px;
+
+  color:#f5f5f5;
+
+  cursor:pointer;
+}
+
+.topbar-logo{
+
+  font-size:24px;
+  font-weight:900;
+
+  letter-spacing:1.2px;
+
+  text-transform:uppercase;
+
+  background:linear-gradient(
+    90deg,
+    #19a7ff 0%,
+    #0066ff 24%,
+    #2d7dff 40%,
+    #ffffff 56%,
+    #d8d8d8 74%,
+    #ffffff 100%
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* IFRAME */
+iframe{
+  flex:1;
+  width:100%;
+  border:none;
+  background:#020202;
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+
+  background:rgba(0,0,0,.78);
+
+  backdrop-filter:blur(2px);
+
+  display:none;
+
+  z-index:1000;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+  .sidebar{
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    transform:translateX(-100%);
+
+    z-index:1001;
+
+    transition:.3s;
+  }
+
+  .sidebar.active{
+    transform:translateX(0);
+  }
+
+  .topbar{
+    display:flex;
+  }
+
+  .logo-text strong{
+    font-size:22px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
+<div class="overlay"
+id="overlay"
+onclick="fecharMenu()"></div>
 
-  <div>
+<!-- SIDEBAR -->
+<div class="sidebar"
+id="sidebar">
 
-    <div class="logo">PrimePay</div>
+  <div class="sidebar-content">
 
-    <!-- PERFIL -->
-    <div class="user-box">
-      <div class="user-name" id="nomeUser">Carregando...</div>
-      <div class="user-role">Gerente</div>
+    <!-- LOGO -->
+    <div class="logo-box">
+
+      <div class="logo-top">
+
+        <div class="logo-img">
+          <img src="https://i.ibb.co/Y4PTJ78n/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+        </div>
+
+        <div class="logo-text">
+          <strong>NEX BANK</strong>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="menu-item active" onclick="abrir('g-dashboard.html', this)">
-      <i class="ri-home-5-line"></i> Dashboard
+    <!-- USER -->
+    <div class="user"
+    id="userBox"></div>
+
+    <!-- MENU -->
+    <div class="menu">
+
+      <!-- PAINEL -->
+      <div class="menu-item active"
+      onclick="abrir('g-dashboard.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-home-5-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Painel Geral</strong>
+            <span>Resumo e gestão</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- OPERADORES -->
+      <div class="menu-item"
+      onclick="abrir('g-operadores.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-team-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Operadores</strong>
+            <span>Gerenciar operadores</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- SAQUES -->
+      <div class="menu-item"
+      onclick="abrir('g-saques.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-wallet-3-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Saques</strong>
+            <span>Controle financeiro</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="menu-item" onclick="abrir('g-operadores.html', this)">
-      <i class="ri-user-3-line"></i> Operadores
+    <!-- SUPORTE -->
+    <div class="divider">
+      suporte
     </div>
 
-    <div class="menu-item" onclick="abrir('g-saques.html', this)">
-      <i class="ri-wallet-3-line"></i> Saques
-    </div>
+    <div class="support-card"
+    onclick="abrir('suporte-gerente.html')">
 
-    <!-- 🔥 SUPORTE -->
-    <div class="menu-item suporte" onclick="abrir('suporte-gerente.html', this)">
-      <i class="ri-customer-service-2-line"></i> Suporte
+      <div class="support-top">
+
+        <div class="support-icon">
+          <i class="ri-customer-service-2-line"></i>
+        </div>
+
+        <div class="support-text">
+
+          <strong>Central de Suporte</strong>
+
+          <span>
+            Atendimento prioritário
+          </span>
+
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
-  <div class="logout" onclick="logout()">
-    <i class="ri-logout-box-r-line"></i> Sair
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+
+    <div class="logout"
+    onclick="logout()">
+
+      <i class="ri-logout-box-r-line"></i>
+
+      Encerrar sessão
+
+    </div>
+
   </div>
 
 </div>
 
+<!-- MAIN -->
 <div class="main">
-  <iframe id="frame" src="g-dashboard.html"></iframe>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+
+    <div class="topbar-left">
+
+      <i class="ri-menu-line menu-btn"
+      onclick="abrirMenu()"></i>
+
+      <strong class="topbar-logo">
+        NEX BANK
+      </strong>
+
+    </div>
+
+  </div>
+
+  <!-- FRAME -->
+  <iframe id="frame"
+  src="g-dashboard.html"></iframe>
+
 </div>
 
 <script>
 
-// IDENTIFICAÇÃO
-let usuario = localStorage.getItem("usuario");
-document.getElementById("nomeUser").innerText = usuario || "Gerente";
+/* USER */
+let usuario =
+localStorage.getItem("usuario")
+|| "Gerente";
 
-// NAVEGAÇÃO
-function abrir(pagina, el){
-  document.getElementById("frame").src = pagina;
+let primeiroNome =
+usuario.includes("@")
+? usuario.split("@")[0]
+: usuario.split(" ")[0];
 
-  document.querySelectorAll(".menu-item")
-    .forEach(i => i.classList.remove("active"));
+document.getElementById("userBox").innerHTML = `
 
-  el.classList.add("active");
+  <div class="user-top">
+
+    <div class="avatar">
+      <i class="ri-shield-user-line"></i>
+    </div>
+
+    <div class="user-info">
+
+      <div class="painel">
+        Painel do Gerente
+      </div>
+
+      <strong>
+        ${primeiroNome}
+      </strong>
+
+      <div class="badge">
+
+        <div class="badge-dot"></div>
+
+        Gerente ativo
+
+      </div>
+
+    </div>
+
+  </div>
+
+`;
+
+/* ABRIR */
+function abrir(pagina,el){
+
+  document.getElementById("frame").src =
+  pagina;
+
+  if(el){
+
+    document.querySelectorAll(".menu-item")
+    .forEach(i=>i.classList.remove("active"));
+
+    el.classList.add("active");
+
+  }
+
+  fecharMenu();
+
 }
 
-// LOGOUT
+/* MOBILE */
+function abrirMenu(){
+
+  document.getElementById("sidebar")
+  .classList.add("active");
+
+  document.getElementById("overlay")
+  .style.display = "block";
+
+}
+
+function fecharMenu(){
+
+  document.getElementById("sidebar")
+  .classList.remove("active");
+
+  document.getElementById("overlay")
+  .style.display = "none";
+
+}
+
+/* LOGOUT */
 function logout(){
+
   localStorage.clear();
+
   window.location.href = "login.html";
+
 }
 
 </script>

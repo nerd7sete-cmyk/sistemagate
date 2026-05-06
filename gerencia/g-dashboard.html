@@ -2,20 +2,48 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Dashboard Gerente</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
+}
+
+/* BASE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#050505;
+}
 
 body{
-  background:#0a0a0a;
-  color:white;
-  padding:20px;
+  color:#fff;
+
+  padding:
+    calc(18px + env(safe-area-inset-top))
+    18px
+    calc(24px + env(safe-area-inset-bottom));
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:1400px;
+  margin:auto;
 }
 
 /* HEADER */
@@ -23,243 +51,689 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px;
+  gap:14px;
+  margin-bottom:22px;
+}
+
+.top-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.header-icon{
+  width:54px;
+  height:54px;
+
+  border-radius:18px;
+
+  background:#0f172a;
+
+  border:1px solid rgba(59,130,246,.20);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:
+    0 0 20px rgba(59,130,246,.15);
+}
+
+.header-icon i{
+  font-size:22px;
+  color:#3b82f6;
 }
 
 .top h2{
-  color:#ffffff;
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:-0.8px;
+}
+
+.sub{
+  margin-top:5px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* STATUS */
+.live{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  background:#0b0b0b;
+
+  border:1px solid rgba(255,255,255,.06);
+
+  padding:12px 16px;
+
+  border-radius:14px;
+
+  font-size:12px;
+  color:#d1d5db;
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:0 0 10px #22c55e;
 }
 
 /* GRID */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:15px;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(240px,1fr));
+
+  gap:14px;
 }
 
 /* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:20px;
-  padding:20px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.8),
-    inset 0 0 10px rgba(255,255,255,0.02);
-  transition:0.25s;
   position:relative;
+
+  background:#0b0b0b;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:24px;
+
+  padding:20px;
+
+  overflow:hidden;
+
+  transition:.22s;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.02);
 }
 
 .card:hover{
   transform:translateY(-2px);
-  border-color:#3b82f6;
+
+  border-color:
+  rgba(59,130,246,.18);
 }
 
 /* ICON */
 .icon{
-  position:absolute;
-  top:15px;
-  left:15px;
-  font-size:18px;
-  color:#3b82f6;
-  opacity:0.8;
+  width:46px;
+  height:46px;
+
+  border-radius:16px;
+
+  background:#101010;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* TEXTOS */
-.title{
-  font-size:12px;
+.icon i{
+  font-size:18px;
   color:#3b82f6;
-  margin-left:25px;
+}
+
+/* TEXT */
+.title{
+  margin-top:16px;
+  font-size:12px;
+  color:#6b7280;
 }
 
 .valor{
-  font-size:26px;
-  margin-top:6px;
-  font-weight:600;
+  margin-top:8px;
+
+  font-size:31px;
+  font-weight:700;
+
+  letter-spacing:-1px;
 }
 
-/* LUCRO */
+/* GREEN */
 #lucro{
-  color:#16a34a;
-  text-shadow:0 0 10px rgba(34,197,94,0.4);
+  color:#22c55e;
 }
 
-/* BOTÃO SACAR */
+/* INFO */
+.info{
+  margin-top:14px;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  font-size:11px;
+  color:#9ca3af;
+}
+
+.info-dot{
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+}
+
+/* BUTTON */
 .btn-sacar{
   position:absolute;
-  top:15px;
-  right:15px;
-  padding:8px 16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
+  top:18px;
+  right:18px;
+
+  height:38px;
+
+  padding:0 16px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#101010;
+
+  border:1px solid rgba(59,130,246,.12);
+
+  color:#60a5fa;
+
   font-size:12px;
-  font-weight:600;
+  font-weight:700;
+
   cursor:pointer;
-  background:linear-gradient(145deg,#111,#0a0a0a);
-  color:#e5e7eb;
-  box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.03),
-    0 4px 15px rgba(0,0,0,0.6);
-  transition:all 0.25s ease;
+
+  transition:.2s;
 }
 
 .btn-sacar:hover{
-  color:#fff;
-  border-color:#3b82f6;
+  background:#141414;
+
   box-shadow:
-    0 0 12px rgba(59,130,246,0.4),
-    inset 0 0 10px rgba(59,130,246,0.1);
+    0 0 18px rgba(59,130,246,.18);
 }
 
-.btn-sacar:active{
-  transform:scale(0.96);
-}
-
-/* GRAFICO */
+/* CHART */
 .chart-card{
-  margin-top:20px;
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:20px;
-  padding:20px;
-  border:1px solid rgba(255,255,255,0.05);
+  margin-top:18px;
+
+  background:#0b0b0b;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:26px;
+
+  padding:22px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+.chart-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .chart-title{
-  font-size:12px;
-  color:#3b82f6;
-  margin-bottom:10px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.chart-sub{
+  margin-top:5px;
+
+  font-size:11px;
+  color:#6b7280;
 }
 
 .chart{
-  height:260px !important;
+  margin-top:20px !important;
+
   width:100% !important;
+  height:300px !important;
 }
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .top h2{
+    font-size:20px;
+  }
+
+  .valor{
+    font-size:26px;
+  }
+
+  .chart{
+    height:240px !important;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <h2>Dashboard Gerente</h2>
-</div>
+<div class="container">
 
-<div class="grid">
+  <!-- HEADER -->
+  <div class="top">
 
-  <div class="card">
-    <i class="ri-money-dollar-circle-line icon"></i>
-    <div class="title">Volume total processado</div>
-    <div class="valor" id="total">R$ 0,00</div>
+    <div class="top-left">
+
+      <div class="header-icon">
+        <i class="ri-line-chart-line"></i>
+      </div>
+
+      <div>
+
+        <h2>
+          Dashboard Gerente
+        </h2>
+
+        <div class="sub">
+          Controle financeiro e operacional em tempo real
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="live">
+
+      <div class="live-dot"></div>
+
+      Sistema Online
+
+    </div>
+
   </div>
 
-  <div class="card">
-    <i class="ri-percent-line icon"></i>
-    <div class="title">Taxa do gerente</div>
-    <div class="valor" id="taxaGerente">0%</div>
+  <!-- CARDS -->
+  <div class="grid">
+
+    <!-- TOTAL -->
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-money-dollar-circle-line"></i>
+      </div>
+
+      <div class="title">
+        Volume total processado
+      </div>
+
+      <div class="valor"
+      id="total">
+
+        R$ 0,00
+
+      </div>
+
+      <div class="info">
+
+        <div class="info-dot"></div>
+
+        Atualização automática
+
+      </div>
+
+    </div>
+
+    <!-- OPERADORES -->
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-team-line"></i>
+      </div>
+
+      <div class="title">
+        Quantidade de operadores
+      </div>
+
+      <div class="valor"
+      id="totalOperadores">
+
+        0
+
+      </div>
+
+      <div class="info">
+
+        <div class="info-dot"></div>
+
+        Operadores vinculados
+
+      </div>
+
+    </div>
+
+    <!-- CUSTO -->
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-bank-card-line"></i>
+      </div>
+
+      <div class="title">
+        Custo da plataforma
+      </div>
+
+      <div class="valor"
+      id="taxaDono">
+
+        0%
+
+      </div>
+
+      <div class="info">
+
+        <div class="info-dot"></div>
+
+        Taxa operacional ativa
+
+      </div>
+
+    </div>
+
+    <!-- LUCRO -->
+    <div class="card">
+
+      <button class="btn-sacar"
+      onclick="sacar()">
+
+        Sacar
+
+      </button>
+
+      <div class="icon">
+        <i class="ri-wallet-3-line"></i>
+      </div>
+
+      <div class="title">
+        Lucro líquido disponível
+      </div>
+
+      <div class="valor"
+      id="lucro">
+
+        R$ 0,00
+
+      </div>
+
+      <div class="info">
+
+        <div class="info-dot"></div>
+
+        Disponível para retirada
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div class="card">
-    <i class="ri-bank-line icon"></i>
-    <div class="title">Custo da plataforma</div>
-    <div class="valor" id="taxaDono">0%</div>
+  <!-- CHART -->
+  <div class="chart-card">
+
+    <div class="chart-head">
+
+      <div>
+
+        <div class="chart-title">
+          Desempenho financeiro
+        </div>
+
+        <div class="chart-sub">
+          Volume processado pelos operadores
+        </div>
+
+      </div>
+
+    </div>
+
+    <canvas
+      id="grafico"
+      class="chart">
+    </canvas>
+
   </div>
 
-  <div class="card">
-    <i class="ri-wallet-3-line icon"></i>
-    <button class="btn-sacar" onclick="sacar()">Sacar</button>
-    <div class="title">Lucro líquido disponível</div>
-    <div class="valor" id="lucro">R$ 0,00</div>
-  </div>
-
-</div>
-
-<div class="chart-card">
-  <div class="chart-title">Desempenho financeiro</div>
-  <canvas id="grafico" class="chart"></canvas>
 </div>
 
 <script>
 
-// 🔥 SACAR (mesma lógica do operador)
+/* SACAR */
 function sacar(){
-  if(window.parent && window.parent.document.getElementById("frame")){
-    window.parent.document.getElementById("frame").src = "saques.html";
+
+  if(
+    window.parent &&
+    window.parent.document.getElementById("frame")
+  ){
+
+    window.parent.document.getElementById("frame").src =
+    "saques.html";
+
   }else{
-    window.location.href = "saques.html";
+
+    window.location.href =
+    "saques.html";
+
   }
+
 }
 
-// FORMATADOR BR
+/* FORMAT */
 function f(v){
-  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+  return Number(v || 0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
 }
 
-// DADOS
-let gerenteLogado = localStorage.getItem("usuario");
+/* DADOS */
+let gerenteLogado =
+localStorage.getItem("usuario");
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-let gerentes = JSON.parse(localStorage.getItem("gerentes")) || [];
-let config = JSON.parse(localStorage.getItem("config")) || {taxa:15};
+let transacoes =
+JSON.parse(
+  localStorage.getItem("transacoes")
+)
+|| [];
 
-let gerente = gerentes.find(g => g.email === gerenteLogado);
-let meusOperadores = operadores.filter(o => o.gerente === gerenteLogado);
+let operadores =
+JSON.parse(
+  localStorage.getItem("operadores")
+)
+|| [];
 
-// CALCULO
+let config =
+JSON.parse(
+  localStorage.getItem("config")
+)
+|| {
+  taxa:15
+};
+
+/* OPERADORES */
+let meusOperadores =
+operadores.filter(
+  o => o.gerente === gerenteLogado
+);
+
+/* CALCULO */
 let total = 0;
+
 let porDia = {};
 
-transacoes.forEach(t=>{
-  let op = meusOperadores.find(o => o.email === t.operador);
+transacoes.forEach(t => {
+
+  let op =
+  meusOperadores.find(
+    o => o.email === t.operador
+  );
 
   if(op){
-    let v = Number(t.valor) || 0;
+
+    let v =
+    Number(t.valor) || 0;
+
     total += v;
 
-    let dia = new Date(t.data || Date.now()).getDate();
-    porDia[dia] = (porDia[dia] || 0) + v;
+    let dia =
+    new Date(
+      t.data || Date.now()
+    ).getDate();
+
+    porDia[dia] =
+    (porDia[dia] || 0) + v;
+
   }
+
 });
 
-let dias = Object.keys(porDia);
-let valores = Object.values(porDia);
+let dias =
+Object.keys(porDia);
 
-let taxaGerente = gerente?.taxa || 25;
-let taxaDono = config.taxa || 15;
+let valores =
+Object.values(porDia);
 
-let ganhoGerente = total * (taxaGerente / 100);
-let custoDono = total * (taxaDono / 100);
-let lucro = ganhoGerente - custoDono;
+let taxaDono =
+config.taxa || 15;
 
-// RENDER
-document.getElementById("total").innerText = f(total);
-document.getElementById("taxaGerente").innerText = taxaGerente + "%";
-document.getElementById("taxaDono").innerText = taxaDono + "%";
-document.getElementById("lucro").innerText = f(lucro);
+let lucro =
+total - (
+  total * (taxaDono / 100)
+);
 
-// GRAFICO
-let ctx = document.getElementById("grafico").getContext("2d");
+/* RENDER */
+document.getElementById("total").innerText =
+f(total);
 
-let gradient = ctx.createLinearGradient(0,0,0,260);
-gradient.addColorStop(0,"rgba(59,130,246,0.4)");
-gradient.addColorStop(1,"rgba(59,130,246,0)");
+document.getElementById("totalOperadores").innerText =
+meusOperadores.length;
+
+document.getElementById("taxaDono").innerText =
+taxaDono + "%";
+
+document.getElementById("lucro").innerText =
+f(lucro);
+
+/* CHART */
+let ctx =
+document.getElementById("grafico")
+.getContext("2d");
+
+let gradient =
+ctx.createLinearGradient(
+  0,0,0,300
+);
+
+gradient.addColorStop(
+  0,
+  "rgba(59,130,246,.30)"
+);
+
+gradient.addColorStop(
+  1,
+  "rgba(59,130,246,0)"
+);
 
 new Chart(ctx,{
+
   type:"line",
+
   data:{
+
     labels:dias,
+
     datasets:[{
+
       data:valores,
+
       borderColor:"#3b82f6",
+
       backgroundColor:gradient,
+
       fill:true,
-      tension:0.4
+
+      tension:0.4,
+
+      borderWidth:2,
+
+      pointRadius:3,
+
+      pointBackgroundColor:"#3b82f6"
+
     }]
+
   },
+
   options:{
+
     responsive:true,
+
     maintainAspectRatio:false,
-    plugins:{legend:{display:false}}
+
+    plugins:{
+
+      legend:{
+        display:false
+      }
+
+    },
+
+    scales:{
+
+      x:{
+
+        ticks:{
+          color:"#6b7280"
+        },
+
+        grid:{
+          color:"rgba(255,255,255,.03)"
+        }
+
+      },
+
+      y:{
+
+        ticks:{
+          color:"#6b7280"
+        },
+
+        grid:{
+          color:"rgba(255,255,255,.03)"
+        }
+
+      }
+
+    }
+
   }
+
 });
 
 </script>
