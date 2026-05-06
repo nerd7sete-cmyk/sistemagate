@@ -2,255 +2,683 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Extrato</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
+}
+
+/* 🔥 FIX IPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#050505;
+}
 
 body{
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 60%),
-    #0a0a0a;
   color:white;
-  padding:20px;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+
+  background:
+    radial-gradient(circle at top, rgba(59,130,246,.08), transparent 45%),
+    #050505;
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:1200px;
+  margin:auto;
 }
 
 /* HEADER */
-.header{margin-bottom:25px;}
-.header h1{font-size:22px;}
-.header p{color:#9ca3af;font-size:13px;}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+
+  margin-bottom:26px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon{
+  width:52px;
+  height:52px;
+
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 0 22px rgba(59,130,246,.35);
+}
+
+.icon i{
+  color:#fff;
+  font-size:22px;
+}
+
+.header h1{
+  font-size:24px;
+  font-weight:700;
+}
+
+.header p{
+  margin-top:4px;
+  color:#6b7280;
+  font-size:12px;
+}
+
+/* STATUS */
+.live-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  background:#0b0b0b;
+
+  border:1px solid rgba(34,197,94,.15);
+
+  padding:12px 16px;
+
+  border-radius:14px;
+
+  font-size:12px;
+  color:#22c55e;
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:0 0 12px #22c55e;
+
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  50%{
+    transform:scale(1.5);
+    opacity:.5;
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
 
 /* FILTROS */
 .filtros{
   display:flex;
   gap:10px;
-  margin-bottom:25px;
+  margin-bottom:22px;
   flex-wrap:wrap;
 }
 
 .filtro{
-  padding:8px 14px;
+  padding:11px 16px;
+
   border-radius:999px;
-  background:#0f0f0f;
-  border:1px solid rgba(59,130,246,0.2);
+
+  background:#0b0b0b;
+
+  border:1px solid rgba(255,255,255,.06);
+
   cursor:pointer;
+
   font-size:13px;
+  font-weight:600;
+
   color:#9ca3af;
-  transition:0.2s;
+
+  transition:.2s;
 }
 
 .filtro:hover{
-  border-color:#3b82f6;
-  color:white;
+  border-color:rgba(59,130,246,.3);
+  color:#fff;
 }
 
 .filtro.active{
-  background:#3b82f6;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:white;
   border:none;
+
+  box-shadow:0 0 16px rgba(59,130,246,.25);
 }
 
-/* TABELA */
+/* TABLE */
 .table{
-  border-radius:20px;
-  background:#0f0f0f;
-  border:1px solid rgba(59,130,246,0.15);
+  background:linear-gradient(180deg,#0b0b0b,#070707);
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:24px;
+
   overflow:hidden;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.02);
 }
 
+/* HEADER TABLE */
 .row.header{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1.2fr;
-  padding:16px;
-  font-size:12px;
+  background:rgba(255,255,255,.02);
+
+  border-bottom:1px solid rgba(255,255,255,.05);
+
   color:#6b7280;
+
+  font-size:12px;
+  font-weight:600;
 }
 
+/* ROW */
 .row{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1.2fr;
-  padding:16px;
-  border-top:1px solid #1a1a1a;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr
+    1fr
+    1fr
+    1.2fr;
+
   align-items:center;
-  transition:0.2s;
+
+  padding:18px;
+
+  transition:.2s;
+
+  gap:12px;
 }
 
-.row:hover{background:#111;}
+.row:not(.header){
+  border-top:1px solid rgba(255,255,255,.03);
+}
 
-/* VALORES */
+.row:hover{
+  background:rgba(255,255,255,.015);
+}
+
+/* VALUE */
 .valor{
-  font-weight:600;
+  font-size:15px;
+  font-weight:700;
+  color:#fff;
 }
 
+/* TAXA */
 .taxa{
-  color:#f87171; /* 🔥 vermelho profissional */
+  color:#f87171;
   font-size:13px;
-}
-
-.taxa strong{
   font-weight:600;
 }
 
+.taxa span{
+  color:#6b7280;
+  font-size:11px;
+  margin-left:4px;
+}
+
+/* LIQUIDO */
 .liquido{
   color:#22c55e;
-  font-weight:600;
+  font-weight:700;
+  font-size:15px;
+}
+
+/* CLIENTE */
+.cliente{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:34px;
+  height:34px;
+
+  border-radius:12px;
+
+  background:rgba(59,130,246,.08);
+
+  border:1px solid rgba(59,130,246,.14);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.avatar i{
+  color:#3b82f6;
+  font-size:15px;
 }
 
 /* STATUS */
 .status{
-  padding:6px 10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:8px 12px;
+
   border-radius:999px;
+
   font-size:11px;
-  display:inline-block;
+  font-weight:700;
+
+  width:max-content;
 }
 
 .aprovado{
   color:#22c55e;
-  background:rgba(34,197,94,0.12);
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.15);
 }
 
 .pendente{
   color:#facc15;
-  background:rgba(250,204,21,0.12);
+  background:rgba(250,204,21,.10);
+  border:1px solid rgba(250,204,21,.12);
 }
 
 /* DATA */
 .data{
-  font-size:12px;
-  color:#9ca3af;
   display:flex;
   flex-direction:column;
+
+  gap:3px;
+
+  font-size:13px;
+  color:#d1d5db;
 }
 
 .hora{
-  font-size:11px;
   color:#6b7280;
+  font-size:11px;
 }
 
 /* EMPTY */
 .empty{
   text-align:center;
-  padding:30px;
+  padding:45px 20px;
   color:#6b7280;
+  font-size:13px;
 }
 
 /* MOBILE */
-@media(max-width:700px){
-  .row.header{display:none;}
+@media(max-width:900px){
+
+  .row.header{
+    display:none;
+  }
+
   .row{
     grid-template-columns:1fr;
-    gap:6px;
+    gap:10px;
   }
+
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>Extrato</h1>
-  <p>Histórico financeiro detalhado</p>
-</div>
+<div class="container">
 
-<div class="filtros">
-  <div class="filtro active" onclick="filtrar('todos', this)">Todos</div>
-  <div class="filtro" onclick="filtrar('aprovado', this)">Aprovados</div>
-  <div class="filtro" onclick="filtrar('pendente', this)">Pendentes</div>
-</div>
+  <!-- HEADER -->
+  <div class="header">
 
-<div class="table" id="tabela"></div>
+    <div class="header-left">
+
+      <div class="icon">
+        <i class="ri-file-chart-line"></i>
+      </div>
+
+      <div>
+
+        <h1>Extrato financeiro</h1>
+
+        <p>
+          Histórico detalhado das operações processadas
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="live-status">
+
+      <div class="live-dot"></div>
+
+      Atualização em tempo real
+
+    </div>
+
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+
+    <div class="filtro active"
+      onclick="filtrar('todos', this)">
+      Todos
+    </div>
+
+    <div class="filtro"
+      onclick="filtrar('aprovado', this)">
+      Aprovados
+    </div>
+
+    <div class="filtro"
+      onclick="filtrar('pendente', this)">
+      Pendentes
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table" id="tabela"></div>
+
+</div>
 
 <script>
 
+/* FORMAT */
 function formatar(v){
-  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+  return Number(v || 0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
 }
 
+/* STATUS */
 function renderStatus(s){
-  if(s==="aprovado") return `<span class="status aprovado">Aprovado</span>`;
-  return `<span class="status pendente">Pendente</span>`;
+
+  if(s==="aprovado"){
+
+    return `
+      <span class="status aprovado">
+        Aprovado
+      </span>
+    `;
+
+  }
+
+  return `
+    <span class="status pendente">
+      Pendente
+    </span>
+  `;
+
 }
 
-let usuario = localStorage.getItem("usuario");
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let usuario =
+  localStorage.getItem("usuario");
 
-let dados = transacoes.filter(t => t.operador === usuario);
+let transacoes =
+  JSON.parse(localStorage.getItem("transacoes"))
+  || [];
 
-dados.sort((a,b)=> new Date(b.data) - new Date(a.data));
+let dados =
+  transacoes.filter(
+    t => t.operador === usuario
+  );
 
-const tabela = document.getElementById("tabela");
+dados.sort(
+  (a,b)=>
+    new Date(b.data) - new Date(a.data)
+);
 
+const tabela =
+  document.getElementById("tabela");
+
+/* RENDER */
 function render(lista){
 
   tabela.innerHTML = `
+
     <div class="row header">
+
       <div>Bruto</div>
+
       <div>Taxa</div>
+
       <div>Líquido</div>
+
       <div>Cliente</div>
+
       <div>Status</div>
+
       <div>Data</div>
+
     </div>
+
   `;
 
   if(lista.length === 0){
-    tabela.innerHTML += `<div class="empty">Nenhuma transação encontrada</div>`;
+
+    tabela.innerHTML += `
+
+      <div class="empty">
+
+        Nenhuma transação encontrada
+
+      </div>
+
+    `;
+
     return;
+
   }
 
   lista.forEach(item => {
 
-    let bruto = item.valor_bruto || item.valor;
-    let taxaValor = item.taxa_valor || (bruto * (item.taxa || 0)/100);
-    let liquido = item.valor;
+    let bruto =
+      item.valor_bruto || item.valor;
 
-    let d = new Date(item.data);
+    let taxaValor =
+      item.taxa_valor ||
+      (bruto * (item.taxa || 0)/100);
 
-    let data = d.toLocaleDateString("pt-BR");
-    let hora = d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+    let liquido =
+      item.valor;
+
+    let d =
+      new Date(item.data);
+
+    let data =
+      d.toLocaleDateString("pt-BR");
+
+    let hora =
+      d.toLocaleTimeString(
+        "pt-BR",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
 
     tabela.innerHTML += `
+
       <div class="row">
-        <div class="valor">${formatar(bruto)}</div>
+
+        <div class="valor">
+          ${formatar(bruto)}
+        </div>
 
         <div class="taxa">
-          - <strong>${formatar(taxaValor)}</strong>
-          <span style="color:#9ca3af">(${item.taxa || 0}%)</span>
+
+          - ${formatar(taxaValor)}
+
+          <span>
+            (${item.taxa || 0}%)
+          </span>
+
         </div>
 
-        <div class="liquido">${formatar(liquido)}</div>
+        <div class="liquido">
+          ${formatar(liquido)}
+        </div>
 
-        <div>${item.cliente || "Cliente"}</div>
+        <div class="cliente">
 
-        <div>${renderStatus(item.status)}</div>
+          <div class="avatar">
+            <i class="ri-user-3-line"></i>
+          </div>
+
+          <div>
+            ${item.cliente || "Cliente"}
+          </div>
+
+        </div>
+
+        <div>
+          ${renderStatus(item.status)}
+        </div>
 
         <div class="data">
-          ${data}
-          <span class="hora">${hora}</span>
+
+          <span>
+            ${data}
+          </span>
+
+          <span class="hora">
+            ${hora}
+          </span>
+
         </div>
+
       </div>
+
     `;
+
   });
+
 }
 
+/* FILTRO */
 function filtrar(tipo, el){
 
-  document.querySelectorAll(".filtro")
-    .forEach(f => f.classList.remove("active"));
+  document
+    .querySelectorAll(".filtro")
+    .forEach(f =>
+      f.classList.remove("active")
+    );
 
   el.classList.add("active");
 
   if(tipo === "todos"){
+
     render(dados);
+
   }else{
-    render(dados.filter(d => d.status === tipo));
+
+    render(
+      dados.filter(
+        d => d.status === tipo
+      )
+    );
+
   }
+
 }
 
+/* 🔥 AUTO UPDATE */
+setInterval(()=>{
+
+  transacoes =
+    JSON.parse(localStorage.getItem("transacoes"))
+    || [];
+
+  dados =
+    transacoes.filter(
+      t => t.operador === usuario
+    );
+
+  dados.sort(
+    (a,b)=>
+      new Date(b.data) - new Date(a.data)
+  );
+
+  let ativo =
+    document.querySelector(".filtro.active");
+
+  if(ativo){
+
+    let tipo =
+      ativo.innerText.toLowerCase();
+
+    if(tipo === "todos"){
+
+      render(dados);
+
+    }else{
+
+      render(
+        dados.filter(
+          d => d.status === tipo
+        )
+      );
+
+    }
+
+  }
+
+},3000);
+
+/* INIT */
 render(dados);
 
 </script>

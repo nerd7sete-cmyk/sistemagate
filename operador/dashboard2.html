@@ -2,24 +2,46 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
 
-html, body{
-  max-width:100%;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+/* 🔥 FIX IPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
   overflow-x:hidden;
+  background:#050505;
 }
 
 body{
-  background:#0a0a0a;
   color:white;
-  padding:20px;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:1400px;
+  margin:auto;
 }
 
 /* HEADER */
@@ -27,132 +49,258 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px;
+  gap:12px;
+
+  margin-bottom:24px;
+}
+
+.top-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon-header{
+  width:52px;
+  height:52px;
+
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 0 25px rgba(59,130,246,.35);
+}
+
+.icon-header i{
+  font-size:22px;
+  color:#fff;
 }
 
 .top h2{
-  color:#ffffff;
+  font-size:24px;
+  font-weight:700;
 }
 
+.sub{
+  margin-top:4px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* FILTRO */
 .filtro{
-  background:#0f0f0f;
-  border:1px solid #1a1a1a;
-  padding:10px 14px;
-  border-radius:12px;
+  background:#0b0b0b;
+
+  border:1px solid rgba(255,255,255,.06);
+
+  padding:14px 16px;
+
+  border-radius:16px;
+
   color:white;
+
+  outline:none;
+
+  font-size:13px;
 }
 
 /* GRID */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
 }
 
 .grid-dash{
   display:grid;
-  grid-template-columns: 2fr 1fr;
-  gap:15px;
-}
-
-@media(max-width:900px){
-  .grid-dash{grid-template-columns:1fr;}
+  grid-template-columns:2fr 1fr;
+  gap:16px;
 }
 
 /* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:20px;
-  padding:20px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.8),
-    inset 0 0 10px rgba(255,255,255,0.02);
-  transition:0.25s;
   position:relative;
+
+  background:linear-gradient(180deg,#0b0b0b,#070707);
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:22px;
+
+  padding:20px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.02);
+
+  transition:.25s;
 }
 
 .card:hover{
   transform:translateY(-2px);
-  border-color:#3b82f6;
+  border-color:rgba(59,130,246,.22);
 }
 
-/* ICONES */
-.icon{
+/* GLOW */
+.card::before{
+  content:"";
+
   position:absolute;
-  top:15px;
-  left:15px;
-  font-size:18px;
-  color:#3b82f6;
-  opacity:0.8;
+
+  top:-60px;
+  right:-60px;
+
+  width:120px;
+  height:120px;
+
+  background:rgba(59,130,246,.08);
+
+  border-radius:50%;
+
+  filter:blur(30px);
 }
 
-/* TEXTOS */
+/* ICON */
+.icon{
+  width:42px;
+  height:42px;
+
+  border-radius:14px;
+
+  background:rgba(59,130,246,.08);
+
+  border:1px solid rgba(59,130,246,.12);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin-bottom:14px;
+}
+
+.icon i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+/* TEXT */
 .title{
   font-size:12px;
-  color:#3b82f6;
-  margin-left:25px;
+  color:#6b7280;
 }
 
 .valor{
-  font-size:28px;
-  margin-top:6px;
-  font-weight:600;
+  font-size:30px;
+  font-weight:700;
+
+  margin-top:8px;
+
+  letter-spacing:-1px;
 }
 
-/* 🔥 SALDO PREMIUM */
+.live{
+  margin-top:12px;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  font-size:11px;
+  color:#22c55e;
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:0 0 12px #22c55e;
+
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  50%{
+    transform:scale(1.5);
+    opacity:.5;
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
+/* SALDO */
 #saldo{
-  color:#16a34a;
-  text-shadow:0 0 10px rgba(34,197,94,0.4);
+  color:#22c55e;
+
+  text-shadow:0 0 14px rgba(34,197,94,.28);
 }
 
-/* BOTÃO */
+/* BTN */
 .btn-sacar{
   position:absolute;
-  top:15px;
-  right:15px;
-  padding:8px 16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
+
+  top:18px;
+  right:18px;
+
+  border:none;
+
+  padding:10px 16px;
+
+  border-radius:14px;
+
+  background:rgba(59,130,246,.08);
+
+  border:1px solid rgba(59,130,246,.18);
+
+  color:#3b82f6;
+
   font-size:12px;
-  font-weight:600;
+  font-weight:700;
+
   cursor:pointer;
-  background:linear-gradient(145deg,#111,#0a0a0a);
-  color:#e5e7eb;
-  box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.03),
-    0 4px 15px rgba(0,0,0,0.6);
-  transition:all 0.25s ease;
+
+  transition:.2s;
 }
 
 .btn-sacar:hover{
-  color:#fff;
-  border-color:#3b82f6;
-  box-shadow:
-    0 0 12px rgba(59,130,246,0.4),
-    inset 0 0 10px rgba(59,130,246,0.1);
+  background:rgba(59,130,246,.14);
+  transform:translateY(-1px);
 }
 
-.btn-sacar:active{
-  transform:scale(0.96);
+/* CHART */
+.chart-card{
+  height:420px;
 }
 
-/* PROGRESS */
-.progress{
-  height:8px;
-  background:#1a1a1a;
-  border-radius:999px;
-  margin:12px 0;
-  overflow:hidden;
-}
-
-.bar{
-  height:100%;
-  background:linear-gradient(90deg,#3b82f6,#60a5fa);
+.chart{
+  margin-top:20px !important;
+  width:100% !important;
+  height:320px !important;
 }
 
 /* INDICES */
 .indices{
+  margin-top:20px;
+
   display:flex;
   flex-direction:column;
   gap:18px;
@@ -165,224 +313,612 @@ body{
 }
 
 .circle{
-  width:65px;
-  height:65px;
+  width:72px;
+  height:72px;
+
   border-radius:50%;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 0 10px rgba(59,130,246,0.3);
+
+  font-size:13px;
+  font-weight:700;
+
+  box-shadow:0 0 18px rgba(59,130,246,.18);
 }
 
-/* GRÁFICO */
-.chart{
-  margin-top:15px;
-  height:260px !important;
-  width:100% !important;
+.info-indice strong{
+  font-size:14px;
+}
+
+.info-indice small{
+  color:#6b7280;
+  font-size:12px;
+}
+
+/* PROGRESS */
+.progress{
+  margin-top:16px;
+
+  width:100%;
+  height:10px;
+
+  background:#121212;
+
+  border-radius:999px;
+
+  overflow:hidden;
+}
+
+.bar{
+  height:100%;
+
+  background:linear-gradient(90deg,#2563eb,#60a5fa);
+
+  border-radius:999px;
+
+  transition:.4s;
+}
+
+/* RESPONSIVO */
+@media(max-width:950px){
+
+  .grid-dash{
+    grid-template-columns:1fr;
+  }
+
 }
 
 @media(max-width:700px){
-  .valor{font-size:22px;}
+
+  .top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .valor{
+    font-size:24px;
+  }
+
+  .top h2{
+    font-size:21px;
+  }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <h2>Dashboard</h2>
-  <select class="filtro" id="filtroTempo" onchange="filtrar()">
-    <option value="7">Últimos 7 dias</option>
-    <option value="15">Últimos 15 dias</option>
-    <option value="30" selected>Últimos 30 dias</option>
-    <option value="90">Últimos 90 dias</option>
-  </select>
-</div>
+<div class="container">
 
-<div class="grid">
-  <div class="card">
-    <i class="ri-money-dollar-circle-line icon"></i>
-    <div class="title">Total em vendas</div>
-    <div class="valor" id="total">R$ 0,00</div>
-  </div>
+  <!-- HEADER -->
+  <div class="top">
 
-  <div class="card">
-    <i class="ri-shopping-cart-2-line icon"></i>
-    <div class="title">Pedidos</div>
-    <div class="valor" id="pedidos">0</div>
-  </div>
+    <div class="top-left">
 
-  <div class="card">
-    <i class="ri-bar-chart-line icon"></i>
-    <div class="title">Ticket médio</div>
-    <div class="valor" id="ticket">R$ 0,00</div>
-  </div>
-
-  <div class="card">
-    <i class="ri-wallet-3-line icon"></i>
-    <button class="btn-sacar" onclick="sacar()">Sacar</button>
-    <div class="title">Saldo liquido (disponivel)</div>
-    <div class="valor" id="saldo">R$ 0,00</div>
-  </div>
-</div>
-
-<br>
-
-<div class="grid-dash">
-
-  <div class="card">
-    <div class="title">Vendas por dia</div>
-    <canvas id="grafico" class="chart"></canvas>
-  </div>
-
-  <div class="card">
-    <div class="title">Índices</div>
-
-    <div class="indices">
-      <div class="indice">
-        <div class="circle" id="pixCircle"><span id="pixPerc">0%</span></div>
-        <div><strong>PIX</strong><br><small style="color:#9ca3af">Conversão</small></div>
+      <div class="icon-header">
+        <i class="ri-bar-chart-box-line"></i>
       </div>
 
-      <div class="indice">
-        <div class="circle" id="boletoCircle"><span id="boletoPerc">0%</span></div>
-        <div><strong>Boleto</strong><br><small style="color:#9ca3af">Conversão</small></div>
+      <div>
+
+        <h2>Dashboard</h2>
+
+        <div class="sub">
+          Monitoramento em tempo real das operações financeiras
+        </div>
+
       </div>
 
-      <div class="indice">
-        <div class="circle" id="chargeCircle"><span id="chargePerc">0%</span></div>
-        <div><strong>Chargebacks</strong><br><small style="color:#9ca3af">Período atual</small></div>
+    </div>
+
+    <select class="filtro" id="filtroTempo" onchange="filtrar()">
+      <option value="7">Últimos 7 dias</option>
+      <option value="15">Últimos 15 dias</option>
+      <option value="30" selected>Últimos 30 dias</option>
+      <option value="90">Últimos 90 dias</option>
+    </select>
+
+  </div>
+
+  <!-- TOP CARDS -->
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-money-dollar-circle-line"></i>
       </div>
+
+      <div class="title">
+        Total em vendas
+      </div>
+
+      <div class="valor" id="total">
+        R$ 0,00
+      </div>
+
+      <div class="live">
+        <div class="live-dot"></div>
+        Atualizando em tempo real
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-shopping-cart-2-line"></i>
+      </div>
+
+      <div class="title">
+        Pedidos processados
+      </div>
+
+      <div class="valor" id="pedidos">
+        0
+      </div>
+
+      <div class="live">
+        <div class="live-dot"></div>
+        Fluxo operacional ativo
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-bar-chart-line"></i>
+      </div>
+
+      <div class="title">
+        Ticket médio
+      </div>
+
+      <div class="valor" id="ticket">
+        R$ 0,00
+      </div>
+
+      <div class="live">
+        <div class="live-dot"></div>
+        Métrica calculada automaticamente
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <button class="btn-sacar" onclick="sacar()">
+        Sacar
+      </button>
+
+      <div class="icon">
+        <i class="ri-wallet-3-line"></i>
+      </div>
+
+      <div class="title">
+        Saldo líquido disponível
+      </div>
+
+      <div class="valor" id="saldo">
+        R$ 0,00
+      </div>
+
+      <div class="live">
+        <div class="live-dot"></div>
+        Disponível para saque
+      </div>
+
     </div>
 
   </div>
-</div>
 
-<br>
+  <br>
 
-<div class="grid">
-  <div class="card">
-    <i class="ri-flashlight-line icon"></i>
-    <div class="title">PIX</div>
-    <div class="valor" id="pix">R$ 0,00</div>
-    <div class="progress"><div class="bar" id="pixBar"></div></div>
+  <!-- DASH -->
+  <div class="grid-dash">
+
+    <!-- GRAFICO -->
+    <div class="card chart-card">
+
+      <div class="title">
+        Volume de vendas por dia
+      </div>
+
+      <canvas id="grafico" class="chart"></canvas>
+
+    </div>
+
+    <!-- INDICES -->
+    <div class="card">
+
+      <div class="title">
+        Índices operacionais
+      </div>
+
+      <div class="indices">
+
+        <div class="indice">
+
+          <div class="circle" id="pixCircle">
+            <span id="pixPerc">0%</span>
+          </div>
+
+          <div class="info-indice">
+            <strong>PIX</strong><br>
+            <small>Conversão do período</small>
+          </div>
+
+        </div>
+
+        <div class="indice">
+
+          <div class="circle" id="boletoCircle">
+            <span id="boletoPerc">0%</span>
+          </div>
+
+          <div class="info-indice">
+            <strong>Boleto</strong><br>
+            <small>Conversão do período</small>
+          </div>
+
+        </div>
+
+        <div class="indice">
+
+          <div class="circle" id="chargeCircle">
+            <span id="chargePerc">0%</span>
+          </div>
+
+          <div class="info-indice">
+            <strong>Chargebacks</strong><br>
+            <small>Índice operacional atual</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div class="card">
-    <i class="ri-file-list-3-line icon"></i>
-    <div class="title">Boleto</div>
-    <div class="valor" id="boleto">R$ 0,00</div>
-    <div class="progress"><div class="bar" id="boletoBar"></div></div>
+  <br>
+
+  <!-- BOTTOM -->
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-flashlight-line"></i>
+      </div>
+
+      <div class="title">
+        Volume PIX
+      </div>
+
+      <div class="valor" id="pix">
+        R$ 0,00
+      </div>
+
+      <div class="progress">
+        <div class="bar" id="pixBar"></div>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">
+        <i class="ri-file-list-3-line"></i>
+      </div>
+
+      <div class="title">
+        Volume boleto
+      </div>
+
+      <div class="valor" id="boleto">
+        R$ 0,00
+      </div>
+
+      <div class="progress">
+        <div class="bar" id="boletoBar"></div>
+      </div>
+
+    </div>
+
   </div>
+
 </div>
 
 <script>
-// JS original intacto
+
+/* 🔥 SACAR */
 function sacar(){
-  if(window.parent && window.parent.document.getElementById("frame")){
-    window.parent.document.getElementById("frame").src = "saques.html";
+
+  if(
+    window.parent &&
+    window.parent.document.getElementById("frame")
+  ){
+
+    window.parent.document.getElementById("frame").src =
+      "saques.html";
+
   }else{
+
     window.location.href = "saques.html";
+
   }
+
 }
 
-let usuario = localStorage.getItem("usuario");
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
+let usuario =
+  localStorage.getItem("usuario");
+
+let transacoes =
+  JSON.parse(localStorage.getItem("transacoes"))
+  || [];
+
+let operadores =
+  JSON.parse(localStorage.getItem("operadores"))
+  || [];
 
 let chart;
 
+/* FILTRO */
 function filtrar(){
-  let dias = Number(document.getElementById("filtroTempo").value);
+
+  let dias = Number(
+    document.getElementById("filtroTempo").value
+  );
+
   let agora = new Date();
 
   let filtradas = transacoes.filter(t=>{
-    if(t.operador !== usuario) return false;
+
+    if(t.operador !== usuario){
+      return false;
+    }
+
     let data = new Date(t.data);
-    let diff = (agora - data) / (1000*60*60*24);
+
+    let diff =
+      (agora - data) /
+      (1000*60*60*24);
+
     return diff <= dias;
+
   });
 
   carregar(filtradas);
+
 }
 
+/* LOAD */
 function carregar(minhas){
-  let total=0, pix=0, boleto=0;
+
+  let total=0;
+  let pix=0;
+  let boleto=0;
+
   let pedidos = minhas.length;
+
   let porDia={};
 
   minhas.forEach(t=>{
+
     let v = Number(t.valor)||0;
-    total+=v;
-    if(t.tipo==="pix") pix+=v;
-    if(t.tipo==="boleto") boleto+=v;
-    let dia=new Date(t.data).getDate();
-    porDia[dia]=(porDia[dia]||0)+v;
+
+    total += v;
+
+    if(t.tipo==="pix"){
+      pix += v;
+    }
+
+    if(t.tipo==="boleto"){
+      boleto += v;
+    }
+
+    let dia =
+      new Date(t.data).getDate();
+
+    porDia[dia] =
+      (porDia[dia]||0)+v;
+
   });
 
-  let operador = operadores.find(o=>o.email===usuario);
-  let taxa = operador?.taxa || 10;
-  let saldo = total * (1 - taxa/100);
+  let operador =
+    operadores.find(o=>o.email===usuario);
+
+  let taxa =
+    operador?.taxa || 10;
+
+  let saldo =
+    total * (1 - taxa/100);
 
   function f(v){
-    return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+    return v.toLocaleString(
+      "pt-BR",
+      {
+        style:"currency",
+        currency:"BRL"
+      }
+    );
+
   }
 
-  document.getElementById("total").innerText=f(total);
-  document.getElementById("pedidos").innerText=pedidos;
-  document.getElementById("ticket").innerText=f(total/(pedidos||1));
-  document.getElementById("saldo").innerText=f(saldo);
+  document.getElementById("total").innerText =
+    f(total);
 
-  document.getElementById("pix").innerText=f(pix);
-  document.getElementById("boleto").innerText=f(boleto);
+  document.getElementById("pedidos").innerText =
+    pedidos;
 
-  let pixPerc = total ? (pix/total)*100 : 0;
-  let boletoPerc = total ? (boleto/total)*100 : 0;
+  document.getElementById("ticket").innerText =
+    f(total/(pedidos||1));
 
-  document.getElementById("pixBar").style.width=pixPerc+"%";
-  document.getElementById("boletoBar").style.width=boletoPerc+"%";
+  document.getElementById("saldo").innerText =
+    f(saldo);
+
+  document.getElementById("pix").innerText =
+    f(pix);
+
+  document.getElementById("boleto").innerText =
+    f(boleto);
+
+  let pixPerc =
+    total ? (pix/total)*100 : 0;
+
+  let boletoPerc =
+    total ? (boleto/total)*100 : 0;
+
+  document.getElementById("pixBar").style.width =
+    pixPerc+"%";
+
+  document.getElementById("boletoBar").style.width =
+    boletoPerc+"%";
 
   function setCircle(id,val){
+
     document.getElementById(id).style.background =
-      `conic-gradient(#3b82f6 ${val*3.6}deg,#1a1a1a 0)`;
+      `conic-gradient(
+        #3b82f6 ${val*3.6}deg,
+        #1a1a1a 0
+      )`;
+
   }
 
   setCircle("pixCircle",pixPerc);
   setCircle("boletoCircle",boletoPerc);
   setCircle("chargeCircle",0);
 
-  document.getElementById("pixPerc").innerText=pixPerc.toFixed(1)+"%";
-  document.getElementById("boletoPerc").innerText=boletoPerc.toFixed(1)+"%";
+  document.getElementById("pixPerc").innerText =
+    pixPerc.toFixed(1)+"%";
 
-  if(chart) chart.destroy();
+  document.getElementById("boletoPerc").innerText =
+    boletoPerc.toFixed(1)+"%";
 
-  let ctx = document.getElementById("grafico").getContext("2d");
+  document.getElementById("chargePerc").innerText =
+    "0%";
 
-  let gradient = ctx.createLinearGradient(0,0,0,260);
-  gradient.addColorStop(0,"rgba(59,130,246,0.4)");
-  gradient.addColorStop(1,"rgba(59,130,246,0)");
+  if(chart){
+    chart.destroy();
+  }
+
+  let ctx =
+    document.getElementById("grafico")
+    .getContext("2d");
+
+  let gradient =
+    ctx.createLinearGradient(0,0,0,320);
+
+  gradient.addColorStop(
+    0,
+    "rgba(59,130,246,.35)"
+  );
+
+  gradient.addColorStop(
+    1,
+    "rgba(59,130,246,0)"
+  );
 
   chart = new Chart(ctx,{
+
     type:"line",
+
     data:{
+
       labels:Object.keys(porDia),
+
       datasets:[{
+
         data:Object.values(porDia),
+
         borderColor:"#3b82f6",
+
         backgroundColor:gradient,
+
         fill:true,
-        tension:0.4
+
+        tension:0.4,
+
+        borderWidth:3,
+
+        pointRadius:4,
+
+        pointBackgroundColor:"#3b82f6"
+
       }]
+
     },
+
     options:{
+
       responsive:true,
+
       maintainAspectRatio:false,
-      plugins:{legend:{display:false}}
+
+      plugins:{
+
+        legend:{
+          display:false
+        }
+
+      },
+
+      scales:{
+
+        x:{
+
+          ticks:{
+            color:"#6b7280"
+          },
+
+          grid:{
+            color:"rgba(255,255,255,.03)"
+          }
+
+        },
+
+        y:{
+
+          ticks:{
+            color:"#6b7280"
+          },
+
+          grid:{
+            color:"rgba(255,255,255,.03)"
+          }
+
+        }
+
+      }
+
     }
+
   });
+
 }
 
+/* 🔥 AUTO UPDATE */
+setInterval(()=>{
+
+  transacoes =
+    JSON.parse(localStorage.getItem("transacoes"))
+    || [];
+
+  filtrar();
+
+},3000);
+
+/* INIT */
 filtrar();
+
 </script>
 
 </body>

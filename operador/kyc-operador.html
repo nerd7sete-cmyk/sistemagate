@@ -2,99 +2,305 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Verificação de Conta</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-body{
+
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family:"Segoe UI";
+}
+
+/* 🔥 FIX iPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
   background:#050505;
+}
+
+body{
   color:#fff;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
 .container{
+  width:100%;
   max-width:720px;
   margin:auto;
-  padding:25px;
 }
 
-.title{font-size:24px;font-weight:600;}
-.sub{font-size:13px;color:#9ca3af;margin-bottom:15px;}
+/* HEADER */
+.header{
+  margin-bottom:22px;
+}
 
-.card{
-  background:#0a0a0a;
-  padding:16px;
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.icon{
+  width:46px;
+  height:46px;
   border-radius:14px;
-  margin-top:15px;
-  border:1px solid rgba(255,255,255,0.05);
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 20px rgba(59,130,246,.35);
+  flex-shrink:0;
 }
 
-.label{font-size:12px;color:#9ca3af;}
+.icon i{
+  font-size:20px;
+  color:#fff;
+}
 
-input{
+.title{
+  font-size:22px;
+  font-weight:700;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+  line-height:1.5;
+}
+
+/* STATUS */
+.status-box{
+  margin-top:18px;
+  background:rgba(59,130,246,.08);
+  border:1px solid rgba(59,130,246,.18);
+  padding:14px;
+  border-radius:16px;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status-box i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+.status-box span{
+  font-size:12px;
+  color:#d1d5db;
+  line-height:1.5;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#0b0b0b,#070707);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:18px;
+  margin-top:16px;
+}
+
+/* LABEL */
+.label{
+  font-size:12px;
+  color:#9ca3af;
+  margin-bottom:8px;
+}
+
+/* INPUT */
+.input{
   width:100%;
-  padding:11px;
-  margin-top:6px;
-  margin-bottom:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
+  min-width:0;
+  padding:15px 15px 15px 44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.06);
   background:#050505;
   color:#fff;
+  outline:none;
+  transition:.2s;
+  font-size:14px;
 }
 
-.row{display:flex;gap:10px;}
-
-.upload{
-  border:1px dashed rgba(255,255,255,0.1);
-  padding:15px;
-  text-align:center;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-.upload:hover{
+.input:focus{
   border-color:#3b82f6;
+  box-shadow:0 0 12px rgba(59,130,246,.15);
 }
 
-.preview{
+.input::placeholder{
+  color:#555;
+}
+
+/* INPUT BOX */
+.input-box{
+  position:relative;
+}
+
+.input-box i{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#3b82f6;
+  font-size:16px;
+}
+
+/* STATUS INPUT */
+.input-status{
+  margin-top:8px;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#22c55e;
+}
+
+.input-status::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 8px #22c55e;
+}
+
+/* INPUT ERRO */
+.input.error{
+  border-color:#ef4444;
+  box-shadow:0 0 12px rgba(239,68,68,.12);
+}
+
+.input.success{
+  border-color:#22c55e;
+  box-shadow:0 0 12px rgba(34,197,94,.12);
+}
+
+/* ROW */
+.row{
+  display:flex;
+  gap:12px;
   width:100%;
-  margin-top:10px;
-  border-radius:10px;
 }
 
+.row .field{
+  flex:1;
+  min-width:0;
+}
+
+/* INFO BOX */
+.info{
+  margin-top:18px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:16px;
+
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.info i{
+  color:#3b82f6;
+  font-size:18px;
+  margin-top:2px;
+}
+
+.info-text{
+  font-size:12px;
+  color:#9ca3af;
+  line-height:1.6;
+}
+
+/* BUTTON */
 .btn{
   width:100%;
-  padding:15px;
-  margin-top:20px;
   border:none;
-  border-radius:12px;
+  padding:16px;
+  border-radius:16px;
+  margin-top:22px;
+
   background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:#fff;
-  font-size:14px;
+
+  font-size:15px;
+  font-weight:700;
+
   cursor:pointer;
+  transition:.25s;
+
+  box-shadow:
+    0 0 18px rgba(59,130,246,.25),
+    inset 0 1px 0 rgba(255,255,255,.15);
 }
 
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 0 25px rgba(59,130,246,.35),
+    inset 0 1px 0 rgba(255,255,255,.2);
+}
+
+/* TOAST */
 #toast{
   position:fixed;
-  bottom:25px;
-  right:25px;
+
+  left:50%;
+  bottom:30px;
+
+  transform:translateX(-50%) translateY(20px);
+
   background:#0f0f0f;
+  border:1px solid rgba(255,255,255,.08);
+
   padding:14px 18px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+
+  font-size:13px;
+  color:#fff;
+
   opacity:0;
-  transform:translateY(20px);
-  transition:0.3s;
+  transition:.3s;
+
+  z-index:9999;
+
+  width:max-content;
+  max-width:90%;
+  text-align:center;
 }
 
 #toast.show{
   opacity:1;
-  transform:translateY(0);
+  transform:translateX(-50%) translateY(0);
 }
+
+/* MOBILE */
+@media(max-width:600px){
+
+  .row{
+    flex-direction:column;
+  }
+
+  .title{
+    font-size:20px;
+  }
+
+}
+
 </style>
 </head>
 
@@ -102,55 +308,166 @@ input{
 
 <div class="container">
 
-  <div class="title">Verificação de Conta</div>
-  <div class="sub">Confirme sua identidade para liberar saques</div>
+  <!-- HEADER -->
+  <div class="header">
 
-  <div class="card">
-    <div class="label">Dados pessoais</div>
-    <input id="nome" placeholder="Nome completo">
+    <div class="header-top">
 
-    <div class="row">
-      <input id="cpf" placeholder="CPF">
-      <input id="nascimento" type="date">
-    </div>
-  </div>
+      <div class="icon">
+        <i class="ri-shield-check-line"></i>
+      </div>
 
-  <div class="card">
-    <div class="label">Endereço</div>
+      <div>
+        <div class="title">Verificação de Conta</div>
 
-    <input id="rua" placeholder="Rua">
+        <div class="sub">
+          Complete seus dados para ativar sua conta e liberar operações financeiras.
+        </div>
+      </div>
 
-    <div class="row">
-      <input id="numero" placeholder="Número">
-      <input id="cidade" placeholder="Cidade">
     </div>
 
-    <input id="cep" placeholder="CEP">
+    <div class="status-box">
+      <i class="ri-information-line"></i>
+
+      <span>
+        Seus dados são protegidos por criptografia e utilizados apenas para validação da conta.
+      </span>
+    </div>
+
   </div>
 
-  <!-- UPLOADS -->
+  <!-- DADOS -->
   <div class="card">
-    <div class="label">Documento (Frente)</div>
-    <div class="upload" onclick="docFront.click()">Enviar frente</div>
-    <input type="file" id="docFront" accept="image/*" hidden onchange="preview(this,'frontPreview')">
-    <img id="frontPreview" class="preview">
+
+    <div class="label">Nome completo</div>
+
+    <div class="input-box">
+      <i class="ri-user-3-line"></i>
+      <input class="input" id="nome" placeholder="Digite seu nome completo">
+    </div>
+
+    <div class="row" style="margin-top:12px;">
+
+      <div class="field">
+
+        <div class="label">CPF</div>
+
+        <div class="input-box">
+          <i class="ri-shield-check-line"></i>
+
+          <input
+            class="input"
+            id="cpf"
+            placeholder="000.000.000-00"
+            maxlength="14"
+            oninput="mascaraCPF(this)"
+          >
+        </div>
+
+        <div class="input-status" id="cpfStatus">
+          Documento protegido e validado
+        </div>
+
+      </div>
+
+      <div class="field">
+
+        <div class="label">Nascimento</div>
+
+        <div class="input-box">
+          <i class="ri-calendar-line"></i>
+
+          <input
+            class="input"
+            id="nascimento"
+            placeholder="DD / MM / AAAA"
+            maxlength="14"
+            oninput="mascaraData(this)"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
+  <!-- ENDEREÇO -->
   <div class="card">
-    <div class="label">Documento (Verso)</div>
-    <div class="upload" onclick="docBack.click()">Enviar verso</div>
-    <input type="file" id="docBack" accept="image/*" hidden onchange="preview(this,'backPreview')">
-    <img id="backPreview" class="preview">
+
+    <div class="label">Rua</div>
+
+    <div class="input-box">
+      <i class="ri-road-map-line"></i>
+      <input class="input" id="rua" placeholder="Digite sua rua">
+    </div>
+
+    <div class="row" style="margin-top:12px;">
+
+      <div class="field">
+
+        <div class="label">Número</div>
+
+        <div class="input-box">
+          <i class="ri-home-4-line"></i>
+          <input class="input" id="numero" placeholder="Número">
+        </div>
+
+      </div>
+
+      <div class="field">
+
+        <div class="label">Cidade</div>
+
+        <div class="input-box">
+          <i class="ri-building-line"></i>
+          <input class="input" id="cidade" placeholder="Cidade">
+        </div>
+
+      </div>
+
+    </div>
+
+    <div style="margin-top:12px;">
+
+      <div class="label">CEP</div>
+
+      <div class="input-box">
+        <i class="ri-map-pin-line"></i>
+
+        <input
+          class="input"
+          id="cep"
+          placeholder="00000-000"
+          maxlength="9"
+          oninput="mascaraCEP(this)"
+        >
+      </div>
+
+      <div class="input-status" id="cepStatus">
+        Endereço protegido por validação
+      </div>
+
+    </div>
+
   </div>
 
-  <div class="card">
-    <div class="label">Selfie</div>
-    <div class="upload" onclick="selfie.click()">Enviar selfie</div>
-    <input type="file" id="selfie" accept="image/*" hidden onchange="preview(this,'selfiePreview')">
-    <img id="selfiePreview" class="preview">
+  <!-- INFO -->
+  <div class="info">
+
+    <i class="ri-lock-line"></i>
+
+    <div class="info-text">
+      Após o envio, sua conta será validada automaticamente conforme as configurações da plataforma.
+    </div>
+
   </div>
 
-  <button class="btn" onclick="enviar()">Enviar para análise</button>
+  <!-- BOTÃO -->
+  <button class="btn" onclick="enviar()">
+    Confirmar dados
+  </button>
 
 </div>
 
@@ -160,8 +477,9 @@ input{
 
 let usuario = localStorage.getItem("usuario") || "user";
 
-/* 🔥 AUTO KYC IMEDIATO AO ENTRAR */
+/* 🔥 AUTO KYC */
 (function autoVerificar(){
+
   let auto = localStorage.getItem("autoKyc") === "true";
 
   if(auto){
@@ -178,86 +496,170 @@ let usuario = localStorage.getItem("usuario") || "user";
         numero: "",
         cidade: "",
         cep: "",
-        frente: "",
-        verso: "",
-        selfie: "",
         status: "aprovado"
       };
 
       localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
     }
 
-    /* 🔥 REDIRECIONA NA HORA */
     setTimeout(()=>{
+
       if(window.parent && window.parent.document.getElementById("frame")){
         window.parent.document.getElementById("frame").src = "perfil-operador.html";
       }else{
         window.location.href = "perfil-operador.html";
       }
-    },300);
+
+    },200);
+
   }
+
 })();
 
-/* preview */
-function preview(input,id){
-  let file = input.files[0];
-
-  if(file){
-    let reader = new FileReader();
-
-    reader.onload = function(e){
-      document.getElementById(id).src = e.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  }
-}
-
+/* TOAST */
 function toast(msg){
+
   let t = document.getElementById("toast");
+
   t.innerText = msg;
+
   t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),2000);
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  },2000);
+
 }
 
+/* CPF */
+function mascaraCPF(input){
+
+  let v = input.value.replace(/\D/g,'');
+
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+
+  input.value = v;
+
+  if(v.length === 14){
+
+    input.classList.remove("error");
+    input.classList.add("success");
+
+    cpfStatus.innerText = "CPF validado com segurança";
+    cpfStatus.style.color = "#22c55e";
+
+  }else{
+
+    input.classList.remove("success");
+
+    if(v.length > 0){
+
+      input.classList.add("error");
+
+      cpfStatus.innerText = "CPF incompleto";
+      cpfStatus.style.color = "#ef4444";
+    }
+
+  }
+
+}
+
+/* DATA */
+function mascaraData(input){
+
+  let v = input.value.replace(/\D/g,'');
+
+  if(v.length > 2){
+    v = v.replace(/^(\d{2})(\d)/,'$1 / $2');
+  }
+
+  if(v.length > 7){
+    v = v.replace(/^(\d{2}) \/ (\d{2})(\d)/,'$1 / $2 / $3');
+  }
+
+  input.value = v;
+
+}
+
+/* CEP */
+function mascaraCEP(input){
+
+  let v = input.value.replace(/\D/g,'');
+
+  v = v.replace(/^(\d{5})(\d)/,'$1-$2');
+
+  input.value = v;
+
+  if(v.length === 9){
+
+    input.classList.remove("error");
+    input.classList.add("success");
+
+    cepStatus.innerText = "CEP validado com segurança";
+    cepStatus.style.color = "#22c55e";
+
+  }else{
+
+    input.classList.remove("success");
+
+    if(v.length > 0){
+
+      input.classList.add("error");
+
+      cepStatus.innerText = "CEP incompleto";
+      cepStatus.style.color = "#ef4444";
+    }
+
+  }
+
+}
+
+/* ENVIAR */
 function enviar(){
 
-  let frente = document.getElementById("frontPreview").src;
-  let verso = document.getElementById("backPreview").src;
-  let selfie = document.getElementById("selfiePreview").src;
-
   if(!nome.value || !cpf.value){
+
     toast("Preencha nome e CPF");
+
     return;
   }
 
   let auto = localStorage.getItem("autoKyc") === "true";
 
   let dados = {
+
     nome: nome.value,
     cpf: cpf.value,
     nascimento: nascimento.value,
+
     rua: rua.value,
     numero: numero.value,
     cidade: cidade.value,
     cep: cep.value,
-    frente: frente || "",
-    verso: verso || "",
-    selfie: selfie || "",
+
     status: auto ? "aprovado" : "analise"
   };
 
   localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
 
-  toast(auto ? "Conta verificada automaticamente ⚡" : "Enviado para análise");
+  toast(
+    auto
+      ? "Conta verificada automaticamente ⚡"
+      : "Dados enviados para análise"
+  );
 
   setTimeout(()=>{
+
     if(window.parent && window.parent.document.getElementById("frame")){
       window.parent.document.getElementById("frame").src = "perfil-operador.html";
     }else{
       window.location.href = "perfil-operador.html";
     }
-  },1000);
+
+  },900);
+
 }
 
 </script>

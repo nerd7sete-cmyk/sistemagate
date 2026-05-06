@@ -2,123 +2,351 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Perfil & Segurança</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-body{
+
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family:"Segoe UI";
+}
+
+/* 🔥 FIX iPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
   background:#050505;
+}
+
+body{
   color:#fff;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
 }
 
 .container{
-  max-width:700px;
+  width:100%;
+  max-width:720px;
   margin:auto;
-  padding:25px;
 }
 
-.title{font-size:24px;font-weight:600;}
-.sub{font-size:13px;color:#9ca3af;margin-bottom:20px;}
+/* HEADER */
+.header{
+  margin-bottom:24px;
+}
 
-.card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  padding:18px;
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon{
+  width:52px;
+  height:52px;
   border-radius:16px;
-  margin-bottom:15px;
-  border:1px solid rgba(255,255,255,0.05);
-}
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
 
-.user{display:flex;align-items:center;gap:12px;}
-
-.avatar{
-  width:45px;height:45px;border-radius:50%;
-  background:#111;
   display:flex;
   align-items:center;
   justify-content:center;
+
+  box-shadow:0 0 22px rgba(59,130,246,.35);
+
+  flex-shrink:0;
+}
+
+.icon i{
+  font-size:22px;
+  color:#fff;
+}
+
+.title{
+  font-size:23px;
+  font-weight:700;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+  line-height:1.5;
+}
+
+/* STATUS TOP */
+.security-status{
+  margin-top:18px;
+
+  background:rgba(59,130,246,.08);
+  border:1px solid rgba(59,130,246,.18);
+
+  border-radius:18px;
+  padding:15px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.security-status i{
+  color:#3b82f6;
   font-size:20px;
 }
 
-.name{font-size:15px;font-weight:600;}
-.email{font-size:12px;color:#9ca3af;}
+.security-status span{
+  font-size:12px;
+  color:#d1d5db;
+  line-height:1.5;
+}
 
-.status{
-  margin-top:12px;
-  display:inline-block;
-  padding:6px 12px;
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#0b0b0b,#070707);
+  border:1px solid rgba(255,255,255,.05);
+
   border-radius:20px;
-  font-size:12px;
+
+  padding:20px;
+  margin-top:16px;
 }
 
-.nao{background:#3f0000;color:#ef4444;}
-.analise{background:#3f2f00;color:#facc15;}
-.aprovado{background:#052e16;color:#22c55e;}
-
-.info-box{
-  margin-top:10px;
-  font-size:12px;
-  color:#9ca3af;
-}
-
-.badge{
-  display:inline-block;
-  margin-top:10px;
-  padding:5px 10px;
-  border-radius:999px;
-  font-size:11px;
-  background:rgba(59,130,246,0.15);
-  color:#3b82f6;
-  border:1px solid rgba(59,130,246,0.2);
-}
-
-.kyc-title{
-  font-size:14px;
-  margin-bottom:6px;
+/* USER */
+.user{
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:14px;
 }
 
-.kyc-desc{
+.avatar{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+
+  background:linear-gradient(145deg,#111,#0a0a0a);
+
+  border:1px solid rgba(255,255,255,.06);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 0 18px rgba(59,130,246,.08);
+}
+
+.avatar i{
+  font-size:24px;
+  color:#3b82f6;
+}
+
+.name{
+  font-size:16px;
+  font-weight:700;
+}
+
+.email{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* STATUS */
+.status{
+  margin-top:16px;
+
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:8px 14px;
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:600;
+}
+
+.status i{
+  font-size:14px;
+}
+
+.nao{
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.15);
+  color:#ef4444;
+}
+
+.analise{
+  background:rgba(250,204,21,.12);
+  border:1px solid rgba(250,204,21,.15);
+  color:#facc15;
+}
+
+.aprovado{
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.15);
+  color:#22c55e;
+}
+
+/* INFO BOX */
+.info-box{
+  margin-top:18px;
+}
+
+.info-item{
+  margin-top:10px;
+
+  background:#050505;
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:14px;
+  padding:14px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.info-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.info-left i{
+  color:#3b82f6;
+  font-size:16px;
+}
+
+.info-label{
+  font-size:11px;
+  color:#6b7280;
+}
+
+.info-value{
+  font-size:13px;
+  color:#fff;
+  margin-top:2px;
+}
+
+/* BADGE */
+.badge{
+  margin-top:14px;
+
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  padding:7px 12px;
+
+  border-radius:999px;
+
+  background:rgba(59,130,246,.1);
+  border:1px solid rgba(59,130,246,.15);
+
+  color:#3b82f6;
+  font-size:11px;
+  font-weight:600;
+}
+
+/* TITLE */
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  font-size:15px;
+  font-weight:700;
+}
+
+.section-title i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+.section-desc{
+  margin-top:10px;
   font-size:12px;
   color:#9ca3af;
+  line-height:1.6;
 }
 
+/* BUTTON */
 .kyc-btn{
   width:100%;
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
+  margin-top:18px;
+
   border:none;
   cursor:pointer;
-  font-size:14px;
+
+  padding:16px;
+
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
   color:#fff;
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
-  box-shadow:0 0 15px rgba(59,130,246,0.3);
+  font-size:14px;
+  font-weight:700;
+
+  transition:.25s;
+
+  box-shadow:
+    0 0 18px rgba(59,130,246,.25),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.kyc-btn:hover{
+  transform:translateY(-2px);
+}
+
+/* BOX STATUS */
+.kyc-done,
+.kyc-pending{
+
+  margin-top:18px;
+
+  border-radius:16px;
+  padding:16px;
+
+  text-align:center;
+
+  font-size:13px;
+  font-weight:600;
 }
 
 .kyc-done{
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
-  background:linear-gradient(145deg,#052e16,#064e3b);
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.15);
   color:#22c55e;
-  text-align:center;
 }
 
 .kyc-pending{
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
-  background:#3f2f00;
+  background:rgba(250,204,21,.12);
+  border:1px solid rgba(250,204,21,.15);
   color:#facc15;
-  text-align:center;
 }
+
+/* MOBILE */
+@media(max-width:600px){
+
+  .title{
+    font-size:20px;
+  }
+
+}
+
 </style>
 </head>
 
@@ -126,33 +354,78 @@ body{
 
 <div class="container">
 
-  <div class="title">Perfil & Segurança</div>
-  <div class="sub">Gerencie seus dados e verificação da conta</div>
+  <!-- HEADER -->
+  <div class="header">
 
+    <div class="header-top">
+
+      <div class="icon">
+        <i class="ri-shield-user-line"></i>
+      </div>
+
+      <div>
+
+        <div class="title">
+          Perfil & Segurança
+        </div>
+
+        <div class="sub">
+          Gerencie seus dados, segurança e validação da sua conta.
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="security-status">
+
+      <i class="ri-lock-2-line"></i>
+
+      <span>
+        Ambiente protegido com criptografia avançada e monitoramento em tempo real.
+      </span>
+
+    </div>
+
+  </div>
+
+  <!-- PERFIL -->
   <div class="card">
+
     <div class="user">
+
       <div class="avatar">
         <i class="ri-user-3-line"></i>
       </div>
+
       <div>
-        <div class="name" id="nomeUser">Usuário</div>
+
+        <div class="name" id="nomeUser">
+          Usuário
+        </div>
+
         <div class="email" id="emailUser"></div>
+
       </div>
+
     </div>
 
     <div id="statusBox"></div>
+
     <div id="dadosKyc" class="info-box"></div>
+
   </div>
 
+  <!-- KYC -->
   <div class="card">
 
-    <div class="kyc-title">
+    <div class="section-title">
       <i class="ri-shield-check-line"></i>
       Verificação de identidade
     </div>
 
-    <div class="kyc-desc" id="descKyc">
-      Para liberar saques e aumentar a segurança da sua conta, é necessário concluir a verificação.
+    <div class="section-desc" id="descKyc">
+      Para liberar operações financeiras e aumentar a segurança da conta, finalize sua verificação.
     </div>
 
     <div id="areaKyc"></div>
@@ -163,83 +436,173 @@ body{
 
 <script>
 
-// 🔥 GARANTE USUÁRIO FIXO
+/* 🔥 USUÁRIO */
 let usuario = localStorage.getItem("usuario");
 
 if(!usuario){
+
   usuario = "usuario@email.com";
+
   localStorage.setItem("usuario", usuario);
+
 }
 
 document.getElementById("emailUser").innerText = usuario;
 
-// CPF MASK
+/* CPF */
 function mascararCPF(cpf){
+
   if(!cpf) return "";
-  return cpf.replace(/(\d{3})\d{3}(\d{3})\d{2}/, "$1***$2**");
+
+  return cpf.replace(
+    /(\d{3})\d{3}(\d{3})\d{2}/,
+    "$1***$2**"
+  );
+
 }
 
-// 🔥 ABRIR KYC
+/* ABRIR KYC */
 function abrirKYC(){
+
   try{
+
     if(window.parent && window.parent !== window){
+
       let frame = window.parent.document.getElementById("frame");
+
       if(frame){
+
         frame.src = "kyc-operador.html";
+
         return;
       }
+
     }
+
   }catch(e){}
 
   window.location.href = "kyc-operador.html";
+
 }
 
-// 🔥 FUNÇÃO PRINCIPAL
+/* 🔥 STATUS */
 function carregarStatus(){
 
-  let dados = JSON.parse(localStorage.getItem("kyc_"+usuario));
+  let dados = JSON.parse(
+    localStorage.getItem("kyc_"+usuario)
+  );
+
   let box = document.getElementById("statusBox");
   let dadosBox = document.getElementById("dadosKyc");
   let area = document.getElementById("areaKyc");
-  let desc = document.getElementById("descKyc");
 
-  // 🔴 NÃO TEM KYC → MOSTRA BOTÃO SEMPRE
+  /* 🔴 NÃO VERIFICADO */
   if(!dados){
-    box.innerHTML = `<div class="status nao">Conta não verificada</div>`;
+
+    box.innerHTML = `
+      <div class="status nao">
+        <i class="ri-close-circle-line"></i>
+        Conta não verificada
+      </div>
+    `;
 
     area.innerHTML = `
       <button class="kyc-btn" onclick="abrirKYC()">
-        Enviar documentos
+        Verificar conta
       </button>
     `;
 
     return;
   }
 
-  // 🟡 ANALISE
+  /* 🟡 EM ANÁLISE */
   if(dados.status === "analise"){
-    box.innerHTML = `<div class="status analise">Em análise</div>`;
-    area.innerHTML = `<div class="kyc-pending">Em análise</div>`;
+
+    box.innerHTML = `
+      <div class="status analise">
+        <i class="ri-loader-4-line"></i>
+        Verificação em análise
+      </div>
+    `;
+
+    area.innerHTML = `
+      <div class="kyc-pending">
+        Seus dados estão sendo analisados.
+      </div>
+    `;
+
     return;
   }
 
-  // 🟢 APROVADO
+  /* 🟢 APROVADO */
   if(dados.status === "aprovado"){
-    box.innerHTML = `<div class="status aprovado">Conta verificada</div>`;
 
-    document.getElementById("nomeUser").innerText = dados.nome || "Usuário";
+    document.getElementById("nomeUser").innerText =
+      dados.nome || "Usuário";
 
-    dadosBox.innerHTML = `
-      <div class="badge">Verificado</div><br><br>
-      CPF: ${mascararCPF(dados.cpf)}<br>
-      Endereço: ${dados.rua || ""}, ${dados.numero || ""} - ${dados.cidade || ""}
+    box.innerHTML = `
+      <div class="status aprovado">
+        <i class="ri-checkbox-circle-line"></i>
+        Conta verificada
+      </div>
+
+      <div class="badge">
+        <i class="ri-verified-badge-line"></i>
+        Verificação concluída
+      </div>
     `;
 
-    area.innerHTML = `<div class="kyc-done">Verificação concluída</div>`;
+    dadosBox.innerHTML = `
+
+      <div class="info-item">
+
+        <div class="info-left">
+
+          <i class="ri-bank-card-line"></i>
+
+          <div>
+            <div class="info-label">CPF</div>
+            <div class="info-value">
+              ${mascararCPF(dados.cpf)}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="info-item">
+
+        <div class="info-left">
+
+          <i class="ri-map-pin-line"></i>
+
+          <div>
+            <div class="info-label">Endereço</div>
+            <div class="info-value">
+              ${dados.rua || "-"},
+              ${dados.numero || "-"} -
+              ${dados.cidade || "-"}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+    area.innerHTML = `
+      <div class="kyc-done">
+        Segurança validada com sucesso.
+      </div>
+    `;
+
   }
+
 }
 
-// 🔥 GARANTE QUE RODA NO TEMPO CERTO
+/* INIT */
 window.onload = carregarStatus;
 
 </script>

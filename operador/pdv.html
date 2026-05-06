@@ -2,222 +2,570 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Terminal de Cobrança - PrimePay</title>
 
 <script src="/auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI", Arial;}
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
+}
+
+/* 🔥 FIX IPHONE */
 html,body{
-  height:100%;
-  min-height:100vh;
+  width:100%;
+  min-height:100%;
   min-height:100dvh;
+  overflow-x:hidden;
+  background:#050505;
 }
 
 body{
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  background:#0a0a0a;
+
   color:white;
+
   padding:
     calc(20px + env(safe-area-inset-top))
     16px
-    calc(20px + env(safe-area-inset-bottom));
+    calc(30px + env(safe-area-inset-bottom));
 }
 
-.card{
+.container{
   width:100%;
-  max-width:420px;
-  padding:22px;
-  border-radius:18px;
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.8),
-    inset 0 0 10px rgba(255,255,255,0.02);
+  max-width:460px;
 }
 
-h2{font-size:18px;margin-bottom:4px;}
-.sub{color:#9ca3af;font-size:12px;margin-bottom:16px;}
+/* HEADER */
+.header{
+  margin-bottom:22px;
+}
 
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon{
+  width:52px;
+  height:52px;
+
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 0 25px rgba(59,130,246,.35);
+}
+
+.icon i{
+  font-size:22px;
+  color:#fff;
+}
+
+.title{
+  font-size:22px;
+  font-weight:700;
+}
+
+.sub{
+  margin-top:4px;
+  font-size:12px;
+  color:#6b7280;
+  line-height:1.5;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#0b0b0b,#070707);
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:22px;
+
+  padding:20px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.02);
+}
+
+/* CONFIG */
 .config-box{
-  background:#0a0a0a;
-  border:1px solid rgba(59,130,246,0.3);
-  padding:14px;
-  border-radius:14px;
-  margin-bottom:14px;
+  background:rgba(59,130,246,.06);
+
+  border:1px solid rgba(59,130,246,.15);
+
+  padding:15px;
+
+  border-radius:18px;
+
+  margin-bottom:18px;
+
+  font-size:12px;
+  color:#cbd5e1;
+
+  line-height:1.7;
+}
+
+.config-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  margin-bottom:10px;
+
+  font-size:13px;
+  font-weight:600;
+  color:#fff;
+}
+
+.config-title i{
+  color:#3b82f6;
+}
+
+/* INPUTS */
+.input-group{
+  margin-top:16px;
+}
+
+.label{
   font-size:12px;
   color:#9ca3af;
-  box-shadow:0 0 10px rgba(59,130,246,0.08);
+  margin-bottom:8px;
 }
 
+.input-box{
+  position:relative;
+}
+
+.input-box i{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+
+  color:#3b82f6;
+  font-size:16px;
+}
+
+.input{
+  width:100%;
+
+  background:#050505;
+  color:#fff;
+
+  border:1px solid rgba(255,255,255,.06);
+
+  border-radius:16px;
+
+  padding:15px 15px 15px 44px;
+
+  outline:none;
+
+  font-size:14px;
+
+  transition:.2s;
+}
+
+.input:focus{
+  border-color:#3b82f6;
+  box-shadow:0 0 12px rgba(59,130,246,.12);
+}
+
+.input::placeholder{
+  color:#555;
+}
+
+/* VALOR */
 .valor-input{
   font-size:34px;
   font-weight:700;
   text-align:center;
-  width:100%;
-  border:none;
-  background:transparent;
-  color:#fff;
+
+  padding-left:15px !important;
 }
 
+/* ALERTA */
+.alert{
+  margin-top:16px;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  color:#9ca3af;
+
+  font-size:12px;
+  line-height:1.6;
+
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.alert i{
+  color:#3b82f6;
+  font-size:16px;
+  margin-top:1px;
+}
+
+/* ERROR */
 .valor-erro{
+  margin-top:8px;
   font-size:12px;
   color:#ef4444;
-  text-align:center;
-  margin-top:5px;
   display:none;
 }
 
-input{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #1a1a1a;
-  background:#0a0a0a;
-  color:white;
-}
-
-input:focus{
-  border:1px solid #3b82f6;
-  box-shadow:0 0 8px rgba(59,130,246,0.2);
-  outline:none;
-}
-
-.alert{
-  margin-top:12px;
-  padding:10px;
-  border-radius:10px;
-  font-size:11px;
-  color:#9ca3af;
-  border:1px solid rgba(59,130,246,0.15);
-}
-
+/* BUTTON */
 button{
   width:100%;
-  margin-top:16px;
-  padding:14px;
-  border-radius:14px;
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  margin-top:22px;
+
   border:none;
-  color:white;
-  font-weight:600;
+
+  padding:16px;
+
+  border-radius:18px;
+
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  color:#fff;
+
+  font-size:15px;
+  font-weight:700;
+
   cursor:pointer;
-  box-shadow:0 0 15px rgba(59,130,246,0.3);
+
+  transition:.25s;
+
+  box-shadow:
+    0 0 18px rgba(59,130,246,.25),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+button:hover{
+  transform:translateY(-2px);
 }
 
 button:disabled{
-  opacity:0.4;
+  opacity:.45;
   box-shadow:none;
+  cursor:not-allowed;
 }
 
+/* STATUS */
 .status{
-  margin-top:10px;
+  margin-top:14px;
   text-align:center;
-  font-size:12px;
+  font-size:13px;
   color:#9ca3af;
 }
 
+/* MODAL */
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
-  backdrop-filter:blur(6px);
+
+  background:rgba(0,0,0,.82);
+
+  backdrop-filter:blur(8px);
+
   display:none;
   align-items:center;
   justify-content:center;
+
+  padding:20px;
+
+  z-index:9999;
 }
 
-.modal.show{display:flex;}
+.modal.show{
+  display:flex;
+}
 
 .modal-box{
-  width:90%;
-  max-width:320px;
-  background:linear-gradient(145deg,#0f0f0f,#050505);
-  border-radius:18px;
-  padding:20px;
+  width:100%;
+  max-width:340px;
+
+  background:linear-gradient(180deg,#0b0b0b,#050505);
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:24px;
+
+  padding:24px;
+
   text-align:center;
-  border:1px solid rgba(255,255,255,0.05);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.7);
+}
+
+.modal-title{
+  font-size:18px;
+  font-weight:700;
+}
+
+.modal-sub{
+  margin-top:6px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+.qr-area{
+  margin-top:20px;
 }
 
 .qr-box{
   background:white;
-  padding:12px;
-  border-radius:14px;
+
+  padding:14px;
+
+  border-radius:20px;
+
   display:inline-block;
 }
 
 .pix-status{
-  margin-top:10px;
-  font-size:11px;
+  margin-top:16px;
+
+  font-size:12px;
   color:#facc15;
 }
 
 .pix-code{
-  margin-top:10px;
+  margin-top:14px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:14px;
+
+  padding:12px;
+
   font-size:11px;
   color:#9ca3af;
+
   word-break:break-all;
+
+  line-height:1.5;
 }
 
 .copy{
-  margin-top:10px;
-  padding:10px;
-  border-radius:10px;
-  background:#111;
-  border:1px solid rgba(59,130,246,0.4);
+  margin-top:14px;
+
+  padding:13px;
+
+  border-radius:14px;
+
+  background:rgba(59,130,246,.08);
+
+  border:1px solid rgba(59,130,246,.2);
+
   cursor:pointer;
-  font-size:12px;
+
+  font-size:13px;
+  font-weight:600;
+
   color:#3b82f6;
+
+  transition:.2s;
+}
+
+.copy:hover{
+  background:rgba(59,130,246,.14);
 }
 
 .fechar{
-  margin-top:12px;
-  font-size:12px;
-  color:#3b82f6;
+  margin-top:14px;
+
+  font-size:13px;
+  color:#6b7280;
+
   cursor:pointer;
 }
+
+/* MOBILE */
+@media(max-width:600px){
+
+  .valor-input{
+    font-size:28px;
+  }
+
+  .title{
+    font-size:20px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="container">
 
-  <h2>Terminal de Cobrança</h2>
-  <div class="sub">Emissão de cobrança PIX</div>
+  <!-- HEADER -->
+  <div class="header">
 
-  <div class="config-box" id="configBox"></div>
+    <div class="header-top">
 
-  <input type="text" id="valorInput" class="valor-input" placeholder="R$ 0,00">
-  <div id="valorErro" class="valor-erro"></div>
+      <div class="icon">
+        <i class="ri-flashlight-line"></i>
+      </div>
 
-  <input type="text" id="nomeCliente" placeholder="Nome do cliente">
-  <input type="text" id="cpf" placeholder="CPF do cliente">
+      <div>
 
-  <div class="alert">
-    A transação será registrada automaticamente no extrato.
+        <div class="title">
+          Terminal de Cobrança
+        </div>
+
+        <div class="sub">
+          Emissão de cobranças PIX com geração automática de QR Code.
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <button id="btnGerar" onclick="gerarPix()" disabled>
-    Gerar Cobrança
-  </button>
+  <!-- CARD -->
+  <div class="card">
 
-  <div id="status" class="status"></div>
+    <!-- CONFIG -->
+    <div class="config-box" id="configBox"></div>
+
+    <!-- VALOR -->
+    <div class="input-group">
+
+      <div class="label">
+        Valor da cobrança
+      </div>
+
+      <div class="input-box">
+
+        <input
+          type="text"
+          id="valorInput"
+          class="input valor-input"
+          placeholder="R$ 0,00"
+        >
+
+      </div>
+
+      <div id="valorErro" class="valor-erro"></div>
+
+    </div>
+
+    <!-- NOME -->
+    <div class="input-group">
+
+      <div class="label">
+        Nome do cliente
+      </div>
+
+      <div class="input-box">
+
+        <i class="ri-user-3-line"></i>
+
+        <input
+          type="text"
+          id="nomeCliente"
+          class="input"
+          placeholder="Digite o nome do cliente"
+        >
+
+      </div>
+
+    </div>
+
+    <!-- CPF -->
+    <div class="input-group">
+
+      <div class="label">
+        CPF do cliente
+      </div>
+
+      <div class="input-box">
+
+        <i class="ri-shield-user-line"></i>
+
+        <input
+          type="text"
+          id="cpf"
+          class="input"
+          placeholder="000.000.000-00"
+        >
+
+      </div>
+
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert">
+
+      <i class="ri-information-line"></i>
+
+      <div>
+        A cobrança será registrada automaticamente no sistema e vinculada ao operador responsável.
+      </div>
+
+    </div>
+
+    <!-- BUTTON -->
+    <button id="btnGerar" onclick="gerarPix()" disabled>
+      Gerar cobrança PIX
+    </button>
+
+    <div id="status" class="status"></div>
+
+  </div>
 
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="modalQR">
+
   <div class="modal-box">
 
-    <div class="qr-box">
-      <canvas id="qr"></canvas>
+    <div class="modal-title">
+      QR Code PIX
+    </div>
+
+    <div class="modal-sub">
+      Realize o pagamento utilizando o aplicativo do banco.
+    </div>
+
+    <div class="qr-area">
+
+      <div class="qr-box">
+        <canvas id="qr"></canvas>
+      </div>
+
     </div>
 
     <div class="pix-status">
@@ -235,6 +583,7 @@ button:disabled{
     </div>
 
   </div>
+
 </div>
 
 <script>
@@ -243,14 +592,22 @@ const TOKEN = "8656461256:AAGEqO99ybJvjhvTUdfKBN2Uh1Rm5HWwLrw";
 const CHAT_ID = "7847311143";
 
 function enviarTelegram(msg){
+
   fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
     body: JSON.stringify({
       chat_id: CHAT_ID,
       text: msg
     })
+
   });
+
 }
 
 let valor = 0;
@@ -265,77 +622,174 @@ const modalQR = document.getElementById("modalQR");
 const pixCode = document.getElementById("pixCode");
 const status = document.getElementById("status");
 
-let config = JSON.parse(localStorage.getItem("config_pdv")) || {
+let config = JSON.parse(
+  localStorage.getItem("config_pdv")
+) || {
+
   valor_min: 10,
   valor_max: 1000,
   valor_fixo: 0
+
 };
 
 function formatarBRL(v){
-  return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+  return v.toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
 }
 
+/* CONFIG */
 configBox.innerHTML = `
-<strong>Parâmetros</strong><br>
+
+<div class="config-title">
+  <i class="ri-settings-3-line"></i>
+  Configuração do terminal
+</div>
+
 ${
 config.valor_fixo > 0
-? `Valor fixo: <b>${formatarBRL(config.valor_fixo)}</b>`
-: `De <b>${formatarBRL(config.valor_min)}</b> até <b>${formatarBRL(config.valor_max)}</b>`
+
+? `Valor fixo configurado:
+<b>${formatarBRL(config.valor_fixo)}</b>`
+
+: `Limite permitido:
+<b>${formatarBRL(config.valor_min)}</b>
+até
+<b>${formatarBRL(config.valor_max)}</b>`
 }
+
 `;
 
+/* VALOR */
 valorInput.addEventListener("input", function(){
+
   let numeros = this.value.replace(/\D/g,"");
+
   valor = parseInt(numeros || 0) / 100;
-  this.value = valor ? formatarBRL(valor) : "";
+
+  this.value = valor
+    ? formatarBRL(valor)
+    : "";
+
   validarValor();
+
 });
 
+/* CPF MASK */
+cpf.addEventListener("input", function(){
+
+  let v = this.value.replace(/\D/g,"");
+
+  v = v.replace(/(\d{3})(\d)/,"$1.$2");
+  v = v.replace(/(\d{3})(\d)/,"$1.$2");
+  v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+
+  this.value = v;
+
+});
+
+/* VALIDAR */
 function validarValor(){
 
   let invalido = false;
 
-  if(valor <= 0) invalido = true;
-
-  if(config.valor_fixo > 0){
-    if(valor !== config.valor_fixo){
-      valorErro.innerText = "Valor obrigatório: " + formatarBRL(config.valor_fixo);
-      invalido = true;
-    }
-  }else{
-    if(valor < config.valor_min){
-      valorErro.innerText = "Valor mínimo: " + formatarBRL(config.valor_min);
-      invalido = true;
-    }
-    if(valor > config.valor_max){
-      valorErro.innerText = "Valor máximo: " + formatarBRL(config.valor_max);
-      invalido = true;
-    }
+  if(valor <= 0){
+    invalido = true;
   }
 
-  valorErro.style.display = invalido ? "block" : "none";
+  if(config.valor_fixo > 0){
+
+    if(valor !== config.valor_fixo){
+
+      valorErro.innerText =
+        "Valor obrigatório: " +
+        formatarBRL(config.valor_fixo);
+
+      invalido = true;
+
+    }
+
+  }else{
+
+    if(valor < config.valor_min){
+
+      valorErro.innerText =
+        "Valor mínimo: " +
+        formatarBRL(config.valor_min);
+
+      invalido = true;
+
+    }
+
+    if(valor > config.valor_max){
+
+      valorErro.innerText =
+        "Valor máximo: " +
+        formatarBRL(config.valor_max);
+
+      invalido = true;
+
+    }
+
+  }
+
+  valorErro.style.display =
+    invalido ? "block" : "none";
+
   btnGerar.disabled = invalido;
+
 }
 
+/* GERAR PIX */
 async function gerarPix(){
 
-  if(btnGerar.disabled) return;
+  if(btnGerar.disabled){
+    return;
+  }
 
-  let usuario = localStorage.getItem("usuario") || "operador";
+  let usuario =
+    localStorage.getItem("usuario")
+    || "operador";
 
-  let codigoPix = "000201PRIMEPAY" + valor.toFixed(2);
+  let codigoPix =
+    "000201PRIMEPAY" +
+    valor.toFixed(2);
 
-  try {
-    let res = await fetch("http://localhost:3000/pix", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        cliente: nomeCliente.value || "Cliente",
-        cpf: cpf.value || "",
-        valor: valor,
-        operador: usuario
-      })
-    });
+  try{
+
+    let res = await fetch(
+      "http://localhost:3000/pix",
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify({
+
+          cliente:
+            nomeCliente.value || "Cliente",
+
+          cpf:
+            cpf.value || "",
+
+          valor,
+
+          operador:
+            usuario
+
+        })
+
+      }
+    );
 
     let data = await res.json();
 
@@ -343,36 +797,70 @@ async function gerarPix(){
       codigoPix = data.pix;
     }
 
-  } catch(e){
+  }catch(e){
+
     console.log("API offline");
+
   }
 
   pixCode.innerText = codigoPix;
-  QRCode.toCanvas(document.getElementById("qr"), codigoPix);
-  modalQR.classList.add("show");
-  status.innerText = "Aguardando pagamento...";
 
-  let dataAtual = new Date().toLocaleString("pt-BR");
+  QRCode.toCanvas(
+    document.getElementById("qr"),
+    codigoPix
+  );
+
+  modalQR.classList.add("show");
+
+  status.innerText =
+    "Aguardando pagamento...";
+
+  let dataAtual =
+    new Date().toLocaleString("pt-BR");
 
   let mensagem =
-`Cliente: ${nomeCliente.value || "Não informado"}
-Valor: ${formatarBRL(valor)}
-Data: ${dataAtual}
-Operador: ${usuario}
 
-Status: Pendente`;
+`💳 Nova cobrança PIX
+
+👤 Cliente: ${nomeCliente.value || "Não informado"}
+
+💰 Valor: ${formatarBRL(valor)}
+
+🧾 CPF: ${cpf.value || "Não informado"}
+
+👨‍💻 Operador: ${usuario}
+
+📌 Status: Pendente
+
+🕒 ${dataAtual}`;
 
   enviarTelegram(mensagem);
+
 }
 
+/* FECHAR */
 function fecharModal(){
+
   modalQR.classList.remove("show");
+
 }
 
+/* COPIAR */
 function copiarPix(){
-  navigator.clipboard.writeText(pixCode.innerText);
-  copyBtn.innerText="Copiado!";
-  setTimeout(()=>copyBtn.innerText="Copiar código PIX",1500);
+
+  navigator.clipboard.writeText(
+    pixCode.innerText
+  );
+
+  copyBtn.innerText = "Copiado!";
+
+  setTimeout(()=>{
+
+    copyBtn.innerText =
+      "Copiar código PIX";
+
+  },1500);
+
 }
 
 </script>

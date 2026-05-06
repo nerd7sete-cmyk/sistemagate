@@ -2,159 +2,472 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Integrações</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-body{
-  background:#0b0b0b;
-  color:#fff;
-  font-family:"Segoe UI";
-  padding:20px;
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial;
 }
 
+/* FIX IPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#020202;
+}
+
+body{
+  color:#fff;
+
+  padding:
+    calc(16px + env(safe-area-inset-top))
+    14px
+    calc(26px + env(safe-area-inset-bottom));
+
+  background:#020202;
+}
+
+/* CONTAINER */
 .container{
-  max-width:600px;
+  width:100%;
+  max-width:640px;
   margin:auto;
 }
 
-.title{font-size:20px;font-weight:600;}
-.sub{font-size:12px;color:#9ca3af;}
+/* HEADER */
+.header{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
 
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  margin-top:6px;
-  background:#052e16;
-  color:#22c55e;
+  margin-bottom:20px;
 }
 
-/* BOTÃO DOC */
-.doc-btn{
-  margin-top:12px;
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  color:#e5e7eb;
-  cursor:pointer;
+.header-text{
+  flex:1;
+  min-width:0;
+
+  padding-top:2px;
+}
+
+/* ICON */
+.icon{
+  width:56px;
+  height:56px;
+
+  border-radius:18px;
+
+  background:linear-gradient(180deg,#3b82f6,#2563eb);
+
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-  transition:0.25s;
+
+  flex-shrink:0;
+
+  margin-top:2px;
+
+  box-shadow:
+    0 0 22px rgba(59,130,246,.28),
+    inset 0 1px 0 rgba(255,255,255,.14);
 }
 
-.doc-btn:hover{
-  border-color:#3b82f6;
+.icon i{
+  font-size:24px;
   color:#fff;
-  box-shadow:0 0 15px rgba(59,130,246,0.3);
+}
+
+/* TITLE */
+.title{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:-1px;
+  line-height:1;
+}
+
+/* SUB */
+.sub{
+  margin-top:7px;
+  color:#6b7280;
+  font-size:12px;
+  line-height:1.6;
+  max-width:430px;
+}
+
+/* STATUS */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  margin-top:10px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  color:#d1d5db;
+
+  padding:7px 11px;
+
+  border-radius:999px;
+
+  font-size:11px;
+  font-weight:600;
+}
+
+.badge-dot{
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:0 0 10px #22c55e;
 }
 
 /* CARD */
 .card{
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:16px;
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:26px;
+
   padding:16px;
-  margin-top:14px;
-  border:1px solid rgba(255,255,255,0.05);
 }
 
-.label{font-size:12px;color:#9ca3af;}
+/* BUTTON DOC */
+.doc-btn{
+  width:100%;
 
-.value{
-  margin-top:6px;
-  font-size:13px;
-  background:#050505;
-  padding:10px;
-  border-radius:10px;
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  color:#fff;
+
+  padding:15px;
+
+  border-radius:18px;
+
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  border:1px solid rgba(255,255,255,0.05);
+  justify-content:center;
+  gap:10px;
+
+  font-size:14px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+  margin-bottom:12px;
+}
+
+.doc-btn:hover{
+  border-color:rgba(59,130,246,.35);
+
+  box-shadow:0 0 18px rgba(59,130,246,.10);
+}
+
+.doc-btn i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+/* BOX */
+.box{
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:20px;
+
+  padding:16px;
+
+  margin-top:12px;
+
+  transition:.2s;
+}
+
+.box:hover{
+  border-color:rgba(255,255,255,.08);
+}
+
+/* TOP */
+.box-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin-bottom:14px;
+}
+
+/* BOX ICON */
+.box-icon{
+  width:42px;
+  height:42px;
+
+  border-radius:14px;
+
+  background:#0d0d0d;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.box-icon i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+/* TEXT */
+.box-title{
+  font-size:14px;
+  font-weight:600;
+}
+
+.box-sub{
+  margin-top:3px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* VALUE */
+.value{
+  width:100%;
+
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:16px;
+
+  padding:14px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+
+  overflow:hidden;
+}
+
+.code{
+  flex:1;
+
+  font-size:13px;
+
+  color:#d1d5db;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* BUTTONS */
+.actions{
+  display:flex;
+  gap:8px;
 }
 
 .btn{
-  padding:8px 12px;
-  border-radius:8px;
-  font-size:12px;
-  cursor:pointer;
+  width:38px;
+  height:38px;
+
   border:none;
-  transition:0.2s;
-}
 
-.btn-copy{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+
+  background:#0d0d0d;
+
+  border:1px solid rgba(255,255,255,.06);
+
   color:#fff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  transition:.2s;
 }
 
-.btn-copy:hover{
+.btn:hover{
   border-color:#3b82f6;
+  color:#3b82f6;
 }
 
-.btn-save{
-  background:linear-gradient(135deg,#16a34a,#22c55e);
-  color:#fff;
-}
-
-input{
+/* INPUT */
+.input{
   width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
+
+  padding:15px;
+
+  border-radius:16px;
+
+  border:1px solid rgba(255,255,255,.05);
+
   background:#050505;
+
   color:#fff;
-  margin-top:8px;
+
+  outline:none;
+
+  font-size:14px;
+
+  transition:.2s;
 }
 
+.input:focus{
+  border-color:#3b82f6;
+  box-shadow:0 0 12px rgba(59,130,246,.08);
+}
+
+.input::placeholder{
+  color:#555;
+}
+
+/* FOOTER */
 .row{
   display:flex;
   justify-content:space-between;
-  margin-top:10px;
+  align-items:center;
+
+  margin-top:14px;
 }
 
-.event{
+/* STATUS */
+.status{
   display:flex;
-  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+
   font-size:12px;
-  margin-top:6px;
+  color:#22c55e;
 }
 
-.dot{
+.status-dot{
   width:8px;
   height:8px;
+
   border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:0 0 10px #22c55e;
 }
 
-.green{background:#22c55e;}
-.yellow{background:#eab308;}
-.red{background:#ef4444;}
+/* SAVE */
+.btn-save{
+  border:none;
 
+  padding:12px 18px;
+
+  border-radius:14px;
+
+  background:linear-gradient(180deg,#3b82f6,#2563eb);
+
+  color:#fff;
+
+  font-size:13px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+  box-shadow:
+    0 0 18px rgba(59,130,246,.20);
+}
+
+.btn-save:hover{
+  transform:translateY(-1px);
+}
+
+/* TOAST */
 #toast{
   position:fixed;
-  bottom:25px;
-  right:25px;
-  background:#0f0f0f;
-  padding:12px 16px;
-  border-radius:10px;
+
+  bottom:24px;
+  right:20px;
+
+  background:#0d0d0d;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  color:#fff;
+
+  padding:14px 16px;
+
+  border-radius:14px;
+
+  font-size:13px;
+
   opacity:0;
-  transition:0.3s;
+  transform:translateY(10px);
+
+  transition:.25s;
+
+  z-index:999;
 }
 
-#toast.show{opacity:1;}
-
-.small{
-  font-size:11px;
-  color:#777;
-  margin-top:6px;
+#toast.show{
+  opacity:1;
+  transform:translateY(0);
 }
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .header{
+    gap:12px;
+    align-items:flex-start;
+  }
+
+  .title{
+    font-size:24px;
+  }
+
+  .sub{
+    font-size:12px;
+  }
+
+  .icon{
+    width:52px;
+    height:52px;
+
+    border-radius:16px;
+
+    margin-top:2px;
+  }
+
+  .icon i{
+    font-size:22px;
+  }
+
+}
+
 </style>
 </head>
 
@@ -162,59 +475,177 @@ input{
 
 <div class="container">
 
-  <div class="title">Integrações</div>
-  <div class="sub">Gerencie suas chaves e webhook da API</div>
-  <div class="badge">Produção</div>
+  <!-- HEADER -->
+  <div class="header">
 
-  <!-- BOTÃO DOCUMENTAÇÃO -->
-  <button class="doc-btn" onclick="abrirDoc()">
-    <i class="ri-book-open-line"></i>
-    Documentação da API
-  </button>
-
-  <!-- PUBLIC KEY -->
-  <div class="card">
-    <div class="label">Chave pública</div>
-
-    <div class="value">
-      <span id="pubKey">pk_live_123456</span>
-      <button class="btn btn-copy" onclick="copiar('pubKey')">
-        <i class="ri-file-copy-line"></i>
-      </button>
+    <div class="icon">
+      <i class="ri-links-line"></i>
     </div>
 
-    <div class="small">Use no frontend</div>
-  </div>
+    <div class="header-text">
 
-  <!-- SECRET KEY -->
-  <div class="card">
-    <div class="label">Chave secreta</div>
-
-    <div class="value">
-      <span id="secKey">••••••••••••</span>
-      <div>
-        <button class="btn btn-copy" onclick="toggleKey()">
-          <i class="ri-eye-line"></i>
-        </button>
-        <button class="btn btn-copy" onclick="copiarReal()">
-          <i class="ri-file-copy-line"></i>
-        </button>
+      <div class="title">
+        Integrações
       </div>
+
+      <div class="sub">
+        Gerencie suas chaves, webhooks e integrações da API em tempo real.
+      </div>
+
+      <div class="badge">
+        <div class="badge-dot"></div>
+        Ambiente de produção
+      </div>
+
     </div>
 
-    <div class="small">Nunca compartilhe essa chave</div>
   </div>
 
-  <!-- WEBHOOK -->
+  <!-- CARD -->
   <div class="card">
-    <div class="label">Webhook</div>
 
-    <input id="webhook" placeholder="https://seusite.com/webhook">
+    <!-- DOC -->
+    <button class="doc-btn" onclick="abrirDoc()">
 
-    <div class="row">
-      <span style="font-size:12px;color:#22c55e;">Ativo</span>
-      <button class="btn btn-save" onclick="salvar()">Salvar</button>
+      <i class="ri-book-open-line"></i>
+
+      Documentação da API
+
+    </button>
+
+    <!-- PUBLIC KEY -->
+    <div class="box">
+
+      <div class="box-top">
+
+        <div class="box-icon">
+          <i class="ri-key-2-line"></i>
+        </div>
+
+        <div>
+
+          <div class="box-title">
+            Chave pública
+          </div>
+
+          <div class="box-sub">
+            Utilize essa chave no frontend
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="value">
+
+        <div class="code" id="pubKey">
+          pk_live_123456
+        </div>
+
+        <div class="actions">
+
+          <button class="btn" onclick="copiar('pubKey')">
+            <i class="ri-file-copy-line"></i>
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
+
+    <!-- SECRET KEY -->
+    <div class="box">
+
+      <div class="box-top">
+
+        <div class="box-icon">
+          <i class="ri-lock-password-line"></i>
+        </div>
+
+        <div>
+
+          <div class="box-title">
+            Chave secreta
+          </div>
+
+          <div class="box-sub">
+            Nunca compartilhe essa chave
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="value">
+
+        <div class="code" id="secKey">
+          ••••••••••••
+        </div>
+
+        <div class="actions">
+
+          <button class="btn" onclick="toggleKey()">
+            <i class="ri-eye-line"></i>
+          </button>
+
+          <button class="btn" onclick="copiarReal()">
+            <i class="ri-file-copy-line"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- WEBHOOK -->
+    <div class="box">
+
+      <div class="box-top">
+
+        <div class="box-icon">
+          <i class="ri-global-line"></i>
+        </div>
+
+        <div>
+
+          <div class="box-title">
+            Webhook
+          </div>
+
+          <div class="box-sub">
+            Receba eventos automáticos da API
+          </div>
+
+        </div>
+
+      </div>
+
+      <input
+        id="webhook"
+        class="input"
+        placeholder="https://seusite.com/webhook"
+      >
+
+      <div class="row">
+
+        <div class="status">
+
+          <div class="status-dot"></div>
+
+          Webhook ativo
+
+        </div>
+
+        <button class="btn-save" onclick="salvar()">
+          Salvar
+        </button>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>
@@ -226,48 +657,94 @@ input{
 let chaveReal = "sk_live_987654";
 let visivel = false;
 
+/* COPY */
 function copiar(id){
-  let texto = document.getElementById(id).innerText;
+
+  let texto =
+    document.getElementById(id).innerText;
+
   navigator.clipboard.writeText(texto);
-  toast("Copiado");
+
+  toast("Copiado com sucesso");
+
 }
 
+/* COPY SECRET */
 function copiarReal(){
+
   navigator.clipboard.writeText(chaveReal);
-  toast("Chave copiada");
+
+  toast("Chave secreta copiada");
+
 }
 
+/* TOGGLE */
 function toggleKey(){
+
   visivel = !visivel;
+
   document.getElementById("secKey").innerText =
-    visivel ? chaveReal : "••••••••••••";
+    visivel
+      ? chaveReal
+      : "••••••••••••";
+
 }
 
+/* SAVE */
 function salvar(){
-  let webhook = document.getElementById("webhook").value;
-  localStorage.setItem("webhook", webhook);
-  toast("Salvo");
+
+  let webhook =
+    document.getElementById("webhook").value;
+
+  localStorage.setItem(
+    "webhook",
+    webhook
+  );
+
+  toast("Webhook salvo");
+
 }
 
-/* 🔥 CORREÇÃO REAL */
+/* DOC */
 function abrirDoc(){
+
   try{
-    let frame = window.top.document.getElementById("frame");
+
+    let frame =
+      window.top.document.getElementById("frame");
 
     if(frame){
-      frame.src = "documentacao-integracao.html"; // ⚠️ CONFERE O NOME DO ARQUIVO
+
+      frame.src =
+        "documentacao-integracao.html";
+
       return;
+
     }
+
   }catch(e){}
 
-  window.location.href = "documentacao-integracao.html";
+  window.location.href =
+    "documentacao-integracao.html";
+
 }
 
+/* TOAST */
 function toast(msg){
-  let t = document.getElementById("toast");
+
+  let t =
+    document.getElementById("toast");
+
   t.innerText = msg;
+
   t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),2000);
+
+  setTimeout(()=>{
+
+    t.classList.remove("show");
+
+  },2000);
+
 }
 
 </script>

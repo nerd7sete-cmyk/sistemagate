@@ -2,138 +2,544 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>Taxas</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-body{
-  background:#0a0a0a;
-  color:#fff;
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family:"Segoe UI", Arial;
-  padding:20px;
 }
 
-.card{
-  max-width:520px;
+/* FIX IPHONE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#020202;
+}
+
+body{
+  color:#fff;
+
+  padding:
+    calc(16px + env(safe-area-inset-top))
+    14px
+    calc(26px + env(safe-area-inset-bottom));
+
+  background:#020202;
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:620px;
   margin:auto;
-  background:linear-gradient(145deg,#0f0f0f,#0a0a0a);
-  border-radius:20px;
-  padding:22px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:
-    0 15px 40px rgba(0,0,0,0.7),
-    inset 0 0 10px rgba(255,255,255,0.02);
 }
 
-h1{font-size:18px;margin-bottom:5px;}
-.sub{font-size:12px;color:#9ca3af;margin-bottom:20px;}
+/* HEADER */
+.header{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
 
-.box{
+  margin-bottom:20px;
+}
+
+.header-text{
+  flex:1;
+  min-width:0;
+
+  padding-top:2px;
+}
+
+/* ICON */
+.icon{
+  width:56px;
+  height:56px;
+
+  border-radius:18px;
+
+  background:linear-gradient(180deg,#3b82f6,#2563eb);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+
+  margin-top:2px;
+
+  box-shadow:
+    0 0 22px rgba(59,130,246,.25),
+    inset 0 1px 0 rgba(255,255,255,.14);
+}
+
+.icon i{
+  font-size:24px;
+  color:#fff;
+}
+
+/* TITLE */
+.title{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:-1px;
+  line-height:1;
+}
+
+.sub{
+  margin-top:7px;
+  color:#6b7280;
+  font-size:12px;
+  line-height:1.6;
+  max-width:430px;
+}
+
+/* CARD */
+.card{
   background:#050505;
-  border:1px solid rgba(255,255,255,0.04);
-  border-radius:14px;
-  padding:15px;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:26px;
+
+  padding:16px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+/* BOX */
+.box{
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:20px;
+
+  padding:16px;
+
+  transition:.2s;
+}
+
+.box:hover{
+  border-color:rgba(255,255,255,.08);
+}
+
+/* TOP */
+.box-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
   margin-bottom:14px;
 }
 
-.label{font-size:12px;color:#9ca3af;}
+/* BOX ICON */
+.box-icon{
+  width:42px;
+  height:42px;
 
-.valor{
-  font-size:22px;
-  margin-top:6px;
+  border-radius:14px;
+
+  background:#0d0d0d;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.box-icon i{
+  color:#3b82f6;
+  font-size:18px;
+}
+
+/* TEXT */
+.box-title{
+  font-size:14px;
   font-weight:600;
 }
 
-.blue{color:#3b82f6;}
-.white{color:#fff;}
-
-.simulacao input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:#0a0a0a;
-  color:#fff;
-  margin-top:10px;
-}
-
-.result{
-  margin-top:10px;
-  font-size:13px;
-  color:#ccc;
-  line-height:1.6;
-  background:#0a0a0a;
-  padding:12px;
-  border-radius:10px;
-}
-
-.alert{
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.05);
-  padding:12px;
-  border-radius:12px;
+.box-sub{
+  margin-top:3px;
   font-size:12px;
-  color:#aaa;
-  margin-top:10px;
+  color:#6b7280;
 }
 
-.green{color:#22c55e;font-weight:600;}
+/* VALUE */
+.valor{
+  margin-top:4px;
+
+  font-size:24px;
+  font-weight:700;
+
+  letter-spacing:-1px;
+
+  color:#fff;
+}
+
+.blue{
+  color:#3b82f6;
+}
+
+/* SIMULAÇÃO */
+.simulacao{
+  margin-top:12px;
+
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:20px;
+
+  padding:16px;
+}
+
+.sim-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  margin-bottom:14px;
+
+  font-size:14px;
+  font-weight:600;
+}
+
+.sim-title i{
+  color:#3b82f6;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+
+  padding:15px;
+
+  border-radius:16px;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  background:#050505;
+
+  color:#fff;
+
+  outline:none;
+
+  font-size:14px;
+
+  transition:.2s;
+}
+
+.input:focus{
+  border-color:#3b82f6;
+  box-shadow:0 0 12px rgba(59,130,246,.08);
+}
+
+.input::placeholder{
+  color:#555;
+}
+
+/* RESULT */
+.result{
+  margin-top:12px;
+
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:14px;
+
+  padding:14px;
+
+  font-size:13px;
+
+  line-height:1.8;
+
+  color:#d1d5db;
+}
+
+.green{
+  color:#22c55e;
+  font-weight:700;
+}
+
+/* ALERT */
+.alert{
+  margin-top:14px;
+
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:16px;
+
+  padding:14px;
+
+  font-size:12px;
+
+  color:#9ca3af;
+
+  line-height:1.8;
+}
+
+.alert strong{
+  color:#fff;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .title{
+    font-size:24px;
+  }
+
+  .sub{
+    font-size:12px;
+  }
+
+  .icon{
+    width:52px;
+    height:52px;
+
+    border-radius:16px;
+
+    margin-top:2px;
+  }
+
+  .icon i{
+    font-size:22px;
+  }
+
+  .valor{
+    font-size:22px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="container">
 
-  <h1>Taxas da sua conta</h1>
-  <div class="sub">Transparência total sobre valores e descontos aplicados</div>
+  <!-- HEADER -->
+  <div class="header">
 
-  <div class="box">
-    <div class="label">Taxa por venda</div>
-    <div class="valor blue" id="taxaVenda">0%</div>
-  </div>
-
-  <div class="box">
-    <div class="label">Taxa por saque</div>
-    <div class="valor white" id="taxaSaque"></div>
-  </div>
-
-  <div class="box">
-    <div class="label">Valor mínimo para saque</div>
-    <div class="valor white" id="minSaque"></div>
-  </div>
-
-  <div class="box">
-    <div class="label">Limite por saque</div>
-    <div class="valor white" id="maxSaque"></div>
-  </div>
-
-  <div class="box simulacao">
-    <div class="label">Simular venda</div>
-    <input id="valorVenda" placeholder="Digite um valor (ex: 100)">
-    <div class="result" id="resultadoVenda">
-      Informe um valor para calcular
+    <div class="icon">
+      <i class="ri-percent-line"></i>
     </div>
-  </div>
 
-  <div class="box simulacao">
-    <div class="label">Simular saque</div>
-    <input id="valorSaque" placeholder="Digite o valor do saque">
-    <div class="result" id="resultadoSaque">
-      Informe um valor para calcular
+    <div class="header-text">
+
+      <div class="title">
+        Taxas & Operações
+      </div>
+
+      <div class="sub">
+        Transparência total sobre taxas, limites e valores aplicados automaticamente.
+      </div>
+
     </div>
+
   </div>
 
-  <div class="alert" id="alertText"></div>
+  <!-- CARD -->
+  <div class="card">
+
+    <!-- GRID -->
+    <div class="grid">
+
+      <!-- TAXA VENDA -->
+      <div class="box">
+
+        <div class="box-top">
+
+          <div class="box-icon">
+            <i class="ri-line-chart-line"></i>
+          </div>
+
+          <div>
+
+            <div class="box-title">
+              Taxa por venda
+            </div>
+
+            <div class="box-sub">
+              Desconto aplicado automaticamente
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="valor blue" id="taxaVenda">
+          0%
+        </div>
+
+      </div>
+
+      <!-- TAXA SAQUE -->
+      <div class="box">
+
+        <div class="box-top">
+
+          <div class="box-icon">
+            <i class="ri-bank-card-line"></i>
+          </div>
+
+          <div>
+
+            <div class="box-title">
+              Taxa por saque
+            </div>
+
+            <div class="box-sub">
+              Valor descontado por saque
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="valor" id="taxaSaque">
+          R$ 0,00
+        </div>
+
+      </div>
+
+      <!-- MIN -->
+      <div class="box">
+
+        <div class="box-top">
+
+          <div class="box-icon">
+            <i class="ri-arrow-down-line"></i>
+          </div>
+
+          <div>
+
+            <div class="box-title">
+              Valor mínimo
+            </div>
+
+            <div class="box-sub">
+              Valor mínimo permitido
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="valor" id="minSaque">
+          R$ 0,00
+        </div>
+
+      </div>
+
+      <!-- MAX -->
+      <div class="box">
+
+        <div class="box-top">
+
+          <div class="box-icon">
+            <i class="ri-arrow-up-line"></i>
+          </div>
+
+          <div>
+
+            <div class="box-title">
+              Limite por saque
+            </div>
+
+            <div class="box-sub">
+              Valor máximo operacional
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="valor" id="maxSaque">
+          Até R$ 0,00
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SIMULAR VENDA -->
+    <div class="simulacao">
+
+      <div class="sim-title">
+        <i class="ri-calculator-line"></i>
+        Simular venda
+      </div>
+
+      <input
+        id="valorVenda"
+        class="input"
+        placeholder="Digite um valor • Ex: 1000"
+      >
+
+      <div class="result" id="resultadoVenda">
+        Informe um valor para calcular automaticamente
+      </div>
+
+    </div>
+
+    <!-- SIMULAR SAQUE -->
+    <div class="simulacao">
+
+      <div class="sim-title">
+        <i class="ri-wallet-3-line"></i>
+        Simular saque
+      </div>
+
+      <input
+        id="valorSaque"
+        class="input"
+        placeholder="Digite o valor do saque"
+      >
+
+      <div class="result" id="resultadoSaque">
+        Informe um valor para calcular automaticamente
+      </div>
+
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert" id="alertText"></div>
+
+  </div>
 
 </div>
 
 <script>
 
-// 🔥 CONFIG DINÂMICA
+/* CONFIG DINÂMICA */
 let configSaque = JSON.parse(localStorage.getItem("config_saque")) || {
   min:119.90,
   max:1000,
@@ -141,75 +547,157 @@ let configSaque = JSON.parse(localStorage.getItem("config_saque")) || {
 };
 
 let usuario = localStorage.getItem("usuario");
-let operadores = JSON.parse(localStorage.getItem("operadores")) || [];
-let operador = operadores.find(o=>o.email===usuario);
 
-// 🔥 TAXA VENDA
-let taxaVenda = operador?.taxa || 10;
+let operadores =
+  JSON.parse(localStorage.getItem("operadores"))
+  || [];
 
-// FORMAT
+let operador =
+  operadores.find(o=>o.email===usuario);
+
+/* TAXA VENDA */
+let taxaVenda =
+  operador?.taxa || 10;
+
+/* FORMAT */
 function f(v){
-  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+  return Number(v || 0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
 }
 
-// 🔥 SET UI
-document.getElementById("taxaVenda").innerText = taxaVenda + "%";
-document.getElementById("taxaSaque").innerText = f(configSaque.taxa);
-document.getElementById("minSaque").innerText = f(configSaque.min);
-document.getElementById("maxSaque").innerText = "Até " + f(configSaque.max);
+/* UI */
+document.getElementById("taxaVenda").innerText =
+  taxaVenda + "%";
 
-// 🔥 ALERT DINÂMICO
+document.getElementById("taxaSaque").innerText =
+  f(configSaque.taxa);
+
+document.getElementById("minSaque").innerText =
+  f(configSaque.min);
+
+document.getElementById("maxSaque").innerText =
+  "Até " + f(configSaque.max);
+
+/* ALERT */
 document.getElementById("alertText").innerHTML = `
-✔ Taxas aplicadas automaticamente<br>
-✔ Saques ilimitados (respeitando o limite)<br>
-✔ Cada saque: ${f(configSaque.min)} até ${f(configSaque.max)}
+
+  ✔ <strong>Taxas aplicadas automaticamente</strong><br>
+
+  ✔ Saques ilimitados respeitando os limites operacionais<br>
+
+  ✔ Cada saque permitido de
+  <strong>${f(configSaque.min)}</strong>
+  até
+  <strong>${f(configSaque.max)}</strong><br>
+
+  ✔ Processamento seguro e monitorado em tempo real
+
 `;
 
-// 🔥 SIMULAÇÃO VENDA
+/* VENDA */
 valorVenda.oninput = () => {
-  let valor = Number(valorVenda.value.replace(",", "."));
+
+  let valor =
+    Number(
+      valorVenda.value
+        .replace(",", ".")
+    );
 
   if(!valor){
-    resultadoVenda.innerHTML = "Informe um valor para calcular";
+
+    resultadoVenda.innerHTML =
+      "Informe um valor para calcular automaticamente";
+
     return;
+
   }
 
-  let taxa = valor * (taxaVenda/100);
-  let liquido = valor - taxa;
+  let taxa =
+    valor * (taxaVenda/100);
+
+  let liquido =
+    valor - taxa;
 
   resultadoVenda.innerHTML = `
-    Valor da venda: ${f(valor)}<br>
-    Taxa: ${f(taxa)}<br>
-    Você recebe: <span class="green">${f(liquido)}</span>
+
+    Valor bruto:
+    <strong>${f(valor)}</strong><br>
+
+    Taxa aplicada:
+    <strong>${f(taxa)}</strong><br>
+
+    Valor líquido:
+    <span class="green">
+      ${f(liquido)}
+    </span>
+
   `;
+
 };
 
-// 🔥 SIMULAÇÃO SAQUE
+/* SAQUE */
 valorSaque.oninput = () => {
-  let valor = Number(valorSaque.value.replace(",", "."));
+
+  let valor =
+    Number(
+      valorSaque.value
+        .replace(",", ".")
+    );
 
   if(!valor){
-    resultadoSaque.innerHTML = "Informe um valor para calcular";
+
+    resultadoSaque.innerHTML =
+      "Informe um valor para calcular automaticamente";
+
     return;
+
   }
 
   if(valor < configSaque.min){
-    resultadoSaque.innerHTML = "Valor mínimo: " + f(configSaque.min);
+
+    resultadoSaque.innerHTML =
+      "Valor mínimo permitido: " +
+      f(configSaque.min);
+
     return;
+
   }
 
   if(valor > configSaque.max){
-    resultadoSaque.innerHTML = "Limite máximo: " + f(configSaque.max);
+
+    resultadoSaque.innerHTML =
+      "Limite máximo permitido: " +
+      f(configSaque.max);
+
     return;
+
   }
 
-  let liquido = valor - configSaque.taxa;
+  let liquido =
+    valor - configSaque.taxa;
 
   resultadoSaque.innerHTML = `
-    Valor solicitado: ${f(valor)}<br>
-    Taxa: ${f(configSaque.taxa)}<br>
-    Você recebe: <span class="green">${f(liquido)}</span>
+
+    Valor solicitado:
+    <strong>${f(valor)}</strong><br>
+
+    Taxa operacional:
+    <strong>${f(configSaque.taxa)}</strong><br>
+
+    Valor líquido:
+    <span class="green">
+      ${f(liquido)}
+    </span>
+
   `;
+
 };
 
 </script>
