@@ -105,16 +105,6 @@ body{
   margin-top:4px;
 }
 
-/* CARD PREMIUM (LUCRO) */
-.card-blue{
-  border:1px solid rgba(59,130,246,0.25);
-  box-shadow:0 0 15px rgba(59,130,246,0.15);
-}
-
-.card-blue i{
-  font-size:20px;
-}
-
 /* BADGE */
 .badge{
   position:absolute;
@@ -156,19 +146,28 @@ body{
 
 <div class="grid">
 
-  <!-- 💰 NOVO CARD -->
-  <div class="card card-blue" onclick="go('lucros-por-empresa.html')">
+  <!-- 💰 LUCRO (AGORA NORMAL) -->
+  <div class="card" onclick="go('lucros-por-empresa.html')">
     <i class="ri-bar-chart-box-line"></i>
     <div class="card-title">Lucro por Empresa</div>
     <div class="card-desc">Ranking e desempenho</div>
   </div>
 
+  <!-- 💸 GESTÃO DE SALDO -->
+  <div class="card" onclick="go('gestao-saldos.html')">
+    <i class="ri-exchange-funds-line"></i>
+    <div class="card-title">Gestão de Saldo</div>
+    <div class="card-desc">Adicionar ou remover saldo</div>
+  </div>
+
+  <!-- 💳 TRANSAÇÕES -->
   <div class="card" onclick="go('transacoes-admin-root.html')">
     <i class="ri-exchange-dollar-line"></i>
     <div class="card-title">Transações</div>
     <div class="card-desc">Entradas e histórico</div>
   </div>
 
+  <!-- 🏦 SAQUES -->
   <div class="card" onclick="go('saques-admin.html')">
 
     <div class="badge" id="badgeSaques">0</div>

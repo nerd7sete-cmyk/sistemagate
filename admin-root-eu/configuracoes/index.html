@@ -91,16 +91,6 @@ body{
   border-color:rgba(59,130,246,0.3);
 }
 
-/* 🔥 CARD DESTAQUE (Transações) */
-.card.highlight{
-  border:1px solid rgba(59,130,246,0.3);
-  box-shadow:0 0 12px rgba(59,130,246,0.15);
-}
-
-.card.highlight:hover{
-  box-shadow:0 0 18px rgba(59,130,246,0.25);
-}
-
 .card i{
   font-size:18px;
   color:#3b82f6;
@@ -146,17 +136,11 @@ body{
 
   <div class="grid">
 
-    <!-- 🔥 NOVO BOTÃO (DESTAQUE) -->
-    <div class="card highlight" onclick="go('controle-transacoes.html')">
+    <!-- AGORA NORMAL -->
+    <div class="card" onclick="go('controle-transacoes.html')">
       <i class="ri-bar-chart-2-line"></i>
       <div class="card-title">Controle de Transações</div>
       <div class="card-desc">Aprovações, limites e monitoramento</div>
-    </div>
-
-    <div class="card" onclick="go('financeiro.html')">
-      <i class="ri-money-dollar-circle-line"></i>
-      <div class="card-title">Financeiro</div>
-      <div class="card-desc">Lucro e monetização</div>
     </div>
 
     <div class="card" onclick="go('definicoes-taxas.html')">
@@ -187,12 +171,6 @@ body{
       <i class="ri-notification-3-line"></i>
       <div class="card-title">Alertas</div>
       <div class="card-desc">Monitoramento</div>
-    </div>
-
-    <div class="card" onclick="go('permissoes.html')">
-      <i class="ri-shield-user-line"></i>
-      <div class="card-title">Permissões</div>
-      <div class="card-desc">Controle de acesso</div>
     </div>
 
   </div>

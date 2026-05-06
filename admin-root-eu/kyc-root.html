@@ -88,6 +88,17 @@ body{
   border:none;
 }
 
+/* 🔥 AUTO KYC */
+.auto-kyc{
+  margin-top:10px;
+}
+
+.auto-kyc .stat{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
 /* CARD */
 .card{
   background:#070707;
@@ -136,7 +147,7 @@ body{
   margin-top:12px;
 }
 
-/* BOTÕES BASE */
+/* BOTÕES */
 .btn{
   flex:1;
   padding:10px;
@@ -151,7 +162,6 @@ body{
   gap:6px;
 }
 
-/* 👁 VER */
 .btn-view{
   background:#0a0a0a;
   border:1px solid rgba(255,255,255,0.08);
@@ -161,35 +171,18 @@ body{
 .btn-view:hover{
   border-color:#3b82f6;
   color:#fff;
-  box-shadow:0 0 10px rgba(59,130,246,0.15);
 }
 
-/* ✅ APROVAR (premium suave) */
 .btn-aprovar{
   background:rgba(34,197,94,0.10);
   border:1px solid rgba(34,197,94,0.25);
   color:#22c55e;
 }
 
-.btn-aprovar:hover{
-  background:rgba(34,197,94,0.18);
-  border-color:#22c55e;
-  color:#4ade80;
-  box-shadow:0 0 12px rgba(34,197,94,0.2);
-}
-
-/* ❌ REPROVAR (elegante) */
 .btn-reprovar{
   background:rgba(239,68,68,0.10);
   border:1px solid rgba(239,68,68,0.25);
   color:#ef4444;
-}
-
-.btn-reprovar:hover{
-  background:rgba(239,68,68,0.18);
-  border-color:#ef4444;
-  color:#f87171;
-  box-shadow:0 0 12px rgba(239,68,68,0.2);
 }
 
 /* MODAL */
@@ -209,7 +202,6 @@ body{
   background:#070707;
   border-radius:16px;
   padding:20px;
-  border:1px solid rgba(255,255,255,0.05);
 }
 
 .modal img{
@@ -222,7 +214,6 @@ body{
   text-align:right;
   cursor:pointer;
   color:#aaa;
-  margin-bottom:10px;
 }
 
 .empty{
@@ -238,6 +229,7 @@ body{
 <div class="container">
 
 <div class="header">
+
   <div class="header-top">
     <div class="header-icon">
       <i class="ri-shield-check-line"></i>
@@ -245,7 +237,7 @@ body{
 
     <div class="header-text">
       <div class="title">Verificação KYC</div>
-      <div class="subtitle">Análise e validação de identidade dos usuários</div>
+      <div class="subtitle">Análise e validação de identidade</div>
     </div>
   </div>
 
@@ -258,6 +250,14 @@ body{
       <i class="ri-check-double-line"></i> Aprovados: 0 →
     </div>
   </div>
+
+  <!-- 🔥 AUTO KYC -->
+  <div class="auto-kyc">
+    <div class="stat" id="autoKycBtn" onclick="toggleAutoKyc()">
+      <i class="ri-flashlight-line"></i> Auto KYC: OFF
+    </div>
+  </div>
+
 </div>
 
 <div id="lista"></div>
@@ -273,11 +273,38 @@ body{
 
 <script>
 
+/* 🔥 AUTO KYC */
+let autoKyc = localStorage.getItem("autoKyc") === "true";
+
+function atualizarBotao(){
+  let btn = document.getElementById("autoKycBtn");
+
+  if(autoKyc){
+    btn.innerHTML = '<i class="ri-flashlight-fill"></i> Auto KYC: ON';
+    btn.style.background = "linear-gradient(135deg,#2563eb,#3b82f6)";
+    btn.style.color = "#fff";
+    btn.style.border = "none";
+  }else{
+    btn.innerHTML = '<i class="ri-flashlight-line"></i> Auto KYC: OFF';
+    btn.style.background = "#070707";
+    btn.style.color = "#ccc";
+    btn.style.border = "1px solid rgba(255,255,255,0.05)";
+  }
+}
+
+function toggleAutoKyc(){
+  autoKyc = !autoKyc;
+  localStorage.setItem("autoKyc", autoKyc);
+  atualizarBotao();
+}
+
+/* SISTEMA */
 function abrirAprovados(){
   window.location.href = "kyc-aprovados-root.html";
 }
 
 function carregar(){
+
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
@@ -338,6 +365,8 @@ function carregar(){
 
   pendentes.innerText = "Pendentes: " + pend;
   aprovados.innerText = "Aprovados: " + apr;
+
+  atualizarBotao();
 }
 
 carregar();

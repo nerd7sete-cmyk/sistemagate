@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔥 FIX iPHONE -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<title>Controle do Sistema</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
+
+/* 🔥 FIX TELA BRANCA */
+html,body{
+  min-height:100vh;
+  min-height:100dvh;
+  background:#050505;
+}
+
+body{
+  color:#fff;
+  overflow-x:hidden;
+
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    16px
+    calc(30px + env(safe-area-inset-bottom));
+}
+
+/* CONTAINER */
+.container{
+  max-width:520px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.icon{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 25px rgba(59,130,246,0.4);
+}
+
+.icon i{
+  font-size:20px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+
+.sub{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(180deg,#0a0a0a,#050505);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+/* STATUS */
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-size:13px;
+}
+
+.green{color:#22c55e;}
+.yellow{color:#f59e0b;}
+.red{color:#ef4444;}
+.blue{color:#3b82f6;}
+
+/* BOTÕES */
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  margin-top:10px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+  border:none;
+}
+
+/* 🔥 BOTÃO AZUL CORRIGIDO */
+.primary{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#ffffff; /* 🔥 FIX TEXTO */
+  text-shadow:0 0 6px rgba(0,0,0,0.4);
+  box-shadow:0 0 15px rgba(59,130,246,0.25);
+}
+
+/* 🔥 BOTÃO PERIGO */
+.danger{
+  background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.3);
+  color:#ef4444;
+}
+
+.btn:hover{
+  transform:scale(1.02);
+}
+
+/* TEXTO MODO */
+.modo{
+  margin-top:8px;
+  font-size:12px;
+  color:#6b7280;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="icon">
+    <i class="ri-cpu-line"></i>
+  </div>
+
+  <div>
+    <div class="title">Controle do Sistema</div>
+    <div class="sub">Monitoramento em tempo real</div>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div class="card">
+  <b>Status Geral</b>
+
+  <div class="row">
+    <span>Servidor</span>
+    <span id="status" class="green">Online</span>
+  </div>
+
+  <div class="row">
+    <span>Latência</span>
+    <span id="ping">0ms</span>
+  </div>
+
+  <div class="row">
+    <span>Usuários</span>
+    <span id="users">0</span>
+  </div>
+
+  <div class="row">
+    <span>Saldo total</span>
+    <span id="saldo" class="blue">R$ 0</span>
+  </div>
+
+  <div class="row">
+    <span>Saques pendentes</span>
+    <span id="saques">0</span>
+  </div>
+
+  <div class="row">
+    <span>Erros detectados</span>
+    <span id="erros" class="red">0</span>
+  </div>
+</div>
+
+<!-- CONTROLE -->
+<div class="card">
+  <b>Controle do Sistema</b>
+
+  <button class="btn primary" onclick="toggleModo()">
+    Ativar / Desativar Manutenção
+  </button>
+
+  <button class="btn danger" onclick="resetar()">
+    Resetar Sistema
+  </button>
+
+  <div id="modo" class="modo">
+    Sistema normal
+  </div>
+</div>
+
+</div>
+
+<script>
+
+/* 🔥 FUNÇÃO PRINCIPAL */
+function atualizar(){
+
+  let usersData = JSON.parse(localStorage.getItem("users")) || [];
+  let saquesData = JSON.parse(localStorage.getItem("saques")) || [];
+
+  let totalUsers = usersData.length;
+
+  let saldoTotal = usersData.reduce((a,b)=>a+(b.saldo||0),0);
+
+  let saquesPend = saquesData.filter(s=>s.status==="pendente").length;
+
+  let latencia = Math.floor(Math.random()*60)+20;
+
+  let errosSistema = 0;
+
+  if(latencia > 70) errosSistema++;
+  if(saquesPend > 5) errosSistema++;
+  if(totalUsers > 100) errosSistema++;
+
+  if(errosSistema >= 2){
+    status.innerText = "Instável";
+    status.className = "yellow";
+  }else{
+    status.innerText = "Online";
+    status.className = "green";
+  }
+
+  users.innerText = totalUsers;
+  saldo.innerText = "R$ " + saldoTotal.toLocaleString();
+  saques.innerText = saquesPend;
+  ping.innerText = latencia + "ms";
+  erros.innerText = errosSistema;
+}
+
+/* 🔄 LOOP */
+setInterval(atualizar, 2000);
+atualizar();
+
+/* 🚨 MANUTENÇÃO */
+function toggleModo(){
+  let m = localStorage.getItem("manutencao")==="true";
+  m = !m;
+
+  localStorage.setItem("manutencao", m);
+
+  modo.innerText = m ? "🚨 Sistema em manutenção" : "Sistema normal";
+}
+
+/* RESET */
+function resetar(){
+  if(confirm("Resetar sistema?")){
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+</script>
+
+</body>
+</html>
