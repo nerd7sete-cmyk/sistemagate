@@ -1,0 +1,397 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Configurações</title>
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",Arial;
+}
+
+/* BASE */
+html,body{
+  width:100%;
+  min-height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#020202;
+}
+
+body{
+  color:#fff;
+
+  padding:
+  calc(18px + env(safe-area-inset-top))
+  14px
+  calc(28px + env(safe-area-inset-bottom));
+
+  background:#020202;
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:650px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+
+  margin-bottom:22px;
+}
+
+.icon{
+  width:56px;
+  height:56px;
+
+  border-radius:18px;
+
+  background:#080808;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.icon i{
+  font-size:23px;
+  color:#3b82f6;
+}
+
+.header-text{
+  flex:1;
+  min-width:0;
+}
+
+.title{
+  font-size:25px;
+  font-weight:700;
+
+  letter-spacing:-0.7px;
+
+  line-height:1.1;
+}
+
+.sub{
+  margin-top:6px;
+
+  color:#6b7280;
+
+  font-size:12px;
+
+  line-height:1.6;
+
+  max-width:420px;
+}
+
+/* CARD */
+.card{
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:28px;
+
+  padding:14px;
+}
+
+/* MENU */
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* ITEM */
+.item{
+  width:100%;
+
+  background:#090909;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:22px;
+
+  padding:15px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  cursor:pointer;
+
+  transition:.18s ease;
+}
+
+.item:hover{
+  border-color:rgba(59,130,246,.12);
+
+  background:#0a0a0a;
+
+  transform:translateY(-1px);
+}
+
+/* LEFT */
+.left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  min-width:0;
+}
+
+/* ICON */
+.item-icon{
+  width:46px;
+  height:46px;
+
+  border-radius:15px;
+
+  background:#0c0c0c;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+
+  transition:.18s;
+}
+
+.item-icon i{
+  color:#3b82f6;
+  font-size:19px;
+}
+
+/* TEXT */
+.text{
+  min-width:0;
+}
+
+.text h3{
+  font-size:14px;
+  font-weight:600;
+
+  color:#f3f4f6;
+}
+
+.text p{
+  margin-top:4px;
+
+  color:#6b7280;
+
+  font-size:11px;
+
+  line-height:1.5;
+}
+
+/* RIGHT */
+.right{
+  display:flex;
+  align-items:center;
+
+  margin-left:10px;
+}
+
+.right i{
+  color:#52525b;
+  font-size:19px;
+
+  transition:.18s;
+}
+
+/* HOVER EFFECT */
+.item:hover .item-icon{
+  background:#0d1320;
+
+  border-color:rgba(59,130,246,.14);
+}
+
+.item:hover .right i{
+  color:#3b82f6;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  .title{
+    font-size:22px;
+  }
+
+  .sub{
+    font-size:11px;
+  }
+
+  .item{
+    padding:14px;
+  }
+
+  .item-icon{
+    width:44px;
+    height:44px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div class="icon">
+      <i class="ri-settings-3-line"></i>
+    </div>
+
+    <div class="header-text">
+
+      <div class="title">
+        Configurações
+      </div>
+
+      <div class="sub">
+        Gerencie seu perfil, segurança da conta, taxas operacionais e integrações da API.
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+
+    <div class="menu">
+
+      <!-- PERFIL -->
+      <div class="item"
+      onclick="abrir('perfil-operador.html')">
+
+        <div class="left">
+
+          <div class="item-icon">
+            <i class="ri-shield-user-line"></i>
+          </div>
+
+          <div class="text">
+            <h3>Perfil & Segurança</h3>
+            <p>
+              Informações da conta, senha e proteção de acesso
+            </p>
+          </div>
+
+        </div>
+
+        <div class="right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- TAXAS -->
+      <div class="item"
+      onclick="abrir('taxas-operador.html')">
+
+        <div class="left">
+
+          <div class="item-icon">
+            <i class="ri-percent-line"></i>
+          </div>
+
+          <div class="text">
+            <h3>Suas taxas</h3>
+            <p>
+              Taxas operacionais, limites e simulações
+            </p>
+          </div>
+
+        </div>
+
+        <div class="right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- API -->
+      <div class="item"
+      onclick="abrir('integracoes.html')">
+
+        <div class="left">
+
+          <div class="item-icon">
+            <i class="ri-links-line"></i>
+          </div>
+
+          <div class="text">
+            <h3>Integrações API</h3>
+            <p>
+              Webhooks, chaves e documentação técnica
+            </p>
+          </div>
+
+        </div>
+
+        <div class="right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function abrir(pagina){
+
+  try{
+
+    let frame =
+      window.top.document.getElementById("frame");
+
+    if(frame){
+
+      frame.src = pagina;
+
+      return;
+
+    }
+
+  }catch(e){}
+
+  window.location.href = pagina;
+
+}
+
+</script>
+
+</body>
+</html>

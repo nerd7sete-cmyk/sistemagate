@@ -2,171 +2,455 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>PrimePay Operador</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
 
-html, body{
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
   height:100%;
+  overflow:hidden;
 }
 
 body{
   display:flex;
-  background:#000;
-  color:white;
-  font-family:"Segoe UI", Arial;
+  background:#020202;
+  color:#fff;
+  font-family:"Segoe UI",Arial;
 }
 
 /* SIDEBAR */
 .sidebar{
-  width:250px;
+  width:270px;
   height:100dvh;
-  background:#000;
-  border-right:1px solid rgba(59,130,246,0.15);
-  padding:20px;
+
+  background:#050505;
+
+  border-right:1px solid rgba(255,255,255,.04);
+
+  padding:18px 14px;
+
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+
   overflow-y:auto;
 }
 
 /* USER */
 .user{
-  background:linear-gradient(145deg,#0a0a0a,#050505);
-  border:1px solid rgba(59,130,246,0.25);
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:25px;
+  background:#080808;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:24px;
+
+  padding:16px;
+
+  margin-bottom:22px;
+}
+
+/* TOP USER */
+.user-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.avatar{
+  width:54px;
+  height:54px;
+
+  border-radius:18px;
+
+  background:#0f172a;
+
+  border:1px solid rgba(59,130,246,.10);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.avatar i{
+  font-size:23px;
+  color:#3b82f6;
+}
+
+.user-info{
+  flex:1;
+  min-width:0;
+}
+
+.painel{
+  color:#6b7280;
+  font-size:11px;
+
+  margin-bottom:5px;
 }
 
 .user strong{
   display:block;
-  font-size:14px;
+
+  font-size:15px;
+  font-weight:600;
+
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
-.user .painel{
+/* BADGE */
+.badge{
+  margin-top:10px;
+
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  padding:7px 11px;
+
+  border-radius:999px;
+
+  background:#0c0c0c;
+
+  border:1px solid rgba(255,255,255,.04);
+
   font-size:11px;
-  color:#9ca3af;
-  margin-bottom:5px;
+
+  color:#d1d5db;
+}
+
+.badge-dot{
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#22c55e;
 }
 
 /* MENU */
-.menu-item{
+.menu{
   display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:10px;
-  cursor:pointer;
-  color:#9ca3af;
-  transition:all .2s ease;
+  flex-direction:column;
+  gap:8px;
 }
 
-/* ÍCONE */
-.menu-item i{
-  transition:.2s;
+/* ITEM */
+.menu-item{
+  width:100%;
+
+  background:transparent;
+
+  border:1px solid transparent;
+
+  border-radius:18px;
+
+  padding:13px 14px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  cursor:pointer;
+
+  transition:.18s ease;
+}
+
+/* LEFT */
+.menu-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+/* ICON */
+.menu-icon{
+  width:42px;
+  height:42px;
+
+  border-radius:14px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:.18s;
+}
+
+.menu-icon i{
+  font-size:18px;
+  color:#8b949e;
+}
+
+/* TEXT */
+.menu-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.menu-text strong{
+  font-size:13px;
+  font-weight:600;
+
+  color:#e5e7eb;
+}
+
+.menu-text span{
+  margin-top:3px;
+
+  font-size:11px;
+
+  color:#6b7280;
+}
+
+/* RIGHT */
+.menu-right i{
+  font-size:17px;
+  color:#52525b;
 }
 
 /* HOVER */
 .menu-item:hover{
-  background:#0a0a0a;
-  color:#fff;
-  transform:translateX(2px);
+  background:#080808;
+
+  border-color:rgba(255,255,255,.04);
 }
 
-.menu-item:hover i{
+.menu-item:hover .menu-icon{
+  border-color:rgba(59,130,246,.12);
+
+  background:#0c1220;
+}
+
+.menu-item:hover .menu-icon i{
   color:#3b82f6;
 }
 
-/* ATIVO */
-.active{
-  background:linear-gradient(145deg,#0a0a0a,#050505);
-  color:#fff;
-  border:1px solid rgba(59,130,246,0.4);
-  box-shadow:0 0 12px rgba(59,130,246,0.15);
+/* ACTIVE */
+.menu-item.active{
+  background:#0a0a0a;
+
+  border-color:rgba(59,130,246,.12);
 }
 
-.active i{
+.menu-item.active .menu-icon{
+  background:#0c1220;
+
+  border-color:rgba(59,130,246,.16);
+}
+
+.menu-item.active .menu-icon i{
   color:#3b82f6;
 }
 
-/* 🔥 LOGOUT VERMELHO */
-.logout{
-  padding:12px;
-  border-radius:12px;
-  background:#0a0a0a;
+.menu-item.active .menu-right i{
+  color:#3b82f6;
+}
+
+/* DIVIDER */
+.divider{
+  margin:22px 6px 14px;
+
+  color:#52525b;
+
+  font-size:10px;
+
+  font-weight:600;
+
+  letter-spacing:1.2px;
+
+  text-transform:uppercase;
+}
+
+/* SUPPORT */
+.support-card{
+  background:#080808;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:22px;
+
+  padding:16px;
+
   cursor:pointer;
+
+  transition:.18s;
+}
+
+.support-card:hover{
+  border-color:rgba(59,130,246,.12);
+
+  background:#090909;
+}
+
+.support-top{
   display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.support-icon{
+  width:46px;
+  height:46px;
+
+  border-radius:15px;
+
+  background:#0a0a0a;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.support-icon i{
+  color:#3b82f6;
+  font-size:20px;
+}
+
+.support-text strong{
+  display:block;
+
+  font-size:14px;
+  font-weight:600;
+}
+
+.support-text span{
+  display:block;
+
+  margin-top:4px;
+
+  color:#6b7280;
+
+  font-size:11px;
+}
+
+/* LOGOUT */
+.logout{
+  margin-top:14px;
+
+  background:#080808;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:18px;
+
+  padding:15px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
   gap:10px;
-  transition:.2s;
+
+  cursor:pointer;
+
+  transition:.18s;
+
   color:#f87171;
-  border:1px solid rgba(248,113,113,0.2);
+
+  font-size:13px;
+  font-weight:600;
 }
 
 .logout i{
-  color:#f87171;
+  font-size:17px;
 }
 
 .logout:hover{
-  background:rgba(248,113,113,0.08);
-  border:1px solid rgba(248,113,113,0.4);
-  box-shadow:0 0 10px rgba(248,113,113,0.15);
-  transform:translateX(2px);
+  background:#0b0b0b;
+
+  border-color:rgba(239,68,68,.14);
 }
 
 /* MAIN */
 .main{
   flex:1;
+
   display:flex;
   flex-direction:column;
+
   height:100dvh;
 }
 
-/* MOBILE */
+/* MOBILE TOP */
 .topbar{
   display:none;
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+
+  height:65px;
+
+  padding:0 16px;
+
+  align-items:center;
+  gap:12px;
+
+  border-bottom:1px solid rgba(255,255,255,.04);
+
+  background:#050505;
+}
+
+.topbar strong{
+  font-size:15px;
+  font-weight:600;
 }
 
 .menu-btn{
-  font-size:22px;
+  font-size:24px;
   cursor:pointer;
 }
 
+/* IFRAME */
 iframe{
   flex:1;
   width:100%;
   border:none;
+  background:#020202;
 }
 
+/* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.8);
+
+  background:rgba(0,0,0,.75);
+
   display:none;
+
   z-index:1000;
 }
 
+/* MOBILE */
 @media(max-width:900px){
 
   .sidebar{
     position:fixed;
+
     left:0;
     top:0;
-    width:260px;
+
     transform:translateX(-100%);
+
     z-index:1001;
-    transition:0.3s;
+
+    transition:.3s;
   }
 
   .sidebar.active{
@@ -175,119 +459,304 @@ iframe{
 
   .topbar{
     display:flex;
-    align-items:center;
-    gap:10px;
   }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="overlay" id="overlay" onclick="fecharMenu()"></div>
+<div class="overlay"
+id="overlay"
+onclick="fecharMenu()"></div>
 
-<div class="sidebar" id="sidebar">
+<!-- SIDEBAR -->
+<div class="sidebar"
+id="sidebar">
 
   <div>
 
-    <div class="user" id="userBox"></div>
+    <!-- USER -->
+    <div class="user"
+    id="userBox"></div>
 
-    <div class="menu-item active" onclick="abrir('dashboard2.html', this)">
-      <i class="ri-home-5-line"></i> Painel Geral
+    <!-- MENU -->
+    <div class="menu">
+
+      <!-- DASHBOARD -->
+      <div class="menu-item active"
+      onclick="abrir('dashboard2.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-home-5-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Painel Geral</strong>
+            <span>Resumo financeiro</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- RECEBIMENTOS -->
+      <div class="menu-item"
+      onclick="abrir('pdv.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-qr-code-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Recebimentos</strong>
+            <span>PIX e cobranças</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- MOV -->
+      <div class="menu-item"
+      onclick="abrir('extrato.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-bar-chart-box-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Movimentações</strong>
+            <span>Entradas e saídas</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- SAQUES -->
+      <div class="menu-item"
+      onclick="abrir('saques.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-wallet-3-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Retiradas</strong>
+            <span>Saques da conta</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
+      <!-- CONFIG -->
+      <div class="menu-item"
+      onclick="abrir('configuracoes-operador.html', this)">
+
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <i class="ri-settings-3-line"></i>
+          </div>
+
+          <div class="menu-text">
+            <strong>Configurações</strong>
+            <span>Perfil, taxas e API</span>
+          </div>
+
+        </div>
+
+        <div class="menu-right">
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="menu-item" onclick="abrir('pdv.html', this)">
-      <i class="ri-qr-code-line"></i> Recebimentos
+    <!-- DIVIDER -->
+    <div class="divider">
+      suporte
     </div>
 
-    <div class="menu-item" onclick="abrir('extrato.html', this)">
-      <i class="ri-bar-chart-line"></i> Movimentações
-    </div>
+    <!-- SUPPORT -->
+    <div class="support-card"
+    onclick="abrir('suporte-operador.html')">
 
-    <div class="menu-item" onclick="abrir('saques.html', this)">
-      <i class="ri-wallet-3-line"></i> Retiradas
-    </div>
+      <div class="support-top">
 
-    <div class="menu-item" onclick="abrir('pix-cpf-especifico.html', this)">
-      <i class="ri-bank-card-line"></i> Chave PIX CPF
-    </div>
+        <div class="support-icon">
+          <i class="ri-customer-service-2-line"></i>
+        </div>
 
-    <div class="menu-item" onclick="abrir('perfil-operador.html', this)">
-      <i class="ri-shield-user-line"></i> Perfil & Segurança
-    </div>
+        <div class="support-text">
 
-    <div class="menu-item" onclick="abrir('taxas-operador.html', this)">
-      <i class="ri-percent-line"></i> Suas Taxas
-    </div>
+          <strong>Central de Suporte</strong>
 
-    <div class="menu-item" onclick="abrir('integracoes.html', this)">
-      <i class="ri-links-line"></i> Integrações e API
-    </div>
+          <span>
+            Atendimento e suporte técnico
+          </span>
 
-    <div class="menu-item" onclick="abrir('suporte-operador.html', this)">
-      <i class="ri-customer-service-2-line"></i> Suporte
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
-  <div class="logout" onclick="logout()">
-    <i class="ri-logout-box-r-line"></i> Sair
+  <!-- LOGOUT -->
+  <div class="logout"
+  onclick="logout()">
+
+    <i class="ri-logout-box-r-line"></i>
+
+    Encerrar sessão
+
   </div>
 
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
+  <!-- MOBILE -->
   <div class="topbar">
-    <i class="ri-menu-line menu-btn" onclick="abrirMenu()"></i>
-    <strong>PrimePay</strong>
+
+    <i class="ri-menu-line menu-btn"
+    onclick="abrirMenu()"></i>
+
+    <strong>
+      PrimePay
+    </strong>
+
   </div>
 
-  <iframe id="frame" src="dashboard2.html"></iframe>
+  <!-- FRAME -->
+  <iframe id="frame"
+  src="dashboard2.html"></iframe>
 
 </div>
 
 <script>
 
-// USUÁRIO
-let usuario = localStorage.getItem("usuario") || "Operador";
+/* USER */
+let usuario =
+localStorage.getItem("usuario")
+|| "Operador";
 
-let primeiroNome = usuario.includes("@")
-  ? usuario.split("@")[0]
-  : usuario.split(" ")[0];
+let primeiroNome =
+usuario.includes("@")
+? usuario.split("@")[0]
+: usuario.split(" ")[0];
 
 document.getElementById("userBox").innerHTML = `
-  <div class="painel">Painel do Operador</div>
-  <strong>${primeiroNome}</strong>
+
+  <div class="user-top">
+
+    <div class="avatar">
+      <i class="ri-user-3-line"></i>
+    </div>
+
+    <div class="user-info">
+
+      <div class="painel">
+        Painel do Operador
+      </div>
+
+      <strong>
+        ${primeiroNome}
+      </strong>
+
+      <div class="badge">
+
+        <div class="badge-dot"></div>
+
+        Conta ativa
+
+      </div>
+
+    </div>
+
+  </div>
+
 `;
 
-// MENU
-function abrir(pagina, el){
-  document.getElementById("frame").src = pagina;
+/* ABRIR */
+function abrir(pagina,el){
 
-  document.querySelectorAll(".menu-item")
-    .forEach(i => i.classList.remove("active"));
+  document.getElementById("frame").src =
+  pagina;
 
-  el.classList.add("active");
+  if(el){
+
+    document.querySelectorAll(".menu-item")
+    .forEach(i=>i.classList.remove("active"));
+
+    el.classList.add("active");
+
+  }
 
   fecharMenu();
+
 }
 
-// MOBILE
+/* MOBILE */
 function abrirMenu(){
-  document.getElementById("sidebar").classList.add("active");
-  document.getElementById("overlay").style.display = "block";
+
+  document.getElementById("sidebar")
+  .classList.add("active");
+
+  document.getElementById("overlay")
+  .style.display = "block";
+
 }
 
 function fecharMenu(){
-  document.getElementById("sidebar").classList.remove("active");
-  document.getElementById("overlay").style.display = "none";
+
+  document.getElementById("sidebar")
+  .classList.remove("active");
+
+  document.getElementById("overlay")
+  .style.display = "none";
+
 }
 
-// LOGOUT
+/* LOGOUT */
 function logout(){
+
   localStorage.clear();
+
   window.location.href = "login.html";
+
 }
 
 </script>
