@@ -7,7 +7,13 @@
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
 
 html, body{
   height:100%;
@@ -16,6 +22,7 @@ html, body{
 
 body{
   color:white;
+
   padding:
     calc(20px + env(safe-area-inset-top))
     16px
@@ -30,7 +37,7 @@ body{
   margin-bottom:20px;
 }
 
-/* 🔥 HEADER PADRÃO */
+/* HEADER */
 .header-top{
   display:flex;
   align-items:center;
@@ -38,14 +45,24 @@ body{
 }
 
 .header-icon{
-  width:36px;
-  height:36px;
+  width:38px;
+  height:38px;
+
   border-radius:12px;
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  background:
+  linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 0 15px rgba(59,130,246,0.3);
+
+  box-shadow:
+  0 0 15px rgba(59,130,246,0.3);
 }
 
 .header-icon i{
@@ -62,26 +79,40 @@ body{
   color:#6b7280;
 }
 
-/* BOTÃO */
+/* BTN */
 .btn-control{
   display:inline-flex;
   align-items:center;
   gap:6px;
+
   width:fit-content;
-  padding:8px 14px;
-  border-radius:10px;
+
+  padding:9px 14px;
+
+  border-radius:12px;
+
   font-size:12px;
   font-weight:600;
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+  background:
+  linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
   color:white;
+
   cursor:pointer;
+
   transition:.25s ease;
-  box-shadow:0 0 12px rgba(59,130,246,0.25);
+
+  box-shadow:
+  0 0 12px rgba(59,130,246,0.25);
 }
 
 .btn-control:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 18px rgba(59,130,246,0.35);
 }
 
 /* STATS */
@@ -93,90 +124,206 @@ body{
 
 .stat{
   background:#070707;
+
   border:1px solid rgba(255,255,255,0.05);
-  padding:10px 14px;
-  border-radius:10px;
+
+  padding:12px 14px;
+
+  border-radius:14px;
+
   font-size:12px;
+
+  min-width:140px;
 }
 
-/* FILTRO */
+/* FILTER */
 .filters{
   margin-bottom:20px;
 }
 
 .input{
   width:100%;
-  padding:12px;
-  border-radius:10px;
+
+  padding:14px;
+
+  border-radius:14px;
+
   border:1px solid #111;
+
   background:#050505;
+
   color:white;
+
+  outline:none;
 }
 
 /* CARD */
 .card{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* ITEM */
+.item{
   background:#070707;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:14px;
-  overflow:hidden;
+
+  border:1px solid rgba(255,255,255,.05);
+
+  border-radius:18px;
+
+  padding:16px;
+
+  transition:.2s;
 }
 
-/* ROW */
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;
-  padding:14px;
-  border-bottom:1px solid #111;
-  font-size:12px;
+.item:hover{
+  border-color:
+  rgba(59,130,246,.12);
 }
 
-.header{
-  background:#050505;
-  color:#6b7280;
+/* TOP */
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+
+  gap:12px;
 }
 
-.small{
-  font-size:11px;
-  color:#6b7280;
+/* VALOR */
+.valor{
+  font-size:18px;
+  font-weight:700;
 }
 
 /* STATUS */
 .status{
-  font-size:10px;
-  padding:4px 8px;
-  border-radius:20px;
-  display:inline-block;
-  margin-top:5px;
+  padding:6px 10px;
+
+  border-radius:999px;
+
+  font-size:11px;
+  font-weight:600;
 }
 
 .pago{
-  background:rgba(34,197,94,0.15);
+  background:
+  rgba(34,197,94,.14);
+
   color:#22c55e;
 }
 
 .pendente{
-  background:rgba(234,179,8,0.15);
+  background:
+  rgba(234,179,8,.14);
+
   color:#eab308;
+}
+
+/* INFOS */
+.info{
+  margin-top:14px;
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(2,1fr);
+
+  gap:12px;
+}
+
+.box{
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.04);
+
+  border-radius:14px;
+
+  padding:12px;
+}
+
+.box span{
+  display:block;
+
+  color:#6b7280;
+
+  font-size:11px;
+
+  margin-bottom:5px;
+}
+
+.box strong{
+  font-size:12px;
+
+  word-break:break-word;
+}
+
+/* ACTIONS */
+.actions{
+  margin-top:14px;
+
+  display:flex;
+  gap:10px;
+}
+
+/* BTN */
+.btn{
+  flex:1;
+
+  height:42px;
+
+  border-radius:12px;
+
+  border:none;
+
+  cursor:pointer;
+
+  font-size:12px;
+  font-weight:600;
+
+  transition:.2s;
+}
+
+.btn-aprovar{
+  background:
+  rgba(34,197,94,.14);
+
+  color:#22c55e;
+
+  border:1px solid rgba(34,197,94,.20);
+}
+
+.btn-pendente{
+  background:
+  rgba(234,179,8,.14);
+
+  color:#eab308;
+
+  border:1px solid rgba(234,179,8,.20);
 }
 
 /* EMPTY */
 .empty{
-  padding:30px;
+  padding:40px;
+
   text-align:center;
-  color:#555;
+
+  color:#666;
 }
 
-/* MOBILE */
-@media(max-width:900px){
-  .row{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    border:1px solid #111;
-    border-radius:12px;
-    margin-bottom:10px;
+@media(max-width:700px){
+
+  .info{
+    grid-template-columns:1fr;
   }
-  .header{display:none;}
+
+  .actions{
+    flex-direction:column;
+  }
+
 }
+
 </style>
 </head>
 
@@ -184,147 +331,421 @@ body{
 
 <div class="top">
 
-  <!-- 🔥 HEADER NOVO -->
   <div class="header-top">
+
     <div class="header-icon">
       <i class="ri-exchange-dollar-line"></i>
     </div>
+
     <div class="header-text">
-      <h2>Transações do Sistema</h2>
-      <span>Monitoramento completo das movimentações financeiras</span>
+
+      <h2>
+        Extrato ROOT
+      </h2>
+
+      <span>
+        Controle total das cobranças PIX
+      </span>
+
     </div>
+
   </div>
 
-  <div class="btn-control" onclick="irControle()">
-    <i class="ri-settings-3-line"></i>
-    Controle de Aprovação
+  <div class="btn-control"
+  onclick="atualizar()">
+
+    <i class="ri-refresh-line"></i>
+
+    Atualizar
+
   </div>
 
   <div class="stats">
-    <div class="stat" id="total">Total Pago: R$ 0,00</div>
-    <div class="stat" id="lucroTotal">Lucro: R$ 0,00</div>
-    <div class="stat" id="pendenteTotal">Pendentes: R$ 0,00</div>
+
+    <div class="stat"
+    id="totalPago">
+
+      Total Pago:
+      R$ 0,00
+
+    </div>
+
+    <div class="stat"
+    id="totalPendente">
+
+      Pendentes:
+      R$ 0,00
+
+    </div>
+
+    <div class="stat"
+    id="quantidade">
+
+      Transações:
+      0
+
+    </div>
+
   </div>
 
 </div>
 
 <div class="filters">
-  <input id="busca" class="input" placeholder="Buscar por usuário, operador ou gateway..." onkeyup="render()">
+
+  <input
+  id="busca"
+  class="input"
+  placeholder="Buscar cliente, operador ou CPF..."
+  onkeyup="render()">
+
 </div>
 
-<div class="card" id="tabela"></div>
+<div class="card"
+id="tabela"></div>
 
 <script>
 
+/* TELEGRAM */
+const TOKEN =
+"8512466572:AAGKnae07MPKuModAKlrZxnkHg2LLWLLfOQ";
+
+const CHAT_ID =
+"7847311143";
+
+/* ENVIAR TELEGRAM */
+function enviarTelegram(msg){
+
+  fetch(
+
+    `https://api.telegram.org/bot${TOKEN}/sendMessage`,
+
+    {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        chat_id: CHAT_ID,
+
+        text: msg,
+
+        parse_mode:"HTML"
+
+      })
+
+    }
+
+  );
+
+}
+
+/* GET */
 function getTransacoes(){
+
   try{
-    return JSON.parse(localStorage.getItem("transacoes_sistema")) || [];
+
+    return JSON.parse(
+      localStorage.getItem(
+        "extrato_root"
+      )
+    ) || [];
+
   }catch{
+
     return [];
+
   }
+
 }
 
+/* FORMATAR */
 function formatarValor(v){
-  return "R$ " + Number(v).toFixed(2).replace(".", ",");
+
+  return Number(v)
+  .toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
 }
 
-function formatarData(d){
-  if(!d) return "-";
-  return new Date(d).toLocaleString();
-}
-
-function irControle(){
-  window.location.href = "controle-transacoes.html";
-}
-
+/* RENDER */
 function render(){
 
-  let tabela = document.getElementById("tabela");
-  let busca = document.getElementById("busca").value.toLowerCase();
+  let tabela =
+  document.getElementById("tabela");
 
-  let dados = getTransacoes();
+  let busca =
+  document.getElementById("busca")
+  .value
+  .toLowerCase();
+
+  let dados =
+  getTransacoes();
 
   if(busca){
-    dados = dados.filter(t =>
-      (t.usuario || "").toLowerCase().includes(busca) ||
-      (t.operador || "").toLowerCase().includes(busca) ||
-      (t.gerente || "").toLowerCase().includes(busca) ||
-      (t.admin || "").toLowerCase().includes(busca) ||
-      (t.gateway || "").toLowerCase().includes(busca)
+
+    dados =
+    dados.filter(t =>
+
+      (t.cliente || "")
+      .toLowerCase()
+      .includes(busca)
+
+      ||
+
+      (t.operador || "")
+      .toLowerCase()
+      .includes(busca)
+
+      ||
+
+      (t.cpf || "")
+      .toLowerCase()
+      .includes(busca)
+
     );
+
   }
 
   let totalPago = 0;
-  let lucroTotal = 0;
   let totalPendente = 0;
 
-  tabela.innerHTML = `
-    <div class="row header">
-      <div>Valor</div>
-      <div>Status</div>
-      <div>Usuário</div>
-      <div>Hierarquia</div>
-      <div>Gateway</div>
-      <div>Data</div>
-    </div>
-  `;
+  tabela.innerHTML = "";
 
   if(dados.length === 0){
-    tabela.innerHTML += `<div class="empty">Nenhuma transação encontrada</div>`;
+
+    tabela.innerHTML = `
+
+      <div class="empty">
+        Nenhuma transação encontrada
+      </div>
+
+    `;
+
     return;
+
   }
 
-  dados.slice().reverse().forEach(t=>{
+  dados.forEach((t,index)=>{
 
-    let valor = Number(t.valor || 0);
-    let taxa = Number(t.taxa || 15);
+    let valor =
+    Number(t.valor || 0);
 
-    if(t.status === "pago"){
+    if(
+      t.status === "Aprovado"
+    ){
+
       totalPago += valor;
-      lucroTotal += valor * (taxa / 100);
-    }
 
-    if(t.status === "pendente"){
+    }else{
+
       totalPendente += valor;
+
     }
 
     tabela.innerHTML += `
-      <div class="row">
-        <div>${formatarValor(valor)}</div>
+
+    <div class="item">
+
+      <div class="item-top">
 
         <div>
-          <span class="status ${t.status === "pago" ? "pago" : "pendente"}">
-            ${t.status || "-"}
-          </span>
+
+          <div class="valor">
+            ${formatarValor(valor)}
+          </div>
+
         </div>
 
-        <div>${t.usuario || "-"}</div>
+        <div class="status
+        ${
+          t.status === "Aprovado"
+          ? "pago"
+          : "pendente"
+        }">
 
-        <div class="small">
-          OP: ${t.operador || "-"}<br>
-          GER: ${t.gerente || "-"}<br>
-          ADM: ${t.admin || "-"}<br>
-          TAXA: ${taxa}%
+          ${t.status}
+
         </div>
 
-        <div>${t.gateway || "-"}</div>
-
-        <div class="small">${formatarData(t.data)}</div>
       </div>
+
+      <div class="info">
+
+        <div class="box">
+
+          <span>Cliente</span>
+
+          <strong>
+            ${t.cliente || "-"}
+          </strong>
+
+        </div>
+
+        <div class="box">
+
+          <span>Operador</span>
+
+          <strong>
+            ${t.operador || "-"}
+          </strong>
+
+        </div>
+
+        <div class="box">
+
+          <span>CPF</span>
+
+          <strong>
+            ${t.cpf || "-"}
+          </strong>
+
+        </div>
+
+        <div class="box">
+
+          <span>Data</span>
+
+          <strong>
+            ${t.data || "-"}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="actions">
+
+        <button
+        class="btn btn-aprovar"
+        onclick="aprovar(${index})">
+
+          Aprovar
+
+        </button>
+
+        <button
+        class="btn btn-pendente"
+        onclick="pendente(${index})">
+
+          Pendente
+
+        </button>
+
+      </div>
+
+    </div>
+
     `;
+
   });
 
-  document.getElementById("total").innerText =
-    "Total Pago: " + formatarValor(totalPago);
+  document.getElementById(
+    "totalPago"
+  ).innerText =
 
-  document.getElementById("lucroTotal").innerText =
-    "Lucro: " + formatarValor(lucroTotal);
+  "Total Pago: " +
+  formatarValor(totalPago);
 
-  document.getElementById("pendenteTotal").innerText =
-    "Pendentes: " + formatarValor(totalPendente);
+  document.getElementById(
+    "totalPendente"
+  ).innerText =
+
+  "Pendentes: " +
+  formatarValor(totalPendente);
+
+  document.getElementById(
+    "quantidade"
+  ).innerText =
+
+  "Transações: " +
+  dados.length;
+
 }
 
-setInterval(render, 3000);
+/* APROVAR */
+function aprovar(i){
+
+  let dados =
+  getTransacoes();
+
+  dados[i].status =
+  "Aprovado";
+
+  localStorage.setItem(
+    "extrato_root",
+    JSON.stringify(dados)
+  );
+
+  let t = dados[i];
+
+  let mensagem =
+
+`✅ <b>PIX APROVADO</b>
+
+👤 <b>Cliente:</b>
+${t.cliente || "-"}
+
+💰 <b>Valor:</b>
+${formatarValor(t.valor)}
+
+🧾 <b>Operador:</b>
+${t.operador || "-"}
+
+📄 <b>CPF:</b>
+${t.cpf || "-"}
+
+📅 <b>Data:</b>
+${t.data || "-"}
+
+🟢 <b>Status:</b>
+Aprovado`;
+
+  enviarTelegram(mensagem);
+
+  render();
+
+}
+
+/* PENDENTE */
+function pendente(i){
+
+  let dados =
+  getTransacoes();
+
+  dados[i].status =
+  "Pendente";
+
+  localStorage.setItem(
+    "extrato_root",
+    JSON.stringify(dados)
+  );
+
+  render();
+
+}
+
+/* UPDATE */
+function atualizar(){
+
+  render();
+
+}
+
+setInterval(()=>{
+
+  render();
+
+},3000);
+
 render();
 
 </script>

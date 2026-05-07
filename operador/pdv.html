@@ -588,8 +588,8 @@ button:disabled{
 
 <script>
 
-const TOKEN = "8656461256:AAGEqO99ybJvjhvTUdfKBN2Uh1Rm5HWwLrw";
-const CHAT_ID = "7847311143";
+const TOKEN = "SEU_TOKEN";
+const CHAT_ID = "SEU_CHAT_ID";
 
 function enviarTelegram(msg){
 
@@ -681,7 +681,7 @@ valorInput.addEventListener("input", function(){
 
 });
 
-/* CPF MASK */
+/* CPF */
 cpf.addEventListener("input", function(){
 
   let v = this.value.replace(/\D/g,"");
@@ -708,8 +708,8 @@ function validarValor(){
     if(valor !== config.valor_fixo){
 
       valorErro.innerText =
-        "Valor obrigatório: " +
-        formatarBRL(config.valor_fixo);
+      "Valor obrigatório: " +
+      formatarBRL(config.valor_fixo);
 
       invalido = true;
 
@@ -720,8 +720,8 @@ function validarValor(){
     if(valor < config.valor_min){
 
       valorErro.innerText =
-        "Valor mínimo: " +
-        formatarBRL(config.valor_min);
+      "Valor mínimo: " +
+      formatarBRL(config.valor_min);
 
       invalido = true;
 
@@ -730,8 +730,8 @@ function validarValor(){
     if(valor > config.valor_max){
 
       valorErro.innerText =
-        "Valor máximo: " +
-        formatarBRL(config.valor_max);
+      "Valor máximo: " +
+      formatarBRL(config.valor_max);
 
       invalido = true;
 
@@ -740,7 +740,7 @@ function validarValor(){
   }
 
   valorErro.style.display =
-    invalido ? "block" : "none";
+  invalido ? "block" : "none";
 
   btnGerar.disabled = invalido;
 
@@ -754,12 +754,12 @@ async function gerarPix(){
   }
 
   let usuario =
-    localStorage.getItem("usuario")
-    || "operador";
+  localStorage.getItem("usuario")
+  || "operador";
 
   let codigoPix =
-    "000201PRIMEPAY" +
-    valor.toFixed(2);
+  "000201PRIMEPAY" +
+  valor.toFixed(2);
 
   try{
 
@@ -767,24 +767,24 @@ async function gerarPix(){
       "http://localhost:3000/pix",
       {
 
-        method: "POST",
+        method:"POST",
 
-        headers: {
+        headers:{
           "Content-Type":"application/json"
         },
 
-        body: JSON.stringify({
+        body:JSON.stringify({
 
           cliente:
-            nomeCliente.value || "Cliente",
+          nomeCliente.value || "Cliente",
 
           cpf:
-            cpf.value || "",
+          cpf.value || "",
 
           valor,
 
           operador:
-            usuario
+          usuario
 
         })
 
@@ -803,6 +803,53 @@ async function gerarPix(){
 
   }
 
+  /* 🔥 ID */
+  let id =
+  "PIX_" + Date.now();
+
+  /* 🔥 EXTRATO ROOT */
+  let extratoRoot =
+  JSON.parse(
+    localStorage.getItem("extrato_root")
+  ) || [];
+
+  /* 🔥 NOVA TRANSAÇÃO */
+  let transacao = {
+
+    id:id,
+
+    tipo:"PIX",
+
+    cliente:
+    nomeCliente.value || "Cliente",
+
+    cpf:
+    cpf.value || "",
+
+    valor:valor,
+
+    operador:usuario,
+
+    status:"Pendente",
+
+    data:
+    new Date().toLocaleString("pt-BR"),
+
+    codigoPix:codigoPix
+
+  };
+
+  /* 🔥 SALVAR */
+  extratoRoot.unshift(
+    transacao
+  );
+
+  localStorage.setItem(
+    "extrato_root",
+    JSON.stringify(extratoRoot)
+  );
+
+  /* QR */
   pixCode.innerText = codigoPix;
 
   QRCode.toCanvas(
@@ -813,16 +860,28 @@ async function gerarPix(){
   modalQR.classList.add("show");
 
   status.innerText =
-    "Aguardando pagamento...";
+  "Aguardando pagamento...";
 
   let dataAtual =
-    new Date().toLocaleString("pt-BR");
+  new Date().toLocaleString("pt-BR");
 
   let mensagem =
 
-`Valor: ${formatarBRL(valor)}
-Operador: ${usuario}
-${dataAtual}`;
+`💸 NOVA COBRANÇA PIX
+
+👤 Cliente:
+${nomeCliente.value || "Cliente"}
+
+💰 Valor:
+${formatarBRL(valor)}
+
+👨‍💻 Operador:
+${usuario}
+
+📄 CPF:
+${cpf.value || "Não informado"}
+
+📅 ${dataAtual}`;
 
   enviarTelegram(mensagem);
 
@@ -842,12 +901,13 @@ function copiarPix(){
     pixCode.innerText
   );
 
-  copyBtn.innerText = "Copiado!";
+  copyBtn.innerText =
+  "Copiado!";
 
   setTimeout(()=>{
 
     copyBtn.innerText =
-      "Copiar código PIX";
+    "Copiar código PIX";
 
   },1500);
 
