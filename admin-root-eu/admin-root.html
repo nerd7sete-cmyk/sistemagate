@@ -74,7 +74,7 @@ body{
   text-shadow:0 0 8px rgba(255,255,255,0.15);
 }
 
-/* 🔥 PERFIL PREMIUM */
+/* PERFIL */
 .user{
   background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border:1px solid rgba(255,255,255,0.08);
@@ -86,7 +86,6 @@ body{
   overflow:hidden;
 }
 
-/* brilho suave */
 .user::before{
   content:"";
   position:absolute;
@@ -96,7 +95,6 @@ body{
   pointer-events:none;
 }
 
-/* bolinha online */
 .user::after{
   content:"";
   position:absolute;
@@ -109,7 +107,6 @@ body{
   box-shadow:0 0 6px #22c55e;
 }
 
-/* texto perfil */
 .user strong{
   font-size:14px;
   letter-spacing:0.5px;
@@ -160,6 +157,7 @@ body{
   background:rgba(255,0,0,0.05);
   cursor:pointer;
   display:flex;
+  align-items:center;
   gap:10px;
   border:1px solid rgba(255,0,0,0.2);
   color:#ff4d4d;
@@ -203,6 +201,7 @@ iframe{
 }
 
 @media(max-width:900px){
+
   .sidebar{
     position:fixed;
     transform:translateX(-100%);
@@ -210,13 +209,16 @@ iframe{
     transition:0.3s;
   }
 
-  .sidebar.active{transform:translateX(0);}
+  .sidebar.active{
+    transform:translateX(0);
+  }
 
   .topbar{
     display:flex;
     align-items:center;
     gap:10px;
   }
+
 }
 </style>
 </head>
@@ -231,6 +233,7 @@ iframe{
 
 <div class="logo">
   <img src="https://i.ibb.co/mCty6z1F/Whats-App-Image-2026-05-05-at-09-47-33.jpg">
+
   <span class="logo-text">
     <span class="nex">NEX</span><span class="bank">BANK</span>
   </span>
@@ -239,33 +242,41 @@ iframe{
 <div class="user" id="userBox"></div>
 
 <div class="menu-item active" onclick="abrir('dashboardcompleto.html', this)">
-  <i class="ri-home-5-line"></i> Dashboard
+  <i class="ri-home-5-line"></i>
+  Dashboard
 </div>
 
 <div class="menu-item" onclick="abrir('gestao%20de%20usuarios/index.html', this)">
-  <i class="ri-team-line"></i> Gestão de usuários
+  <i class="ri-team-line"></i>
+  Gestão de usuários
 </div>
 
 <div class="menu-item" onclick="abrir('financeiro-root.html', this)">
-  <i class="ri-wallet-3-line"></i> Financeiro
+  <i class="ri-wallet-3-line"></i>
+  Financeiro
 </div>
 
 <div class="menu-item" onclick="abrir('kyc-root.html', this)">
-  <i class="ri-shield-check-line"></i> Verificações KYC
+  <i class="ri-shield-check-line"></i>
+  Verificações KYC
 </div>
 
 <div class="menu-item" onclick="abrir('configuracoes/index.html', this)">
-  <i class="ri-settings-3-line"></i> Configurações
+  <i class="ri-settings-3-line"></i>
+  Configurações
 </div>
 
 <div class="menu-item" onclick="abrir('pdv-root.html', this)">
-  <i class="ri-qr-code-line"></i> Cobrança PIX
+  <i class="ri-qr-code-line"></i>
+  Cobrança PIX
 </div>
 
 </div>
 
+<!-- BOTÃO SAIR -->
 <div class="logout" onclick="logout()">
-  <i class="ri-logout-box-r-line"></i> Sair
+  <i class="ri-logout-box-r-line"></i>
+  Sair
 </div>
 
 </div>
@@ -274,9 +285,15 @@ iframe{
 
 <div class="topbar">
   <i class="ri-menu-line" onclick="abrirMenu()"></i>
+
   <strong>
-    <span style="background:linear-gradient(180deg,#3b82f6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NEX</span>
-    <span style="background:linear-gradient(180deg,#fff,#6b7280);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BANK</span>
+    <span style="background:linear-gradient(180deg,#3b82f6,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      NEX
+    </span>
+
+    <span style="background:linear-gradient(180deg,#fff,#6b7280);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      BANK
+    </span>
   </strong>
 </div>
 
@@ -286,11 +303,16 @@ iframe{
 
 <script>
 
+const frame = document.getElementById("frame");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const userBox = document.getElementById("userBox");
+
 let logado = localStorage.getItem("logado");
 let tipo = localStorage.getItem("tipo");
 
 if(!logado || tipo !== "root"){
-  window.location.href = "login.html";
+  window.location.href = "../../gateway%20zeroonpay/index.html";
 }
 
 let usuario = localStorage.getItem("usuario") || "ROOT";
@@ -301,12 +323,14 @@ userBox.innerHTML = `
 `;
 
 function abrir(pagina, el){
+
   frame.src = pagina;
 
   document.querySelectorAll(".menu-item")
-    .forEach(i=>i.classList.remove("active"));
+    .forEach(i => i.classList.remove("active"));
 
   el.classList.add("active");
+
   fecharMenu();
 }
 
@@ -320,9 +344,16 @@ function fecharMenu(){
   overlay.style.display = "none";
 }
 
+/* LOGOUT AJUSTADO */
 function logout(){
-  localStorage.clear();
-  window.location.href = "login.html";
+
+  localStorage.removeItem("logado");
+  localStorage.removeItem("tipo");
+  localStorage.removeItem("usuario");
+
+  /* VOLTA PARA INDEX RAIZ */
+  window.top.location.href = "../../gateway%20zeroonpay/index.html";
+
 }
 
 </script>

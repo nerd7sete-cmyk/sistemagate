@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+content="width=device-width,
+initial-scale=1.0,
+viewport-fit=cover">
 
-<title>Dashboard</title>
+<title>Dashboard PRO</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+rel="stylesheet">
 
 <style>
 
@@ -21,105 +24,106 @@ content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   font-family:"Segoe UI";
 }
 
-/* BASE */
 html,body{
   width:100%;
   min-height:100%;
-  min-height:100dvh;
-  overflow-x:hidden;
   background:#050505;
+  overflow-x:hidden;
 }
 
 body{
   color:#fff;
 
   padding:
-  calc(14px + env(safe-area-inset-top))
-  14px
-  calc(24px + env(safe-area-inset-bottom));
+  calc(16px + env(safe-area-inset-top))
+  16px
+  calc(25px + env(safe-area-inset-bottom));
 }
 
 /* CONTAINER */
 .container{
   width:100%;
-  max-width:1400px;
+  max-width:1450px;
   margin:auto;
 }
 
 /* HEADER */
-.top{
-  margin-bottom:14px;
-}
-
-.top-left{
+.header{
   display:flex;
-  align-items:flex-start;
-  gap:10px;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:20px;
 }
 
-/* HEADER LINE */
-.header-line{
+.left{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:12px;
 }
 
-.icon-header{
-  width:44px;
-  height:44px;
+.logo{
+  width:50px;
+  height:50px;
+  border-radius:16px;
 
-  border-radius:14px;
-
-  background:#0b0b0b;
-
-  border:1px solid rgba(255,255,255,.05);
+  background:
+  linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  flex-shrink:0;
+  box-shadow:
+  0 0 20px rgba(59,130,246,.35);
 }
 
-.icon-header i{
-  font-size:18px;
-  color:#3b82f6;
+.logo i{
+  font-size:22px;
 }
 
-.top h2{
-  font-size:20px;
+.header h1{
+  font-size:24px;
   font-weight:700;
-
-  letter-spacing:-0.7px;
 }
 
-.sub{
+.header p{
   margin-top:3px;
-
-  font-size:10px;
-
+  font-size:12px;
   color:#6b7280;
 }
 
-/* FILTRO */
-.filtro{
-  height:32px;
+/* STATUS */
+.live{
+  display:flex;
+  align-items:center;
+  gap:8px;
 
   background:#0b0b0b;
 
-  border:1px solid rgba(255,255,255,.05);
+  border:1px solid rgba(34,197,94,.12);
 
-  padding:0 10px;
+  padding:12px 16px;
 
-  border-radius:10px;
+  border-radius:14px;
 
-  color:#d1d5db;
+  color:#22c55e;
 
-  outline:none;
+  font-size:12px;
+}
 
-  font-size:10px;
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
 
-  cursor:pointer;
+  box-shadow:
+  0 0 12px #22c55e;
 }
 
 /* GRID */
@@ -127,39 +131,40 @@ body{
   display:grid;
 
   grid-template-columns:
-  repeat(auto-fit,minmax(210px,1fr));
+  repeat(auto-fit,minmax(240px,1fr));
 
-  gap:12px;
+  gap:14px;
+
+  margin-bottom:14px;
 }
 
 /* CARD */
 .card{
-  background:#0b0b0b;
+  background:
+  linear-gradient(
+    180deg,
+    #0b0b0b,
+    #070707
+  );
 
   border:1px solid rgba(255,255,255,.05);
 
-  border-radius:20px;
+  border-radius:22px;
 
-  padding:15px;
+  padding:18px;
 
   transition:.2s;
 }
 
 .card:hover{
-  border-color:rgba(255,255,255,.08);
-}
-
-/* CARD TOP */
-.card-top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
+  border-color:
+  rgba(59,130,246,.15);
 }
 
 /* ICON */
 .icon{
-  width:40px;
-  height:40px;
+  width:44px;
+  height:44px;
 
   border-radius:14px;
 
@@ -174,208 +179,101 @@ body{
 
 .icon i{
   color:#3b82f6;
-  font-size:17px;
+  font-size:18px;
 }
 
-/* TEXT */
-.title{
-  margin-top:13px;
-
-  font-size:11px;
-
+/* TITULO */
+.titulo{
+  margin-top:14px;
   color:#6b7280;
+  font-size:12px;
 }
 
 .valor{
   margin-top:6px;
 
-  font-size:28px;
+  font-size:30px;
   font-weight:700;
 
-  letter-spacing:-1.2px;
+  letter-spacing:-1px;
 }
 
-/* LIVE */
-.live{
-  margin-top:12px;
-
-  display:flex;
-  align-items:center;
-  gap:7px;
-
-  font-size:10px;
-
-  color:#22c55e;
-}
-
-.live-dot{
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:#22c55e;
-}
-
-/* SALDO */
 #saldo{
   color:#22c55e;
 }
 
-/* BTN */
-.btn-sacar{
-  border:none;
-
-  height:36px;
-
-  padding:0 14px;
-
-  border-radius:12px;
-
-  background:#101010;
-
-  border:1px solid rgba(59,130,246,.12);
-
-  color:#3b82f6;
-
-  font-size:11px;
-  font-weight:600;
-
-  cursor:pointer;
-
-  transition:.2s;
-}
-
-.btn-sacar:hover{
-  background:#121212;
-}
-
-/* CHART */
+/* GRAFICO */
 .chart-card{
-  height:340px;
+  margin-top:14px;
 }
 
-.chart-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+canvas{
+  margin-top:20px;
 }
 
-.chart-title{
-  font-size:13px;
-  font-weight:600;
-}
-
-.chart-sub{
-  margin-top:4px;
-
-  color:#6b7280;
-
-  font-size:10px;
-}
-
-.chart{
-  margin-top:18px !important;
-
-  width:100% !important;
-  height:240px !important;
-}
-
-/* INDICES */
-.indices{
-  margin-top:16px;
+/* LISTA */
+.lista{
+  margin-top:14px;
 
   display:flex;
   flex-direction:column;
-
   gap:12px;
 }
 
-.indice{
-  display:flex;
-  align-items:center;
-  gap:12px;
-
+.item{
   background:#090909;
 
   border:1px solid rgba(255,255,255,.04);
 
   border-radius:16px;
 
-  padding:12px;
-}
-
-/* CIRCLE */
-.circle{
-  width:54px;
-  height:54px;
-
-  border-radius:50%;
+  padding:14px;
 
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  justify-content:center;
+
+  gap:10px;
+}
+
+.nome{
+  font-size:13px;
+  font-weight:600;
+}
+
+.data{
+  margin-top:4px;
 
   font-size:11px;
-  font-weight:700;
-
-  color:#fff;
-}
-
-/* INFO */
-.info-indice strong{
-  font-size:12px;
-}
-
-.info-indice small{
-  display:block;
-
-  margin-top:3px;
-
-  font-size:10px;
-
   color:#6b7280;
 }
 
-/* PROGRESS */
-.progress{
-  margin-top:14px;
-
-  width:100%;
-  height:7px;
-
-  background:#121212;
+.status{
+  padding:7px 12px;
 
   border-radius:999px;
 
-  overflow:hidden;
+  font-size:11px;
+  font-weight:700;
 }
 
-.bar{
-  height:100%;
+.aprovado{
+  background:
+  rgba(34,197,94,.12);
 
-  background:#3b82f6;
-
-  border-radius:999px;
+  color:#22c55e;
 }
 
 /* MOBILE */
 @media(max-width:700px){
 
-  .top h2{
-    font-size:18px;
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
   }
 
   .valor{
-    font-size:24px;
-  }
-
-  .chart-card{
-    height:auto;
-  }
-
-  .chart{
-    height:220px !important;
+    font-size:25px;
   }
 
 }
@@ -388,49 +286,33 @@ body{
 <div class="container">
 
   <!-- HEADER -->
-  <div class="top">
+  <div class="header">
 
-    <div class="top-left">
+    <div class="left">
 
-      <div class="icon-header">
+      <div class="logo">
         <i class="ri-bar-chart-box-line"></i>
       </div>
 
       <div>
 
-        <div class="header-line">
+        <h1>
+          Dashboard PRO
+        </h1>
 
-          <h2>Dashboard</h2>
-
-          <select class="filtro"
-          id="filtroTempo"
-          onchange="filtrar()">
-
-            <option value="7">
-              7 dias
-            </option>
-
-            <option value="15">
-              15 dias
-            </option>
-
-            <option value="30" selected>
-              30 dias
-            </option>
-
-            <option value="90">
-              90 dias
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="sub">
-          Operações financeiras em tempo real
-        </div>
+        <p>
+          Controle financeiro completo
+        </p>
 
       </div>
+
+    </div>
+
+    <div class="live">
+
+      <div class="dot"></div>
+
+      Atualização automática
 
     </div>
 
@@ -439,14 +321,14 @@ body{
   <!-- TOP -->
   <div class="grid">
 
-    <!-- TOTAL EM VENDAS -->
+    <!-- TOTAL -->
     <div class="card">
 
       <div class="icon">
         <i class="ri-money-dollar-circle-line"></i>
       </div>
 
-      <div class="title">
+      <div class="titulo">
         Total em vendas
       </div>
 
@@ -454,85 +336,16 @@ body{
         R$ 0,00
       </div>
 
-      <div class="live">
-
-        <div class="live-dot"></div>
-
-        Atualização automática
-
-      </div>
-
-    </div>
-
-    <!-- TOTAL -->
-    <div class="card">
-
-      <div class="icon">
-        <i class="ri-funds-box-line"></i>
-      </div>
-
-      <div class="title">
-        Total
-      </div>
-
-      <div class="valor" id="totalGeral">
-        R$ 0,00
-      </div>
-
-      <div class="live">
-
-        <div class="live-dot"></div>
-
-        Resumo financeiro
-
-      </div>
-
-    </div>
-
-    <!-- PROCESSADOS -->
-    <div class="card">
-
-      <div class="icon">
-        <i class="ri-shopping-cart-2-line"></i>
-      </div>
-
-      <div class="title">
-        Processados
-      </div>
-
-      <div class="valor" id="pedidos">
-        0
-      </div>
-
-      <div class="live">
-
-        <div class="live-dot"></div>
-
-        Fluxo operacional ativo
-
-      </div>
-
     </div>
 
     <!-- SALDO -->
     <div class="card">
 
-      <div class="card-top">
-
-        <div class="icon">
-          <i class="ri-wallet-3-line"></i>
-        </div>
-
-        <button class="btn-sacar"
-        onclick="sacar()">
-
-          Sacar
-
-        </button>
-
+      <div class="icon">
+        <i class="ri-wallet-3-line"></i>
       </div>
 
-      <div class="title">
+      <div class="titulo">
         Saldo disponível
       </div>
 
@@ -540,57 +353,33 @@ body{
         R$ 0,00
       </div>
 
-      <div class="live">
+    </div>
 
-        <div class="live-dot"></div>
+    <!-- PEDIDOS -->
+    <div class="card">
 
-        Disponível para retirada
+      <div class="icon">
+        <i class="ri-shopping-bag-3-line"></i>
+      </div>
 
+      <div class="titulo">
+        Transações aprovadas
+      </div>
+
+      <div class="valor" id="pedidos">
+        0
       </div>
 
     </div>
-
-  </div>
-
-  <br>
-
-  <!-- VOLUME DE VENDAS -->
-  <div class="card chart-card">
-
-    <div class="chart-head">
-
-      <div>
-
-        <div class="chart-title">
-          Volume de vendas
-        </div>
-
-        <div class="chart-sub">
-          Desempenho diário das transações
-        </div>
-
-      </div>
-
-    </div>
-
-    <canvas id="grafico"
-    class="chart"></canvas>
-
-  </div>
-
-  <br>
-
-  <!-- MEIO -->
-  <div class="grid">
 
     <!-- TICKET -->
     <div class="card">
 
       <div class="icon">
-        <i class="ri-bar-chart-line"></i>
+        <i class="ri-line-chart-line"></i>
       </div>
 
-      <div class="title">
+      <div class="titulo">
         Ticket médio
       </div>
 
@@ -598,158 +387,29 @@ body{
         R$ 0,00
       </div>
 
-      <div class="live">
-
-        <div class="live-dot"></div>
-
-        Média automática
-
-      </div>
-
-    </div>
-
-    <!-- INDICES -->
-    <div class="card">
-
-      <div class="chart-title">
-        Índices operacionais
-      </div>
-
-      <div class="chart-sub">
-        Conversão e performance
-      </div>
-
-      <div class="indices">
-
-        <div class="indice">
-
-          <div class="circle"
-          id="pixCircle">
-
-            <span id="pixPerc">
-              0%
-            </span>
-
-          </div>
-
-          <div class="info-indice">
-
-            <strong>PIX</strong>
-
-            <small>
-              Conversão do período
-            </small>
-
-          </div>
-
-        </div>
-
-        <div class="indice">
-
-          <div class="circle"
-          id="boletoCircle">
-
-            <span id="boletoPerc">
-              0%
-            </span>
-
-          </div>
-
-          <div class="info-indice">
-
-            <strong>Boleto</strong>
-
-            <small>
-              Conversão do período
-            </small>
-
-          </div>
-
-        </div>
-
-        <div class="indice">
-
-          <div class="circle"
-          id="chargeCircle">
-
-            <span id="chargePerc">
-              0%
-            </span>
-
-          </div>
-
-          <div class="info-indice">
-
-            <strong>Chargeback</strong>
-
-            <small>
-              Índice operacional atual
-            </small>
-
-          </div>
-
-        </div>
-
-      </div>
-
     </div>
 
   </div>
 
-  <br>
+  <!-- GRAFICO -->
+  <div class="card chart-card">
 
-  <!-- BOTTOM -->
-  <div class="grid">
-
-    <!-- PIX -->
-    <div class="card">
-
-      <div class="icon">
-        <i class="ri-flashlight-line"></i>
-      </div>
-
-      <div class="title">
-        Volume PIX
-      </div>
-
-      <div class="valor"
-      id="pix">
-
-        R$ 0,00
-
-      </div>
-
-      <div class="progress">
-        <div class="bar"
-        id="pixBar"></div>
-      </div>
-
+    <div class="titulo">
+      Volume diário
     </div>
 
-    <!-- BOLETO -->
-    <div class="card">
+    <canvas id="grafico" height="90"></canvas>
 
-      <div class="icon">
-        <i class="ri-file-list-3-line"></i>
-      </div>
+  </div>
 
-      <div class="title">
-        Volume boleto
-      </div>
+  <!-- ULTIMAS -->
+  <div class="card chart-card">
 
-      <div class="valor"
-      id="boleto">
-
-        R$ 0,00
-
-      </div>
-
-      <div class="progress">
-        <div class="bar"
-        id="boletoBar"></div>
-      </div>
-
+    <div class="titulo">
+      Últimas transações
     </div>
+
+    <div class="lista" id="lista"></div>
 
   </div>
 
@@ -757,33 +417,9 @@ body{
 
 <script>
 
-/* SACAR */
-function sacar(){
-
-  if(
-    window.parent &&
-    window.parent.document.getElementById("frame")
-  ){
-
-    window.parent.document.getElementById("frame").src =
-    "saques.html";
-
-  }else{
-
-    window.location.href = "saques.html";
-
-  }
-
-}
-
 let usuario =
-localStorage.getItem("usuario");
-
-let transacoes =
-JSON.parse(
-  localStorage.getItem("transacoes")
-)
-|| [];
+localStorage.getItem("usuario")
+|| "operador";
 
 let operadores =
 JSON.parse(
@@ -793,185 +429,176 @@ JSON.parse(
 
 let chart;
 
-/* FILTRO */
-function filtrar(){
+/* FORMAT */
+function formatar(v){
 
-  let dias =
-  Number(
-    document.getElementById("filtroTempo").value
+  return Number(v || 0)
+  .toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
   );
 
-  let agora = new Date();
+}
 
-  let filtradas =
-  transacoes.filter(t=>{
+/* CARREGAR */
+function carregar(){
 
-    if(t.operador !== usuario){
-      return false;
-    }
+  let dados =
+  JSON.parse(
+    localStorage.getItem(
+      "extrato_root"
+    )
+  ) || [];
+
+  /* SOMENTE APROVADOS */
+  dados =
+  dados.filter(t =>
+
+    t.operador === usuario
+    &&
+    t.status === "Aprovado"
+
+  );
+
+  let total = 0;
+  let pedidos = 0;
+
+  let porDia = {};
+
+  dados.forEach(t=>{
+
+    let valor =
+    Number(t.valor || 0);
+
+    total += valor;
+
+    pedidos++;
 
     let data =
     new Date(t.data);
 
-    let diff =
-    (agora - data) /
-    (1000*60*60*24);
-
-    return diff <= dias;
-
-  });
-
-  carregar(filtradas);
-
-}
-
-/* LOAD */
-function carregar(minhas){
-
-  let total = 0;
-  let pix = 0;
-  let boleto = 0;
-
-  let pedidos =
-  minhas.length;
-
-  let porDia = {};
-
-  minhas.forEach(t=>{
-
-    let v =
-    Number(t.valor) || 0;
-
-    total += v;
-
-    if(t.tipo==="pix"){
-      pix += v;
-    }
-
-    if(t.tipo==="boleto"){
-      boleto += v;
-    }
-
     let dia =
-    new Date(t.data).getDate();
+    data.getDate() + "/" +
+    (data.getMonth()+1);
 
     porDia[dia] =
-    (porDia[dia] || 0) + v;
+    (porDia[dia] || 0)
+    + valor;
 
   });
 
+  /* TAXA */
   let operador =
   operadores.find(
-    o=>o.email===usuario
+    o => o.email === usuario
   );
 
   let taxa =
-  operador?.taxa || 10;
+  Number(
+    operador?.taxa || 10
+  );
 
-  let saldo =
+  /* SALDO LIQUIDO */
+  let saldoCalculado =
   total * (1 - taxa/100);
 
-  function f(v){
+  /* BUSCAR SAQUES */
+  let saques =
+  JSON.parse(
+    localStorage.getItem(
+      "saques_operador_" + usuario
+    )
+  ) || [];
 
-    return v.toLocaleString(
-      "pt-BR",
-      {
-        style:"currency",
-        currency:"BRL"
-      }
-    );
+  /* TOTAL SACADO */
+  let totalSacado = 0;
 
+  saques.forEach(s=>{
+
+    if(
+      s.status !== "falha"
+    ){
+
+      totalSacado +=
+      Number(s.valor || 0);
+
+    }
+
+  });
+
+  /* SALDO FINAL */
+  let saldo =
+  saldoCalculado - totalSacado;
+
+  if(saldo < 0){
+    saldo = 0;
   }
 
-  document.getElementById("total").innerText =
-  f(total);
+  /* TICKET */
+  let ticket =
+  pedidos
+  ? total / pedidos
+  : 0;
 
-  document.getElementById("totalGeral").innerText =
-  f(total);
+  /* SET */
+  document.getElementById(
+    "total"
+  ).innerText =
+  formatar(total);
 
-  document.getElementById("pedidos").innerText =
+  document.getElementById(
+    "saldo"
+  ).innerText =
+  formatar(saldo);
+
+  document.getElementById(
+    "pedidos"
+  ).innerText =
   pedidos;
 
-  document.getElementById("ticket").innerText =
-  f(total/(pedidos||1));
+  document.getElementById(
+    "ticket"
+  ).innerText =
+  formatar(ticket);
 
-  document.getElementById("saldo").innerText =
-  f(saldo);
-
-  document.getElementById("pix").innerText =
-  f(pix);
-
-  document.getElementById("boleto").innerText =
-  f(boleto);
-
-  let pixPerc =
-  total ? (pix/total)*100 : 0;
-
-  let boletoPerc =
-  total ? (boleto/total)*100 : 0;
-
-  document.getElementById("pixBar").style.width =
-  pixPerc + "%";
-
-  document.getElementById("boletoBar").style.width =
-  boletoPerc + "%";
-
-  function setCircle(id,val){
-
-    document.getElementById(id).style.background =
-    `conic-gradient(
-      #3b82f6 ${val*3.6}deg,
-      #151515 0
-    )`;
-
-  }
-
-  setCircle("pixCircle",pixPerc);
-  setCircle("boletoCircle",boletoPerc);
-  setCircle("chargeCircle",0);
-
-  document.getElementById("pixPerc").innerText =
-  pixPerc.toFixed(1)+"%";
-
-  document.getElementById("boletoPerc").innerText =
-  boletoPerc.toFixed(1)+"%";
-
-  document.getElementById("chargePerc").innerText =
-  "0%";
-
+  /* GRAFICO */
   if(chart){
     chart.destroy();
   }
 
   let ctx =
-  document.getElementById("grafico")
-  .getContext("2d");
+  document.getElementById(
+    "grafico"
+  ).getContext("2d");
 
-  chart = new Chart(ctx,{
+  chart =
+  new Chart(ctx,{
 
     type:"line",
 
     data:{
 
-      labels:Object.keys(porDia),
+      labels:
+      Object.keys(porDia),
 
       datasets:[{
 
-        data:Object.values(porDia),
+        data:
+        Object.values(porDia),
 
         borderColor:"#3b82f6",
 
-        backgroundColor:"rgba(59,130,246,.08)",
+        backgroundColor:
+        "rgba(59,130,246,.08)",
 
         fill:true,
 
-        tension:0.4,
+        tension:.4,
 
-        borderWidth:2,
-
-        pointRadius:3,
-
-        pointBackgroundColor:"#3b82f6"
+        borderWidth:2
 
       }]
 
@@ -981,40 +608,30 @@ function carregar(minhas){
 
       responsive:true,
 
-      maintainAspectRatio:false,
-
       plugins:{
-
         legend:{
           display:false
         }
-
       },
 
       scales:{
 
         x:{
-
           ticks:{
             color:"#6b7280"
           },
-
           grid:{
             color:"rgba(255,255,255,.03)"
           }
-
         },
 
         y:{
-
           ticks:{
             color:"#6b7280"
           },
-
           grid:{
             color:"rgba(255,255,255,.03)"
           }
-
         }
 
       }
@@ -1023,23 +640,59 @@ function carregar(minhas){
 
   });
 
+  /* LISTA */
+  let lista =
+  document.getElementById(
+    "lista"
+  );
+
+  lista.innerHTML = "";
+
+  dados
+  .slice(0,5)
+  .reverse()
+  .forEach(t=>{
+
+    lista.innerHTML += `
+
+      <div class="item">
+
+        <div>
+
+          <div class="nome">
+            ${t.cliente || "Cliente"}
+          </div>
+
+          <div class="data">
+            ${t.data || "-"}
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="status aprovado">
+            ${formatar(t.valor)}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
 }
 
 /* AUTO */
-setInterval(()=>{
-
-  transacoes =
-  JSON.parse(
-    localStorage.getItem("transacoes")
-  )
-  || [];
-
-  filtrar();
-
-},3000);
+setInterval(
+  carregar,
+  3000
+);
 
 /* INIT */
-filtrar();
+carregar();
 
 </script>
 
