@@ -10,7 +10,12 @@
 <title>Configurações do Sistema</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI";}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI";
+}
 
 /* FIX iPHONE */
 html,body{
@@ -123,54 +128,141 @@ body{
 <div class="container">
 
   <div class="header">
+
     <div class="header-top">
+
       <div class="icon">
         <i class="ri-settings-3-line"></i>
       </div>
+
       <div>
-        <div class="title">Configurações</div>
-        <div class="sub">Controle geral do sistema</div>
+
+        <div class="title">
+          Configurações
+        </div>
+
+        <div class="sub">
+          Controle geral do sistema
+        </div>
+
       </div>
+
     </div>
+
   </div>
 
   <div class="grid">
 
-    <!-- AGORA NORMAL -->
-    <div class="card" onclick="go('controle-transacoes.html')">
+    <!-- CONTROLE -->
+    <div class="card"
+    onclick="go('controle-transacoes.html')">
+
       <i class="ri-bar-chart-2-line"></i>
-      <div class="card-title">Controle de Transações</div>
-      <div class="card-desc">Aprovações, limites e monitoramento</div>
+
+      <div class="card-title">
+        Controle de Transações
+      </div>
+
+      <div class="card-desc">
+        Aprovações, limites e monitoramento
+      </div>
+
     </div>
 
-    <div class="card" onclick="go('definicoes-taxas.html')">
+    <!-- TICKETS -->
+    <div class="card"
+    onclick="go('definicoes-taxas.html')">
+
       <i class="ri-ticket-2-line"></i>
-      <div class="card-title">Tickets & Saques</div>
-      <div class="card-desc">Valores e regras</div>
+
+      <div class="card-title">
+        Tickets & Saques
+      </div>
+
+      <div class="card-desc">
+        Valores e regras
+      </div>
+
     </div>
 
-    <div class="card" onclick="go('orquestracao-pagamentos.html')">
+    <!-- PAGAMENTOS -->
+    <div class="card"
+    onclick="go('orquestracao-pagamentos.html')">
+
       <i class="ri-exchange-funds-line"></i>
-      <div class="card-title">Pagamentos</div>
-      <div class="card-desc">Gateways e fluxo</div>
+
+      <div class="card-title">
+        Pagamentos
+      </div>
+
+      <div class="card-desc">
+        Gateways e fluxo
+      </div>
+
     </div>
 
-    <div class="card" onclick="go('auditoria-root.html')">
+    <!-- AUDITORIA -->
+    <div class="card"
+    onclick="go('auditoria-root.html')">
+
       <i class="ri-file-list-3-line"></i>
-      <div class="card-title">Auditoria</div>
-      <div class="card-desc">Logs e rastreamento</div>
+
+      <div class="card-title">
+        Auditoria
+      </div>
+
+      <div class="card-desc">
+        Logs e rastreamento
+      </div>
+
     </div>
 
-    <div class="card" onclick="go('config-root.html')">
+    <!-- SISTEMA -->
+    <div class="card"
+    onclick="go('config-root.html')">
+
       <i class="ri-global-line"></i>
-      <div class="card-title">Sistema</div>
-      <div class="card-desc">Configuração geral</div>
+
+      <div class="card-title">
+        Sistema
+      </div>
+
+      <div class="card-desc">
+        Configuração geral
+      </div>
+
     </div>
 
-    <div class="card" onclick="go('alertas.html')">
+    <!-- ALERTAS -->
+    <div class="card"
+    onclick="go('alertas.html')">
+
       <i class="ri-notification-3-line"></i>
-      <div class="card-title">Alertas</div>
-      <div class="card-desc">Monitoramento</div>
+
+      <div class="card-title">
+        Alertas
+      </div>
+
+      <div class="card-desc">
+        Monitoramento
+      </div>
+
+    </div>
+
+    <!-- NOVO CARD PIX -->
+    <div class="card"
+    onclick="go('ativar-chaves-saques.html')">
+
+      <i class="ri-bank-card-line"></i>
+
+      <div class="card-title">
+        Chaves PIX Operador
+      </div>
+
+      <div class="card-desc">
+        Configuração de saque PIX
+      </div>
+
     </div>
 
   </div>
@@ -182,9 +274,13 @@ body{
 </div>
 
 <script>
+
 function go(page){
+
   window.location.href = page;
+
 }
+
 </script>
 
 </body>
